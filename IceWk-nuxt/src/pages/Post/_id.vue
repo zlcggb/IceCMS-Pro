@@ -282,15 +282,17 @@
               <!---->
               <!-- v-on:click="show = !show"
                 v-if="!show" -->
-              <div class="myVEmojiPicker">
-                <VEmojiPicker
-                  v-show="showDialog"
-                  :style="{ width: '340px', height: '200' }"
-                  labelSearch="Search"
-                  lang="pt-BR"
-                  @select="onSelectEmoji"
-                />
-              </div>
+                <client-only>
+          <div class="myVEmojiPicker">
+            <VEmojiPicker
+              v-show="showDialog"
+              :style="{ width: '340px', height: '200' }"
+              labelSearch="Search"
+              lang="pt-BR"
+              @select="onSelectEmoji"
+            />
+          </div>
+        </client-only>
               <!-- 后台控制是否显示评论 -->
               <div>
                 <!-- <div v-if="!this.glabledata.glableCommentShow"> -->
@@ -397,9 +399,9 @@ export default {
     foot: () => import("../components/Foots.vue"),
     Sticky: () => import("@/components/Sticky"),
     comment,
-    VEmojiPicker,
     Prismjs,
     SideCatalog,
+    VEmojiPicker,
   },
   computed: {
     ...mapState(["playlist", "glabledata", "count"]),

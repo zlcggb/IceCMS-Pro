@@ -712,6 +712,10 @@
           </div>
         </div>
         <!-- <foot /> -->
+        <div v-if="isLoading" class="loading-indicator">
+  <div class="loader"></div>
+  <!-- Add your loading indicator here -->
+</div>
         <div infos="0">
           <div class="
                     adBanner
@@ -978,20 +982,18 @@ export default {
       window.onscroll = () => {
         var scrollTop =
           document.documentElement.scrollTop || document.body.scrollTop;
-        //变量windowHeight是可视区的高度
         var windowHeight =
           document.documentElement.clientHeight || document.body.clientHeight || window.innerHeight;
-        //变量scrollHeight是滚动条的总高度
         var scrollHeight =
           document.documentElement.scrollHeight || document.body.scrollHeight;
-        //滚动条到底部的条件
-        // let bottomOfWindow = (document.documentElement.scrollTop + window.innerHeight) - document.body.scrollHeight;
         let bottomOfWindow = (scrollTop + windowHeight) - scrollHeight;
-        // console.log(bottomOfWindow)
+        
         if (bottomOfWindow == 0.5 || bottomOfWindow == 0) {
+          this.isLoading = true; // 开始加载数据时显示进度
           this.page++;
-          this.getSquare();
-          // console.log("滚动条到底部的条件");
+          this.getSquare().then(() => {
+            this.isLoading = false; // 数据加载完成后隐藏进度
+          });
         }
       }
     },
@@ -1211,6 +1213,7 @@ export default {
 
 data() {
   return {
+    isLoading: false,
     dialogImageUrl: '',
     dialogVisible: false,
     fileList: [],
@@ -1268,6 +1271,37 @@ data() {
 </style>
 
 <style scoped>
+.loading-indicator {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px; /* 根据您的需要设置高度 */
+  background-color: #F3F5F7; /* 背景颜色 */
+}
+
+.loader {
+  position: relative;
+  width: 40px;
+  height: 40px;
+}
+
+.loader::before {
+  content: '';
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  border: 8px solid #3498db; /* 边框颜色 */
+  border-top: 8px solid transparent; /* 透明边框，创建圆形 */
+  border-radius: 50%;
+  animation: spin 1s linear infinite; /* 旋转动画 */
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0) 100%); /* 渐变背景色，尾部渐变为透明 */
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 .delayImg {
   height: 100px;
   width: 145px;
@@ -1609,19 +1643,21 @@ body>.el-container {
 }
 </style>
 <style scoped>
-.myVEmojiPicker     :deep.category {
+.myVEmojiPicker     :deep(.category ){
   background: none;
 }
 
-.myVEmojiPicker     :deep .border {
+.myVEmojiPicker     :deep(.border) {
+  border: 0px solid hsla(210, 8%, 51%, 0.09) !important;
+}
+.myVEmojiPicker     :deep(.myVEmojiPicker[data-v-3bfe90b7]) {
+  border: 0px solid hsla(210, 8%, 51%, 0.09) !important;
+}
+.myVEmojiPicker     :deep(.border) {
   border: 0px solid hsla(210, 8%, 51%, 0.09) !important;
 }
 
-.myVEmojiPicker     :deep .myVEmojiPicker[data-v-3bfe90b7] .border {
-  border: 0px solid hsla(210, 8%, 51%, 0.09) !important;
-}
-
-.myVEmojiPicker     :deep .category.active[data-v-6d975e7c] {
+.myVEmojiPicker     :deep(.category.active[data-v-6d975e7c] ){
   border-bottom: 3px solid #50a1ff;
 }
 
@@ -1640,12 +1676,12 @@ body>.el-container {
   bottom: 20px;
   z-index: 10;
 } */
-.myVEmojiPicker     :deep .emoji-picker[data-v-f1d527bc] {
+.myVEmojiPicker     :deep(.emoji-picker[data-v-f1d527bc]) {
   background-color: #FFFFFF;
   border-radius: 0px;
 }
 
-.myVEmojiPicker :deep .emoji-picker[data-v-f1d527bc] {
+.myVEmojiPicker :deep(.emoji-picker[data-v-f1d527bc]) {
   --ep-color-border: #FFFFFF;
   --ep-color-bg: #FFFFFF;
 }

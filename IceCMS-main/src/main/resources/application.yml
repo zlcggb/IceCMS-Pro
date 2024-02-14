@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/marriage?useUnicode=true&useJDBCCompliantTimezoneShift=true&serverTimezone=UTC
+    url: jdbc:mysql://127.0.0.1:3306/icecms?useUnicode=true&useJDBCCompliantTimezoneShift=true&serverTimezone=UTC
     username: root
-    password: Fuck258!
+    password: 1251beda9241ce30
     driver-class-name: com.mysql.cj.jdbc.Driver
   mail:
     username: 23339097@qq.com # 发送人邮箱

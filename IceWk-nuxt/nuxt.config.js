@@ -2,7 +2,7 @@ export default {
   srcDir: 'src/',
   // Global page headers (https://go.nuxtjs.dev/config-head)
   head: {
-    title: '苏宁源码-您身边的源码专家',
+    title: 'IceCMS',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
@@ -13,7 +13,7 @@ export default {
 
     ],
     link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
+      { rel: 'icon', type: 'image/x-icon', href: '/static/favicon.ico' }
     ]
   },
   server: {
@@ -34,7 +34,7 @@ export default {
     { src: '~/plugins/initial-request', ssr: false }, // 注册插件并启用服务器端渲染 (ssr)
     { src: '~/plugins/global.js', ssr: true },
     { src: '@/plugins/qriously', ssr: false },
-    { src: './plugins/tongji.js' }
+    { src: './plugins/tongji.js' },
   ],
 
   // Auto import components (https://go.nuxtjs.dev/config-components)

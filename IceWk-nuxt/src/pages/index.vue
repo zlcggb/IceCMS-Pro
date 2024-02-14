@@ -218,7 +218,7 @@
                                       " src="../static/image/loding.gif" />
                                 </div>
                               </el-image>
-                              <div v-show="item.thumb == null" class="delayImgss" :style="getStyles()">
+                              <div v-show="item.thumb == null" class="delayImgss" :style="item.backgroundStyle">
                                 <h3 class="
                                       flex
                                       text-center text-white
@@ -347,7 +347,7 @@
                                       src="../static/image/loding.gif" />
                                   </div>
                                 </el-image>
-                                <div v-else class="delayImg" :style="getStyles()">
+                                <div v-else class="delayImg" :style="item.backgroundStyle">
                                   <h3 class="
                                       flex
                                       text-center text-white
@@ -410,7 +410,7 @@
                                       src="../static/image/loding.gif" />
                                   </div>
                                 </el-image>
-                                <div v-else class="delayImg" :style="getStyles()">
+                                <div v-else class="delayImg" :style="item.backgroundStyle">
                                   <h3 class="
                                       flex
                                       text-center text-white
@@ -573,6 +573,8 @@ export default ({
         this.leftArr = this.list.filter((_item, index) => index % 2 === 0);
         //将array进行处理,他的index索引余2 ！===0的就放到一个新数组中rightArr
         this.rightArr = this.list.filter((_item, index) => index % 2 !== 0);
+        this.leftArr = this.addBackgroundStyles(fetchedData);
+        this.rightArr = this.addBackgroundStyles(fetchedData);
       });
       this.listLoading = false;
     },
@@ -587,6 +589,8 @@ export default ({
         this.leftArr = this.list.filter((_item, index) => index % 2 === 0);
         //将array进行处理,他的index索引余2 ！===0的就放到一个新数组中rightArr
         this.rightArr = this.list.filter((_item, index) => index % 2 !== 0);
+        this.leftArr = this.addBackgroundStyles(fetchedData);
+        this.rightArr = this.addBackgroundStyles(fetchedData);
       });
       this.listLoading = false;
     },
@@ -601,6 +605,8 @@ export default ({
         this.leftArr = this.list.filter((_item, index) => index % 2 === 0);
         //将array进行处理,他的index索引余2 ！===0的就放到一个新数组中rightArr
         this.rightArr = this.list.filter((_item, index) => index % 2 !== 0);
+        this.leftArr = this.addBackgroundStyles(fetchedData);
+        this.rightArr = this.addBackgroundStyles(fetchedData);
       });
       this.listLoading = false;
     },
@@ -644,47 +650,24 @@ export default ({
       });
       this.listLoading = false;
     },
-    getStyles() {
-      // 判断是否在服务端
-      if (process.server) {
-        return;
-      }
-      //生成随机颜色
-      let max = 8;
-      let min = 1;
-
-      let x = Math.floor(Math.random() * (max - min + 1)) + min;
-
-      const backcolor = "randomColor" + x;
-
-      if (backcolor == "randomColor1") {
-        return "background-image: linear-gradient( 135deg, #ABDCFF 10%, #0396FF 100%);"
-      }
-      if (backcolor == "randomColor2") {
-        return "background-image: linear-gradient( 135deg, #FEB692 10%, #EA5455 100%);"
-      }
-      if (backcolor == "randomColor3") {
-        return "background-image: linear-gradient( 135deg, #CE9FFC 10%, #7367F0 100%);"
-      }
-      if (backcolor == "randomColor4") {
-        return "background-image: linear-gradient( 135deg, #90F7EC 10%, #32CCBC 100%);"
-      }
-      if (backcolor == "randomColor5") {
-        return "background-image: linear-gradient( 135deg, #81FBB8 10%, #28C76F 100%);"
-      }
-      if (backcolor == "randomColor6") {
-        return "background-image: linear-gradient( 135deg, #E2B0FF 10%, #9F44D3 100%);"
-      }
-      if (backcolor == "randomColor7") {
-        return "background-image: linear-gradient( 135deg, #5EFCE8 10%, #736EFE 100%);"
-      }
-      if (backcolor == "randomColor8") {
-        return "background-image: linear-gradient( 135deg, #FFD3A5 10%, #FD6585 100%);"
-      }
-
-
-      return "background-image: linear-gradient( 135deg, #FFD3A5 10%, #FD6585 100%);"
-
+    addBackgroundStyles(items) {
+      const backgroundColors = [
+        "linear-gradient( 135deg, #ABDCFF 10%, #0396FF 100%);",
+        "linear-gradient( 135deg, #FEB692 10%, #EA5455 100%);",
+        "linear-gradient( 135deg, #CE9FFC 10%, #7367F0 100%);",
+        "linear-gradient( 135deg, #90F7EC 10%, #32CCBC 100%);",
+        "linear-gradient( 135deg, #81FBB8 10%, #28C76F 100%);",
+        "linear-gradient( 135deg, #E2B0FF 10%, #9F44D3 100%);",
+        "linear-gradient( 135deg, #5EFCE8 10%, #736EFE 100%);",
+        "linear-gradient( 135deg, #FFD3A5 10%, #FD6585 100%);"
+      ];
+      return items.map(item => {
+        if (!item.thumb) {
+          const index = Math.floor(Math.random() * backgroundColors.length);
+          item.backgroundStyle = `background-image: ${backgroundColors[index]};`;
+        }
+        return item;
+      });
     },
     formatDate(time) {
       let data = new Date(time)
@@ -709,6 +692,8 @@ export default ({
       this.leftArr = this.list.filter((_item, index) => index % 2 === 0);
       //将array进行处理,他的index索引余2 ！===0的就放到一个新数组中rightArr
       this.rightArr = this.list.filter((_item, index) => index % 2 !== 0);
+      this.leftArr = this.addBackgroundStyles(this.leftArr);
+      this.rightArr = this.addBackgroundStyles(this.rightArr);
     }
   },
   mounted() {    

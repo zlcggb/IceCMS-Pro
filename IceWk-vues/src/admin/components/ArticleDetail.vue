@@ -385,6 +385,9 @@ export default {
 @import "~@/styles/mixin.scss";
 
 .createPost-container {
+
+  margin-top: -26px;
+
   position: relative;
   width: 100%;
 

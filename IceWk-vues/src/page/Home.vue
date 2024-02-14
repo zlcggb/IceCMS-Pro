@@ -155,7 +155,7 @@
                           <div class="macwk-card__body">
                             <h6 data-v-0a1f67c4="" class="mb-0 text-white">
                               <i data-v-0a1f67c4="" class="icon-office fs-22 mr-3 v-m-3"></i>
-                              <span data-v-0a1f67c4="">123</span>
+                              <span data-v-0a1f67c4="">新人必备</span>
                             </h6>
                           </div>
 
@@ -180,7 +180,7 @@
                           <div class="macwk-card__body">
                             <h6 data-v-0a1f67c4="" class="mb-0 text-white">
                               <i data-v-0a1f67c4="" class="icon-gallery fs-22 mr-3 v-m-3"></i>
-                              <span data-v-0a1f67c4="">123</span>
+                              <span data-v-0a1f67c4="">图像处理工具</span>
                             </h6>
                           </div>
 
@@ -205,7 +205,7 @@
                           <div class="macwk-card__body">
                             <h6 data-v-0a1f67c4="" class="mb-0 text-white">
                               <i data-v-0a1f67c4="" class="icon-cp fs-22 mr-3 v-m-3"></i>
-                              <span data-v-0a1f67c4="">123</span>
+                              <span data-v-0a1f67c4="">产品工具</span>
                             </h6>
                           </div>
 
@@ -231,7 +231,7 @@
                             <div class="macwk-card__body">
                               <h6 data-v-0a1f67c4="" class="mb-0 text-white">
                                 <i data-v-0a1f67c4="" class="icon-code fs-22 mr-3 v-m-3"></i>
-                                <span data-v-0a1f67c4="">123</span>
+                                <span data-v-0a1f67c4="">更多专题</span>
                               </h6>
                             </div>
                           </router-link>

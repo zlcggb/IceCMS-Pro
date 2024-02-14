@@ -664,6 +664,7 @@
           </div>
           <!-- v-on:click="show = !show"
                 v-if="!show" -->
+                <client-only>
           <div class="myVEmojiPicker">
             <VEmojiPicker
               v-show="showDialog"
@@ -673,6 +674,7 @@
               @select="onSelectEmoji"
             />
           </div>
+        </client-only>
           <!-- 后台控制是否显示评论 -->
           <!-- <div v-if="!this.glabledata.glableCommentShow">
             <div v-show="!judjeComment"> -->

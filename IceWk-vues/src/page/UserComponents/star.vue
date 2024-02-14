@@ -414,6 +414,7 @@ export default {
 .createPost-container {
     position: relative;
     width: 100%;
+    margin-top: -26px;
 
     .createPost-main-container {
         padding: 40px 45px 20px 50px;

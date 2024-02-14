@@ -376,20 +376,16 @@ export default ({
 </style>
 <style lang="scss" scoped>
 .delayImg {
-  ::v-deep {
-    .el-image__inner {
+  :v-deep(.el-image__inner) {
       border-radius: 8px;
-    }
   }
 }
 
 .delay-3 {
-  ::v-deep {
-    .el-image__inner {
+  :v-deep(.el-image__inner) {
       width: 224px;
       height: 128px;
       border-radius: 8px 8px 0px 0px;
-    }
   }
 }
 
@@ -422,10 +418,8 @@ export default ({
 }
 
 .delay-3 {
-  ::v-deep {
-    .el-image__inner {
+  :v-deep(.el-image__inner) {
       border-radius: 8px 8px 0px 0px;
-    }
   }
 }
 
