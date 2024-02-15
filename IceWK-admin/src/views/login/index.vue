@@ -33,6 +33,8 @@ import Check from "@iconify-icons/ep/check";
 import User from "@iconify-icons/ri/user-3-fill";
 import Info from "@iconify-icons/ri/information-line";
 
+import * as CommonAPI from "@/api/common/login";
+
 defineOptions({
   name: "Login"
 });
@@ -63,28 +65,53 @@ const ruleForm = reactive({
 });
 
 const onLogin = async (formEl: FormInstance | undefined) => {
+  loading.value = true;
   if (!formEl) return;
   await formEl.validate((valid, fields) => {
     if (valid) {
-      loading.value = true;
-      useUserStoreHook()
-        .loginByUsername({ username: ruleForm.username, password: "admin123" })
-        .then(res => {
-          if (res.success) {
-            // 获取后端路由
-            return initRouter().then(() => {
-              disabled.value = true;
-              router
-                .push(getTopMenu(true).path)
-                .then(() => {
-                  message("登录成功", { type: "success" });
-                })
-                .finally(() => (disabled.value = false));
-            });
-          }
+      console.log(ruleForm.username);
+      console.log(ruleForm.password)
+      CommonAPI.loginByPassword({
+        username: ruleForm.username,
+        password: ruleForm.password
+      })
+        .then(({ data }) => {
+          console.log(data);
+          // // 登录成功后 将token存储到sessionStorage中
+          // setTokenFromBackend(data);
+          // // 获取后端路由
+          // initRouter().then(() => {
+          //   router.push(getTopMenu(true).path);
+          //   message("登录成功", { type: "success" });
+          // });
+          // if (isRememberMe.value) {
+          //   savePassword(ruleForm.password);
+          // }
         })
-        .finally(() => (loading.value = false));
+        .catch(() => {
+          loading.value = false;
+          //如果登陆失败则重新获取验证码
+          // getCaptchaCode();
+        });
+      // useUserStoreHook()
+        // .loginByUsername({ username: ruleForm.username, password: "admin123" })
+        // .then(res => {
+        //   if (res.success) {
+        //     // 获取后端路由
+        //     return initRouter().then(() => {
+        //       disabled.value = true;
+        //       router
+        //         .push(getTopMenu(true).path)
+        //         .then(() => {
+        //           message("登录成功", { type: "success" });
+        //         })
+        //         .finally(() => (disabled.value = false));
+        //     });
+        //   }
+        // })
+        // .finally(() => (loading.value = false));
     } else {
+      loading.value = false;
       return fields;
     }
   });

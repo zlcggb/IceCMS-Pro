@@ -19,10 +19,10 @@ export type LoginByPasswordDTO = {
   username: string;
   /**  密码 */
   password: string;
-  /** 验证码 */
-  captchaCode: string;
-  /** 验证码对应的缓存key */
-  captchaCodeKey: string;
+  // /** 验证码 */
+  // captchaCode: string;
+  // /** 验证码对应的缓存key */
+  // captchaCodeKey: string;
 };
 
 /**
@@ -89,7 +89,7 @@ export const getCaptchaCode = () => {
 
 /** 登录接口 */
 export const loginByPassword = (data: LoginByPasswordDTO) => {
-  return http.request<ResponseData<TokenDTO>>("post", "/login", { data });
+  return http.request<ResponseData<TokenDTO>>("get", "/User/login", { data });
 };
 
 /** 获取当前登录用户接口 */
