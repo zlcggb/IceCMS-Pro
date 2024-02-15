@@ -82,7 +82,7 @@ const activities = [
           placement="bottom"
         >
           <div class="message">
-            vue-pure-admin 是一款开源免费且开箱即用的中后台管理系统模版
+            IceCMS 是一款开源免费且开箱即用的中后台管理系统模版
           </div>
         </el-timeline-item>
       </el-timeline>

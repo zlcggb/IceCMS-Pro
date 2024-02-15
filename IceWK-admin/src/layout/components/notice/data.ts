@@ -135,8 +135,8 @@ export const noticesData: TabItem[] = [
       },
       {
         avatar: "",
-        title: "vue-pure-admin 版本发布",
-        description: "vue-pure-admin 版本发布",
+        title: "IceCMS 版本发布",
+        description: "IceCMS 版本发布",
         datetime: "",
         extra: "进行中",
         type: "3"

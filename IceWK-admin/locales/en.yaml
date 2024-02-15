@@ -112,7 +112,7 @@ menus:
   hsExternalPage: External Page
   hsExternalDoc: Docs External
   hsEmbeddedDoc: Docs Embedded
-  externalLink: Vue-Pure-Admin
+  externalLink: IceCMS
   pureutilsLink: Pure-Admin-Utils
   hsEpDocument: Element-Plus
   hsTailwindcssDocument: Tailwindcss

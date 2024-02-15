@@ -7,7 +7,7 @@ import boxen, { type Options as BoxenOptions } from "boxen";
 dayjs.extend(duration);
 
 const welcomeMessage = gradientString("cyan", "magenta").multiline(
-  `Hello! 欢迎使用 vue-pure-admin\n我们为您精心准备了下面两个贴心的保姆级文档\nhttps://yiming_chang.gitee.io/pure-admin-doc\nhttps://pure-admin-utils.netlify.app`
+  `Hello! 欢迎使用 icecms\n我们为您精心准备了下面贴心的保姆级文档\nhttps://www.icecms.com`
 );
 
 const boxenOptions: BoxenOptions = {
