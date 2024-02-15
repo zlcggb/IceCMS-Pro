@@ -89,7 +89,9 @@ export const getCaptchaCode = () => {
 
 /** 登录接口 */
 export const loginByPassword = (data: LoginByPasswordDTO) => {
-  return http.request<ResponseData<TokenDTO>>("get", "/User/login", { data });
+  return http.request<ResponseData<TokenDTO>>("post", "/User/login", {
+    params: data
+ });
 };
 
 /** 获取当前登录用户接口 */
