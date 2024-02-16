@@ -23,6 +23,7 @@ buttons:
   hscontentFullScreen: 内容区全屏
   hscontentExitFullScreen: 内容区退出全屏
 menus:
+  hsPayMent: 支付配置
   hsTag-settings: 标签设置
   hsOrderManagement: 订单管理
   hsMemberManagement: 会员管理

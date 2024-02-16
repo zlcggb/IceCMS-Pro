@@ -19,6 +19,15 @@ export default {
         title: $t("menus.hsStoreOverview"),
         showParent: true
       }
+    },{
+      path: "/store-management/pay-ment",
+      name: "PayMent",
+      component: () => import("@/views/store-management/pay-ment/index.vue"),
+      meta: {
+        icon: "member",
+        title: $t("menus.hsPayMent"),
+        showParent: true
+      }
     },
     {
       path: "/store-management/member-management",
