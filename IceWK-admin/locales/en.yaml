@@ -23,6 +23,7 @@ buttons:
   hscontentFullScreen: Content FullScreen
   hscontentExitFullScreen: Content ExitFullScreen
 menus:
+  hsTag-settings: Tag Settings
   hsOrderManagement: Order Management
   hsMemberManagement: Member Management
   hsStoreOverview: Store Overview

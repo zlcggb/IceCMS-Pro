@@ -1,4 +1,5 @@
 import type { RouteRecordName } from "vue-router";
+import { DictionaryData } from "../../api/common/login";
 
 export type cacheType = {
   mode: string;
@@ -36,6 +37,14 @@ export type setType = {
   hiddenSideBar: boolean;
 };
 
+// export type userType = {
+//   username?: string;
+//   roles?: Array<string>;
+//   /** 字典ListMap 用于下拉框直接展示 */
+//   dictionaryList: Map<String, Array<DictionaryData>>;
+//   /** 字典MapMap 用于匹配值展示 */
+//   dictionaryMap: Record<string, Record<string, DictionaryData>>;
+// };
 export type userType = {
   username?: string;
   roles?: Array<string>;

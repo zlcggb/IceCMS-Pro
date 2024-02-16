@@ -35,6 +35,10 @@ import Info from "@iconify-icons/ri/information-line";
 
 import * as CommonAPI from "@/api/common/login";
 
+import {
+  setTokenFromBackend
+} from "@/utils/auth";
+
 defineOptions({
   name: "Login"
 });
@@ -46,9 +50,8 @@ const loading = ref(false);
 const checked = ref(false);
 const disabled = ref(false);
 const ruleFormRef = ref<FormInstance>();
-const currentPage = computed(() => {
-  return useUserStoreHook().currentPage;
-});
+// 判断登录页面显示哪个组件（0：登录（默认）、1：手机登录、2：二维码登录、3：注册、4：忘记密码）
+const currentPage = ref(0);
 
 const { t } = useI18n();
 const { initStorage } = useLayout();
@@ -74,7 +77,7 @@ const onLogin = async (formEl: FormInstance | undefined) => {
           password: ruleForm.password
         })
         .then(({ data }) => {
-          console.log(data);
+          // console.log(data);
            // 获取后端路由
           initRouter().then(() => {
             router.push(getTopMenu(true).path);
@@ -82,14 +85,6 @@ const onLogin = async (formEl: FormInstance | undefined) => {
           });
           // 登录成功后 将token存储到sessionStorage中
           setTokenFromBackend(data);
-          // // 获取后端路由
-          // initRouter().then(() => {
-          //   router.push(getTopMenu(true).path);
-          //   message("登录成功", { type: "success" });
-          // });
-          // if (isRememberMe.value) {
-          //   savePassword(ruleForm.password);
-          // }
         })
         .catch(() => {
           loading.value = false;
@@ -285,8 +280,7 @@ watch(loginDay, value => {
                   <el-button
                     link
                     type="primary"
-                    @click="useUserStoreHook().SET_CURRENTPAGE(4)"
-                  >
+                    @click="currentPage = 4">
                     {{ t("login.forget") }}
                   </el-button>
                 </div>
@@ -311,7 +305,7 @@ watch(loginDay, value => {
                     :key="index"
                     class="w-full mt-4"
                     size="default"
-                    @click="useUserStoreHook().SET_CURRENTPAGE(index + 1)"
+                    @click="currentPage = item.page"
                   >
                     {{ t(item.title) }}
                   </el-button>

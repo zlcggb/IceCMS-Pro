@@ -1,15 +1,47 @@
-
-
 <template>
-  <el-card shadow="never">
-    <template #header>
-      <div class="card-header">
-        <span class="font-medium">自定义防抖、截流、文本复制、长按指令</span>
-      </div>
-    </template>
-    <div class="mb-2">
-      防抖指令（连续输入，只会执行第一次点击事件，立即执行）
+  <div class="app-container">
+    <el-radio-group v-model="selectedMenu" size="medium" class="menu-container">
+      <el-radio-button label="siteConfig">网站配置</el-radio-button>
+      <el-radio-button label="articleConfig">文章设置</el-radio-button>
+      <el-radio-button label="resourceConfig">资源设置</el-radio-button>
+      <el-radio-button label="homeConfig">首页设置</el-radio-button>
+    </el-radio-group>
+    <div class="content-container">
+      <component :is="currentComponent" />
     </div>
-  </el-card>
+  </div>
 </template>
 
+<script setup>
+import { ref, computed } from 'vue';
+import SiteConfig from './components/SiteConfig.vue';
+import ArticleConfig from './components/ArticleConfig.vue';
+import ResourceConfig from './components/ResourceConfig.vue';
+import HomeConfig from './components/HomeConfig.vue';
+
+const selectedMenu = ref('siteConfig'); // 默认选中网站配置
+
+const componentsMap = {
+  siteConfig: SiteConfig,
+  articleConfig: ArticleConfig,
+  resourceConfig: ResourceConfig,
+  homeConfig: HomeConfig,
+};
+
+const currentComponent = computed(() => componentsMap[selectedMenu.value]);
+</script>
+
+<style scoped>
+.app-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.menu-container {
+  margin-bottom: 10; /* 移除按钮和内容之间的间隔 */
+}
+
+.content-container {
+  margin-top: -1px; /* 如果需要，可以进一步减少或移除间隔 */
+}
+</style>

@@ -1,6 +1,7 @@
 import Cookies from "js-cookie";
 import { storageLocal } from "@pureadmin/utils";
 import { useUserStoreHook } from "@/store/modules/user";
+import { TokenDTO } from "@/api/common/login";
 
 export interface DataInfo<T> {
   /** token */
@@ -24,6 +25,34 @@ export const TokenKey = "authorized-token";
  * 再次打开浏览器需要重新登录系统
  * */
 export const multipleTabsKey = "multiple-tabs";
+export const sessionKey = "user-info";
+
+/**
+ * 后端处理token
+ */
+export function setTokenFromBackend(data): void {
+  console.log(data);
+  const cookieString = JSON.stringify(data);
+  Cookies.set(TokenKey, cookieString, {
+    sameSite: 'None', // 添加这一行
+    secure: true // 和这一行
+  });
+  Cookies.set(multipleTabsKey, 'multiple-tabs');
+  useUserStoreHook().SET_USERNAME(data.name);
+  // useUserStoreHook().SET_ROLES([data.currentUser.roleKey]);
+  // storageLocal().setItem(sessionKey, data);
+
+  // 创建一个符合 DataInfo<number> 接口的对象
+  const userInfo: DataInfo<number> = {
+    accessToken: data.token,
+    expires: Date.now() + 1000 * 60 * 60 * 24, // 假设过期时间为当前时间加一天
+    refreshToken: "your_refresh_token_here",
+    username: data.name,
+    roles: ["user_role_1"]
+  };
+  // 使用 storageLocal().setItem 方法存储 userInfo 对象到本地存储
+  localStorage.setItem(userKey, JSON.stringify(userInfo));
+}
 
 /** 获取`token` */
 export function getToken(): DataInfo<number> {
@@ -48,8 +77,8 @@ export function setToken(data: DataInfo<Date>) {
 
   expires > 0
     ? Cookies.set(TokenKey, cookieString, {
-        expires: (expires - Date.now()) / 86400000
-      })
+      expires: (expires - Date.now()) / 86400000
+    })
     : Cookies.set(TokenKey, cookieString);
 
   Cookies.set(
@@ -57,8 +86,8 @@ export function setToken(data: DataInfo<Date>) {
     "true",
     isRemembered
       ? {
-          expires: loginDay
-        }
+        expires: loginDay
+      }
       : {}
   );
 

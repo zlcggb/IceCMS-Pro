@@ -2,13 +2,16 @@ import { $t } from "@/plugins/i18n";
 
 const operates = [
   {
-    title: $t("login.phoneLogin")
+    title: $t("login.phoneLogin"),
+    page: 1
   },
   {
-    title: $t("login.qRCodeLogin")
+    title: $t("login.qRCodeLogin"),
+    page: 2
   },
   {
-    title: $t("login.register")
+    title: $t("login.register"),
+    page: 3
   }
 ];
 

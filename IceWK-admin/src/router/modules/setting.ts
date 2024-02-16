@@ -21,6 +21,16 @@ export default {
       }
     },
     {
+      path: "/settings/tag-settings",
+      name: "TagSettings",
+      component: () => import("@/views/settings/tag-settings/index.vue"),
+      meta: {
+        icon: "tag-settings",
+        title: $t("menus.hsTag-settings"),
+        showParent: true
+      }
+    },
+    {
       path: "/settings/image-upload",
       name: "ImageUploadSettings",
       component: () => import("@/views/settings/image-upload/index.vue"),
