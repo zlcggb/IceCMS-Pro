@@ -14,24 +14,19 @@ import java.util.List;
 @RequestMapping("/WebTag")
 public class WebAllTagController {
 
-    @Autowired
-    private AllTagMapper allTagMapper;
+  @Autowired private AllTagMapper allTagMapper;
 
-    @ApiOperation(value = "获取全部tag")
-    @GetMapping("/getAllTag")
-    public List<AllTag> getAllTag(
-    ) {
-        return allTagMapper.selectList(null);
-    }
+  @ApiOperation(value = "获取全部tag")
+  @GetMapping("/getAllTag")
+  public List<AllTag> getAllTag() {
+    return allTagMapper.selectList(null);
+  }
 
-    @ApiOperation(value = "根据id获取tag名称")
-    @GetMapping("/getTagByList/{id}")
-    public AllTag getTagByList(
-            @PathVariable("id") Integer id
-    ) {
-        QueryWrapper<AllTag> wrapper = new QueryWrapper<>();
-        wrapper.eq("id",id);
-        return allTagMapper.selectOne(wrapper);
-    }
-
+  @ApiOperation(value = "根据id获取tag名称")
+  @GetMapping("/getTagByList/{id}")
+  public AllTag getTagByList(@PathVariable("id") Integer id) {
+    QueryWrapper<AllTag> wrapper = new QueryWrapper<>();
+    wrapper.eq("id", id);
+    return allTagMapper.selectOne(wrapper);
+  }
 }

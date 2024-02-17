@@ -7,9 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 /**
- * <p>
- *  服务类
- * </p>
+ * 服务类
  *
  * @author admin
  * @since 2022-02-19
@@ -17,8 +15,7 @@ import java.util.List;
 @Repository
 public interface SquareCommentService extends IService<SquareComment> {
 
-    Integer GetCommentNum(Integer planetId);
-    List<SquareComment> VoList(Integer page, Integer limit);
+  Integer GetCommentNum(Integer planetId);
 
-
+  List<SquareComment> VoList(Integer page, Integer limit);
 }

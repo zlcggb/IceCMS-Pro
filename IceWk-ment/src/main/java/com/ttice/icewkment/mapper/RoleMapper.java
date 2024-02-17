@@ -5,14 +5,10 @@ import com.ttice.icewkment.entity.Role;
 import org.springframework.stereotype.Repository;
 
 /**
- * <p>
- *  Mapper 接口
- * </p>
+ * Mapper 接口
  *
  * @author admin
  * @since 2022-01-13
  */
 @Repository
-public interface RoleMapper extends BaseMapper<Role> {
-
-}
+public interface RoleMapper extends BaseMapper<Role> {}

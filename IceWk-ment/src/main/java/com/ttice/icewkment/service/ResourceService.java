@@ -9,9 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 /**
- * <p>
- *  服务类
- * </p>
+ * 服务类
  *
  * @author admin
  * @since 2022-03-28
@@ -19,14 +17,13 @@ import java.util.List;
 @Repository
 public interface ResourceService extends IService<Resource> {
 
-    ResourcePageVO VoList(Integer page, Integer limit);
+  ResourcePageVO VoList(Integer page, Integer limit);
 
-    ResourcePageVO VoListFilter(Integer page, Integer limit, Integer rclass, String filter);
+  ResourcePageVO VoListFilter(Integer page, Integer limit, Integer rclass, String filter);
 
-    List<ResourceVO> ClassVoList(Integer id);
+  List<ResourceVO> ClassVoList(Integer id);
 
-    List<ResourceVO> GetNewResource(Integer num,String filter);
+  List<ResourceVO> GetNewResource(Integer num, String filter);
 
-    ResourcePageVO FindVoList(Integer page, Integer limit, String content);
-
+  ResourcePageVO FindVoList(Integer page, Integer limit, String content);
 }

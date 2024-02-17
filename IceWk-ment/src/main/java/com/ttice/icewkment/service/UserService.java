@@ -5,9 +5,7 @@ import com.ttice.icewkment.entity.User;
 import org.springframework.stereotype.Repository;
 
 /**
- * <p>
- *  服务类
- * </p>
+ * 服务类
  *
  * @author admin
  * @since 2022-01-13
@@ -15,6 +13,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserService extends IService<User> {
 
-    User GetUserInfoById(Integer id);
-
+  User GetUserInfoById(Integer id);
 }

@@ -5,9 +5,9 @@ import lombok.Data;
 
 @Data
 @TableName("t_product")
-public class Product extends BaseEntity{
+public class Product extends BaseEntity {
 
-    private String title; //商品名称
+  private String title; // 商品名称
 
-    private Integer price; //价格（分）
+  private Integer price; // 价格（分）
 }

@@ -8,10 +8,6 @@ import lombok.EqualsAndHashCode;
 import java.io.Serializable;
 
 /**
- * <p>
- *
- * </p>
- *
  * @author admin
  * @since 2022-01-13
  */
@@ -19,12 +15,10 @@ import java.io.Serializable;
 @EqualsAndHashCode(callSuper = false)
 public class Follows implements Serializable {
 
-    @TableId(type = IdType.AUTO)
-    private Integer id;
+  @TableId(type = IdType.AUTO)
+  private Integer id;
 
-    private Integer followerId;
+  private Integer followerId;
 
-    private Integer followingId;
-
-
+  private Integer followingId;
 }

@@ -9,10 +9,6 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * <p>
- *
- * </p>
- *
  * @author admin
  * @since 2022-01-13
  */
@@ -20,16 +16,12 @@ import java.util.Date;
 @EqualsAndHashCode(callSuper = false)
 public class EmailDetection implements Serializable {
 
-    @TableId(type = IdType.AUTO)
-    private Integer id;
+  @TableId(type = IdType.AUTO)
+  private Integer id;
 
-    private String email;
+  private String email;
 
-    private String code;
+  private String code;
 
-    private Date time;
-
-
-
+  private Date time;
 }
-

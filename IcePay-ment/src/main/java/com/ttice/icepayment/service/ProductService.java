@@ -5,6 +5,4 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ProductService extends IService<Product> {
-
-}
+public interface ProductService extends IService<Product> {}

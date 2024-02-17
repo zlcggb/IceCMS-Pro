@@ -1,12 +1,14 @@
 package com.ttice.icewkment.controller;
 
-
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.ttice.icewkment.Util.MathUtils;
 import com.ttice.icewkment.commin.vo.ArticleClassPageVO;
 import com.ttice.icewkment.commin.vo.ClassNameVO;
+import com.ttice.icewkment.entity.Article;
 import com.ttice.icewkment.entity.ArticleClass;
 import com.ttice.icewkment.mapper.ArticleClassMapper;
 import com.ttice.icewkment.service.ArticleClassService;
+import com.ttice.icewkment.service.ArticleService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -19,9 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * <p>
- *  前端控制器
- * </p>
+ * 前端控制器
  *
  * @author admin
  * @since 2022-02-19
@@ -31,85 +31,101 @@ import java.util.List;
 @RequestMapping("/articleClass")
 public class ArticleClassController {
 
-    @Autowired
-    private ArticleClassService articleClassService;
+  @Autowired private ArticleClassService articleClassService;
 
-    @Autowired
-    private ArticleClassMapper articleClassMapper;
+  @Autowired private ArticleClassMapper articleClassMapper;
 
-    @RequiresAuthentication  //需要登陆认证的接口
-    @ApiOperation(value = "新建文章分类")
-    @ApiImplicitParam(name = "articleClass",value = "文章分类对象",required = true)
-    @PostMapping("/newArticleClass")
-    public int newArticleClass(
-            @RequestBody ArticleClass articleClass
-    ) {
+  @Autowired private ArticleService articleService;
 
-        QueryWrapper<ArticleClass> wrapper= new QueryWrapper<ArticleClass>();
-        wrapper.eq("name", articleClass.getName());
-        ArticleClass userjudje = articleClassService.getOne(wrapper);
-        if(userjudje != null){
-            //该分类已存在
-            return 143;
-        }
-        return this.articleClassMapper.insert(articleClass);
+  @RequiresAuthentication // 需要登陆认证的接口
+  @ApiOperation(value = "新建文章分类")
+  @ApiImplicitParam(name = "articleClass", value = "文章分类对象", required = true)
+  @PostMapping("/newArticleClass")
+  public int newArticleClass(@RequestBody ArticleClass articleClass) {
+
+    QueryWrapper<ArticleClass> wrapper = new QueryWrapper<ArticleClass>();
+    wrapper.eq("name", articleClass.getName());
+    ArticleClass userjudje = articleClassService.getOne(wrapper);
+    if (userjudje != null) {
+      // 该分类已存在
+      return 143;
     }
+    return this.articleClassMapper.insert(articleClass);
+  }
 
-    @RequiresAuthentication  //需要登陆认证的接口
-    @ApiOperation(value = "获取文章分类列表(分页)")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "page",value = "页数",required = true),
-            @ApiImplicitParam(name = "limit",value = "总量",required = true)
-    })
-    @PostMapping("/allArticleClass/{page}/{limit}")
-    public ArticleClassPageVO allArticleClass(
-            @PathVariable("page") Integer page,
-            @PathVariable("limit") Integer limit
-    ) {
-
-        return this.articleClassService.GetList(page,limit);
+  @RequiresAuthentication // 需要登陆认证的接口
+  @ApiOperation(value = "新增文章(修改)")
+  @ApiImplicitParam(name = "article", value = "文章", required = true)
+  @PostMapping("/create")
+  public Integer add(@RequestBody Article article) {
+    // 生成随机数注入
+    int number = MathUtils.randomDigitNumber(7);
+    article.setArticleStatus(number);
+    // 查询分类名称对应的id值
+    QueryWrapper<Article> wrapper = new QueryWrapper<>();
+    wrapper.eq("title", article.getTitle());
+    Article articleDB = articleService.getOne(wrapper);
+    QueryWrapper<ArticleClass> wrapperClass = new QueryWrapper<ArticleClass>();
+    wrapperClass.eq("name", article.getSortClass());
+    ArticleClass articleClass = articleClassMapper.selectOne(wrapperClass);
+    article.setSortClass(articleClass.getId().toString());
+    if (articleDB == null) {
+      articleService.save(article);
+    } else {
+      articleService.update(article, wrapper);
     }
+    return article.getId();
+  }
 
-    @RequiresAuthentication  //需要登陆认证的接口
-    @ApiOperation(value = "删除文章分类")
-    @ApiImplicitParam(name = "id",value = "id",required = true)
-    @GetMapping("/DeleteArticleClass/{id}")
-    public int DeleteArticleClass(
-            @PathVariable("id") Integer id
-    ){
-        return this.articleClassMapper.deleteById(id);
+  @RequiresAuthentication // 需要登陆认证的接口
+  @ApiOperation(value = "获取文章分类列表(分页)")
+  @ApiImplicitParams({
+    @ApiImplicitParam(name = "page", value = "页数", required = true),
+    @ApiImplicitParam(name = "limit", value = "总量", required = true)
+  })
+  @PostMapping("/allArticleClass/{page}/{limit}")
+  public ArticleClassPageVO allArticleClass(
+      @PathVariable("page") Integer page, @PathVariable("limit") Integer limit) {
+
+    return this.articleClassService.GetList(page, limit);
+  }
+
+  @RequiresAuthentication // 需要登陆认证的接口
+  @ApiOperation(value = "删除文章分类")
+  @ApiImplicitParam(name = "id", value = "id", required = true)
+  @GetMapping("/DeleteArticleClass/{id}")
+  public int DeleteArticleClass(@PathVariable("id") Integer id) {
+    return this.articleClassMapper.deleteById(id);
+  }
+
+  @RequiresAuthentication // 需要登陆认证的接口
+  @ApiOperation(value = "获取全部分类列表")
+  @GetMapping("/getAllClassName")
+  public List<ClassNameVO> getAllClassName() {
+    List<ClassNameVO> result = new ArrayList<>();
+
+    QueryWrapper<ArticleClass> wrapper = new QueryWrapper<ArticleClass>();
+    wrapper.select("name");
+    ClassNameVO classNameVO = null;
+    List<ArticleClass> articleClasses = articleClassMapper.selectList(wrapper);
+    for (ArticleClass articleClass : articleClasses) {
+      classNameVO = new ClassNameVO();
+      BeanUtils.copyProperties(articleClass, classNameVO);
+      result.add(classNameVO);
     }
+    return result;
+  }
 
-    @RequiresAuthentication  //需要登陆认证的接口
-    @ApiOperation(value = "获取全部分类列表")
-    @GetMapping("/getAllClassName")
-    public List<ClassNameVO> getAllClassName(){
-        List<ClassNameVO> result = new ArrayList<>();
+  @RequiresAuthentication // 需要登陆认证的接口
+  @ApiOperation(value = "根据id值查询对应的分类名称")
+  @ApiImplicitParam(name = "id", value = "id", required = true)
+  @GetMapping("/getClassNameById/{id}")
+  public String getClassNameById(@PathVariable("id") String id) {
 
-        QueryWrapper<ArticleClass> wrapper= new QueryWrapper<ArticleClass>();
-        wrapper.select("name");
-        ClassNameVO classNameVO = null;
-        List<ArticleClass> articleClasses = articleClassMapper.selectList(wrapper);
-        for (ArticleClass articleClass : articleClasses) {
-            classNameVO = new ClassNameVO();
-            BeanUtils.copyProperties(articleClass,classNameVO);
-            result.add(classNameVO);
-        }
-        return result;
-    }
+    QueryWrapper<ArticleClass> wrapper = new QueryWrapper<ArticleClass>();
+    wrapper.eq("id", id);
 
-    @RequiresAuthentication  //需要登陆认证的接口
-    @ApiOperation(value = "根据id值查询对应的分类名称")
-    @ApiImplicitParam(name = "id",value = "id",required = true)
-    @GetMapping("/getClassNameById/{id}")
-    public String getClassNameById(
-            @PathVariable("id") Integer id
-    ){
-        QueryWrapper<ArticleClass> wrapper= new QueryWrapper<ArticleClass>();
-        wrapper.eq("id",id);
-
-        ArticleClass articleClass = articleClassMapper.selectOne(wrapper);
-        return articleClass.getName();
-    }
+    ArticleClass articleClass = articleClassMapper.selectOne(wrapper);
+    return articleClass.getName();
+  }
 }
-

@@ -5,13 +5,10 @@ import com.ttice.icewkment.entity.Setting;
 import org.springframework.stereotype.Repository;
 
 /**
- * <p>
- *  Mapper 接口
- * </p>
+ * Mapper 接口
  *
  * @author admin
  * @since 2022-02-19
  */
 @Repository
-public interface SettingMapper extends BaseMapper<Setting> {
-}
+public interface SettingMapper extends BaseMapper<Setting> {}

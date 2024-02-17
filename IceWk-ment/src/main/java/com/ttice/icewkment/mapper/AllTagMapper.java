@@ -5,5 +5,4 @@ import com.ttice.icewkment.entity.AllTag;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface AllTagMapper extends BaseMapper<AllTag>{
-}
+public interface AllTagMapper extends BaseMapper<AllTag> {}

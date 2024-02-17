@@ -21,9 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * <p>
- *  服务实现类
- * </p>
+ * 服务实现类
  *
  * @author admin
  * @since 2022-02-19
@@ -31,64 +29,59 @@ import java.util.List;
 @Service
 public class SquareServiceImpl extends ServiceImpl<SquareMapper, Square> implements SquareService {
 
+  @Autowired private UserMapper userMapper;
 
-    @Autowired
-    private UserMapper userMapper;
+  @Autowired private SquareCommentService squareCommentService;
 
-    @Autowired
-    private SquareCommentService squareCommentService;
+  @Autowired private SquareMapper squareMapper;
 
-    @Autowired
-    private SquareMapper squareMapper;
+  @Autowired private SquareClassService squareClassService;
 
-    @Autowired
-    private SquareClassService squareClassService;
+  @Override
+  public SquarePageVO VoList(String otherName, Integer page, Integer limit) {
 
-    @Override
-    public SquarePageVO VoList(String otherName, Integer page, Integer limit) {
+    Page<Square> squarePage = new Page<>(page, limit);
 
-        Page<Square> squarePage = new Page<>(page,limit);
+    // 查询分类名称对应的id值
+    QueryWrapper<SquareClass> queryWrapperSquareClass = new QueryWrapper<SquareClass>();
+    queryWrapperSquareClass.eq("other_name", otherName);
+    SquareClass SquareClass = squareClassService.getOne(queryWrapperSquareClass);
+    Integer SquareClassId = SquareClass.getId();
 
-        //查询分类名称对应的id值
-        QueryWrapper<SquareClass> queryWrapperSquareClass = new QueryWrapper<SquareClass>();
-        queryWrapperSquareClass.eq("other_name", otherName);
-        SquareClass SquareClass = squareClassService.getOne(queryWrapperSquareClass);
-        Integer SquareClassId = SquareClass.getId();
+    List<SquareVO> result = new ArrayList<>();
+    QueryWrapper<Square> queryWrapper = new QueryWrapper<Square>();
+    queryWrapper.select().orderByDesc("add_time");
+    queryWrapper.eq("sort_class", SquareClassId);
+    Page<Square> resultPage = squareMapper.selectPage(squarePage, queryWrapper);
 
-        List<SquareVO> result = new ArrayList<>();
-        QueryWrapper<Square> queryWrapper = new QueryWrapper<Square>();
-        queryWrapper.select().orderByDesc("add_time");
-        queryWrapper.eq("sort_class", SquareClassId);
-        Page<Square> resultPage = squareMapper.selectPage(squarePage,queryWrapper);
+    List<Square> squares = resultPage.getRecords();
+    for (Square square : squares) {
 
-        List<Square> squares = resultPage.getRecords();
-        for (Square square : squares) {
+      // 根据用户id获取名称信息
+      // id是内容发布者id
+      Integer authors = square.getAuthor();
+      User users = userMapper.searchId(authors);
+      String username = users.getName();
+      String authorImg = users.getProfile();
+      SquareVO squareVO = new SquareVO();
+      squareVO.setAuthor(username);
+      squareVO.setUserid(authors);
+      squareVO.setImage(square.getImage());
+      squareVO.setAuthorImg(authorImg);
+      // 查询分类名称对应的id值
+      SquareClass SquareClassIs = squareClassService.getById(square.getSortClass());
+      squareVO.setSortName(SquareClassIs.getName());
 
-            //根据用户id获取名称信息
-            //id是内容发布者id
-            Integer authors = square.getAuthor();
-            User users = userMapper.searchId(authors);
-            String username = users.getName();
-            String authorImg = users.getProfile();
-            SquareVO squareVO = new SquareVO();
-            squareVO.setAuthor(username);
-            squareVO.setUserid(authors);
-            squareVO.setImage(square.getImage());
-            squareVO.setAuthorImg(authorImg);
-            //查询分类名称对应的id值
-            SquareClass SquareClassIs = squareClassService.getById(square.getSortClass());
-            squareVO.setSortName(SquareClassIs.getName());
+      Integer planetCommentNum = squareCommentService.GetCommentNum(square.getId());
+      squareVO.setCommentNum(planetCommentNum);
 
-            Integer planetCommentNum = squareCommentService.GetCommentNum(square.getId());
-            squareVO.setCommentNum(planetCommentNum);
-
-            BeanUtils.copyProperties(square,squareVO);
-            result.add(squareVO);
-        }
-        SquarePageVO squarePageVO = new SquarePageVO();
-        squarePageVO.setData(result);
-        squarePageVO.setTotal(resultPage.getTotal());
-        squarePageVO.setPages(resultPage.getPages());
-        return squarePageVO;
+      BeanUtils.copyProperties(square, squareVO);
+      result.add(squareVO);
     }
+    SquarePageVO squarePageVO = new SquarePageVO();
+    squarePageVO.setData(result);
+    squarePageVO.setTotal(resultPage.getTotal());
+    squarePageVO.setPages(resultPage.getPages());
+    return squarePageVO;
+  }
 }

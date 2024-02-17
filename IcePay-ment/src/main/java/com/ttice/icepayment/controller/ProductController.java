@@ -1,6 +1,5 @@
 package com.ttice.icepayment.controller;
 
-
 import com.ttice.icepayment.entity.Product;
 import com.ttice.icepayment.service.ProductService;
 import com.ttice.icepayment.vo.R;
@@ -14,27 +13,26 @@ import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
 
-@CrossOrigin //开放前端的跨域访问
+@CrossOrigin // 开放前端的跨域访问
 @io.swagger.annotations.Api(tags = "测试商品管理")
 @RestController
 @RequestMapping("/api/product")
 public class ProductController {
 
-     @Resource
-     private ProductService productService;
+  @Resource private ProductService productService;
 
-     @ApiOperation("测试接口")
-     @GetMapping("/test")
-     public R test(){
+  @ApiOperation("测试接口")
+  @GetMapping("/test")
+  public R test() {
 
-         return R.ok().data("message", "hello").data("now", new Date());
-     }
-     @ApiOperation("商品列表")
-     @GetMapping("/list")
-     public R list(){
+    return R.ok().data("message", "hello").data("now", new Date());
+  }
 
-         List<Product> list = productService.list();
-         return R.ok().data("productList", list);
-     }
+  @ApiOperation("商品列表")
+  @GetMapping("/list")
+  public R list() {
+
+    List<Product> list = productService.list();
+    return R.ok().data("productList", list);
+  }
 }
-

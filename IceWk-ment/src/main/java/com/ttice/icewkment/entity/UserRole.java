@@ -8,10 +8,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * <p>
- *
- * </p>
- *
  * @author admin
  * @since 2022-01-13
  */
@@ -19,7 +15,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class UserRole implements Serializable {
 
-    private Integer userId;
+  private Integer userId;
 
-    private Integer roleId;
+  private Integer roleId;
 }

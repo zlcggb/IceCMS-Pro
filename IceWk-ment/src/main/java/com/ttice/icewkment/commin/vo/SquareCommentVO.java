@@ -14,33 +14,30 @@ import java.util.List;
 @Data
 public class SquareCommentVO {
 
-    private static final long serialVersionUID=1L;
+  private static final long serialVersionUID = 1L;
 
-    private Integer id;
-    private Integer parentId;
-    private Integer userId;
-    private Integer toUserId;
-    private Integer postId;
-    private Integer loveNum;
-    private String responder;
-    private String reviewers;
-    private Integer responderId;
-    private Integer reviewersId;
-    private String profile;
-    private String content;
-    private Integer status;
-    /**
-     * 添加时间
-     */
-    @ApiModelProperty(value = "创建时间")
-    @TableField(fill = FieldFill.INSERT)//创建注解::自动填充 -DEFAULT没有时，INSERT插入时
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
-    // @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
-    // 返回前端自动把Data类型转换为json类型
-    private Date addTime;
-    /**
-     * 回复列表
-     */
-    private List<SquareComment> reply = new ArrayList<>();
+  private Integer id;
+  private Integer parentId;
+  private Integer userId;
+  private Integer toUserId;
+  private Integer postId;
+  private Integer loveNum;
+  private String responder;
+  private String reviewers;
+  private Integer responderId;
+  private Integer reviewersId;
+  private String profile;
+  private String content;
+  private Integer status;
 
+  /** 添加时间 */
+  @ApiModelProperty(value = "创建时间")
+  @TableField(fill = FieldFill.INSERT) // 创建注解::自动填充 -DEFAULT没有时，INSERT插入时
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+  // @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
+  // 返回前端自动把Data类型转换为json类型
+  private Date addTime;
+
+  /** 回复列表 */
+  private List<SquareComment> reply = new ArrayList<>();
 }

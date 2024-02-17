@@ -15,13 +15,11 @@ import java.util.List;
 @RequestMapping("/Tag")
 public class AllTagController {
 
-    @Autowired
-    private AllTagMapper allTagMapper;
+  @Autowired private AllTagMapper allTagMapper;
 
-    @ApiOperation(value = "获取全部tag")
-    @GetMapping("/getAllTag")
-    public List<AllTag> getAllTag(
-    ) {
-        return allTagMapper.selectList(null);
-    }
+  @ApiOperation(value = "获取全部tag")
+  @GetMapping("/getAllTag")
+  public List<AllTag> getAllTag() {
+    return allTagMapper.selectList(null);
+  }
 }

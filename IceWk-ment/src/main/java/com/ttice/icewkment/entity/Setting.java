@@ -6,10 +6,6 @@ import lombok.EqualsAndHashCode;
 import java.io.Serializable;
 
 /**
- * <p>
- *
- * </p>
- *
  * @author admin
  * @since 2022-01-13
  */
@@ -17,31 +13,31 @@ import java.io.Serializable;
 @EqualsAndHashCode(callSuper = false)
 public class Setting implements Serializable {
 
-    private static final long serialVersionUID=1L;
+  private static final long serialVersionUID = 1L;
 
-    private Integer id;
+  private Integer id;
 
-    private String beian;
+  private String beian;
 
-    private String banquan;
+  private String banquan;
 
-    private boolean comment_show;
+  private boolean comment_show;
 
-    private String sitTitle;
+  private String sitTitle;
 
-    private String sitLogo;
+  private String sitLogo;
 
-    private boolean imageFormat;
+  private boolean imageFormat;
 
-    private String cosIntage;
+  private String cosIntage;
 
-    private String cosBucketName;
+  private String cosBucketName;
 
-    private String cosSecretId;
+  private String cosSecretId;
 
-    private String cosSecretKey;
+  private String cosSecretKey;
 
-    private String cosClientConfig;
+  private String cosClientConfig;
 
-    private Boolean isCos;
+  private Boolean isCos;
 }

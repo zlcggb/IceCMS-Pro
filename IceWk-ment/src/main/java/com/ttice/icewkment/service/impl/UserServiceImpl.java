@@ -9,9 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * <p>
- *  服务实现类
- * </p>
+ * 服务实现类
  *
  * @author admin
  * @since 2022-01-13
@@ -19,14 +17,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
 
-    @Autowired
-    private UserMapper userMapper;
+  @Autowired private UserMapper userMapper;
 
-    @Override
-    public User GetUserInfoById(Integer id) {
-        //根据用户id获取名称信息
-        //id是内容发布者id
-        User user = userMapper.selectById(id);
-        return user;
-    }
+  @Override
+  public User GetUserInfoById(Integer id) {
+    // 根据用户id获取名称信息
+    // id是内容发布者id
+    User user = userMapper.selectById(id);
+    return user;
+  }
 }

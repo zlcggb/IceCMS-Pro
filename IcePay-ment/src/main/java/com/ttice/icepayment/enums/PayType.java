@@ -6,19 +6,12 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum PayType {
-    /**
-     * 微信
-     */
-    WXPAY("微信"),
+  /** 微信 */
+  WXPAY("微信"),
 
+  /** 支付宝 */
+  ALIPAY("支付宝");
 
-    /**
-     * 支付宝
-     */
-    ALIPAY("支付宝");
-
-    /**
-     * 类型
-     */
-    private final String type;
+  /** 类型 */
+  private final String type;
 }

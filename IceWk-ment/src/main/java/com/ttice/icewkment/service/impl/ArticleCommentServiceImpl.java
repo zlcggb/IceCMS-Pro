@@ -10,16 +10,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ArticleCommentServiceImpl extends ServiceImpl<ArticleCommentMapper, ArticleComment> implements ArticleCommentService {
+public class ArticleCommentServiceImpl extends ServiceImpl<ArticleCommentMapper, ArticleComment>
+    implements ArticleCommentService {
 
-    @Autowired
-    private ArticleCommentMapper articleCommentMapper;
+  @Autowired private ArticleCommentMapper articleCommentMapper;
 
-    @Override
-    public int GetCommentNum(Integer articleId) {
-        QueryWrapper<ArticleComment> wrapper = new QueryWrapper<>();
-        wrapper.eq("article_id",articleId);
-        return articleCommentMapper.selectCount(wrapper);
-    }
-
+  @Override
+  public int GetCommentNum(Integer articleId) {
+    QueryWrapper<ArticleComment> wrapper = new QueryWrapper<>();
+    wrapper.eq("article_id", articleId);
+    return articleCommentMapper.selectCount(wrapper);
+  }
 }

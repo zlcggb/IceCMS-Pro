@@ -8,7 +8,7 @@ import java.io.IOException;
 @Repository
 public interface PaymentInfoService {
 
-    void createWxPaymentInfo(String plainText);
+  void createWxPaymentInfo(String plainText);
 
-    void createAliPaymentInfo(HttpServletRequest request) throws IOException;
+  void createAliPaymentInfo(HttpServletRequest request) throws IOException;
 }

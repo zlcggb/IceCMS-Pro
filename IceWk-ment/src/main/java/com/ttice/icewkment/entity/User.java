@@ -10,68 +10,63 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * <p>
- * 
- * </p>
- *
  * @author admin
  * @since 2022-01-13
  */
 @Data
-  @EqualsAndHashCode(callSuper = false)
-    public class User implements Serializable {
+@EqualsAndHashCode(callSuper = false)
+public class User implements Serializable {
 
-    private static final long serialVersionUID=1L;
+  private static final long serialVersionUID = 1L;
 
-    @TableId(type = IdType.AUTO)
-    private Integer userId;
+  @TableId(type = IdType.AUTO)
+  private Integer userId;
 
-    private Integer userage;
+  private Integer userage;
 
-    private String intro;
+  private String intro;
 
-    private String gender;
+  private String gender;
 
-    private String name;
+  private String name;
 
-    @TableField("USERNAME")
-    private String username;
+  @TableField("USERNAME")
+  private String username;
 
-    @TableField("PASSWORD")
-    private String password;
+  @TableField("PASSWORD")
+  private String password;
 
-    private String email;
+  private String email;
 
-    private String role;
+  private String role;
 
-    private String profile;
+  private String profile;
 
-    private String status;
+  private String status;
 
-    private Date created;
+  private Date created;
 
-    private Date lastLogin;
+  private Date lastLogin;
 
-    //从开始之日算起
-    private Date vipValidDate;
+  // 从开始之日算起
+  private Date vipValidDate;
 
-    //加上30/90/365/之后的日期
-    private Date vipExpireDate;
+  // 加上30/90/365/之后的日期
+  private Date vipExpireDate;
 
-    //积分
-    private Integer integral;
+  // 积分
+  private Integer integral;
 
-    //会员是否禁用
-    private Boolean vipDisableTip;
+  // 会员是否禁用
+  private Boolean vipDisableTip;
 
-    private String height;
+  private String height;
 
-    private String birthday;
+  private String birthday;
 
-    private String academic;
+  private String academic;
 
-    private String monthly;
+  private String monthly;
 
-    private String permanent;
-
+  private String permanent;
 }

@@ -7,6 +7,6 @@ import java.util.List;
 
 @Data
 public class ArticleClassPageVO {
-    private List<ArticleClass> data;
-    private Long total;
+  private List<ArticleClass> data;
+  private Long total;
 }

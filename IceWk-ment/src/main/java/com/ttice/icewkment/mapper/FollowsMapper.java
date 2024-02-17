@@ -5,5 +5,4 @@ import com.ttice.icewkment.entity.Follows;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface FollowsMapper extends BaseMapper<Follows>{
-}
+public interface FollowsMapper extends BaseMapper<Follows> {}

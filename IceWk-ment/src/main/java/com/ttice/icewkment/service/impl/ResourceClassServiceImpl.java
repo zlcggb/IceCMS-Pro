@@ -16,45 +16,43 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * <p>
- *  服务实现类
- * </p>
+ * 服务实现类
  *
  * @author admin
  * @since 2022-03-28
  */
 @Service
-public class ResourceClassServiceImpl extends ServiceImpl<ResourceClassMapper, ResourceClass> implements ResourceClassService {
+public class ResourceClassServiceImpl extends ServiceImpl<ResourceClassMapper, ResourceClass>
+    implements ResourceClassService {
 
-    @Autowired
-    private ResourceClassMapper resourceClassMapper;
+  @Autowired private ResourceClassMapper resourceClassMapper;
 
-    @Autowired
-    private ResourceMapper resourceMapper;
+  @Autowired private ResourceMapper resourceMapper;
 
-    @Override
-    public ResourceClassPageVO GetList(Integer page, Integer limit) {
-        Page<ResourceClass> ResourceClassPage = new Page<>(page,limit);
-        ResourceClassPageVO classPageVO = new ResourceClassPageVO();
-        List<ResourceClass> result = new ArrayList<>();
+  @Override
+  public ResourceClassPageVO GetList(Integer page, Integer limit) {
+    Page<ResourceClass> ResourceClassPage = new Page<>(page, limit);
+    ResourceClassPageVO classPageVO = new ResourceClassPageVO();
+    List<ResourceClass> result = new ArrayList<>();
 
-        QueryWrapper<ResourceClass> wrapper= new QueryWrapper<ResourceClass>();
-        wrapper.orderByDesc("id");
+    QueryWrapper<ResourceClass> wrapper = new QueryWrapper<ResourceClass>();
+    wrapper.orderByDesc("id");
 
-        Page<ResourceClass> resultPage = this.resourceClassMapper.selectPage(ResourceClassPage, wrapper);
-        List<ResourceClass> resourceClasses = resultPage.getRecords();
-        for (ResourceClass resourceClasse : resourceClasses) {
-            Integer id = resourceClasse.getId();
-            QueryWrapper<Resource> queryWrapper = new QueryWrapper<>();
-            queryWrapper.eq("sort_class", id);
-            Integer count = resourceMapper.selectCount(queryWrapper);
-            resourceClasse.setNum(count);
-            result.add(resourceClasse);
-        }
-
-        long total = resultPage.getTotal();
-        classPageVO.setData(result);
-        classPageVO.setTotal(total);
-        return classPageVO;
+    Page<ResourceClass> resultPage =
+        this.resourceClassMapper.selectPage(ResourceClassPage, wrapper);
+    List<ResourceClass> resourceClasses = resultPage.getRecords();
+    for (ResourceClass resourceClasse : resourceClasses) {
+      Integer id = resourceClasse.getId();
+      QueryWrapper<Resource> queryWrapper = new QueryWrapper<>();
+      queryWrapper.eq("sort_class", id);
+      Integer count = resourceMapper.selectCount(queryWrapper);
+      resourceClasse.setNum(count);
+      result.add(resourceClasse);
     }
+
+    long total = resultPage.getTotal();
+    classPageVO.setData(result);
+    classPageVO.setTotal(total);
+    return classPageVO;
+  }
 }

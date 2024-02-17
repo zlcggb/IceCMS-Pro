@@ -6,10 +6,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * <p>
- *
- * </p>
- *
  * @author admin
  * @since 2022-01-13
  */
@@ -17,14 +13,13 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class DispositionCarousel implements Serializable {
 
-    private Integer id;
+  private Integer id;
 
-    private String title;
+  private String title;
 
-    private String introduce;
+  private String introduce;
 
-    private String button;
+  private String button;
 
-    private String img;
-
+  private String img;
 }

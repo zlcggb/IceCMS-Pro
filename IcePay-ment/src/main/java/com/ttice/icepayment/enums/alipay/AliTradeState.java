@@ -7,28 +7,18 @@ import lombok.Getter;
 @Getter
 public enum AliTradeState {
 
-    /**
-     * 支付成功
-     */
-    SUCCESS("TRADE_SUCCESS"),
+  /** 支付成功 */
+  SUCCESS("TRADE_SUCCESS"),
 
-    /**
-     * 未支付
-     */
-    NOTPAY("WAIT_BUYER_PAY"),
+  /** 未支付 */
+  NOTPAY("WAIT_BUYER_PAY"),
 
-    /**
-     * 已关闭
-     */
-    CLOSED("TRADE_CLOSED"),
+  /** 已关闭 */
+  CLOSED("TRADE_CLOSED"),
 
-    /**
-     * 交易结束，不可退款
-     */
-    REFUND("TRADE_FINISHED");
+  /** 交易结束，不可退款 */
+  REFUND("TRADE_FINISHED");
 
-    /**
-     * 类型
-     */
-    private final String type;
+  /** 类型 */
+  private final String type;
 }

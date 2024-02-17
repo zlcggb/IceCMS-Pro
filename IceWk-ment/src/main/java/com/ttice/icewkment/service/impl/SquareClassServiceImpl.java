@@ -16,35 +16,34 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class SquareClassServiceImpl extends ServiceImpl<SquareClassMapper, SquareClass> implements SquareClassService {
+public class SquareClassServiceImpl extends ServiceImpl<SquareClassMapper, SquareClass>
+    implements SquareClassService {
 
-    @Autowired
-    private SquareClassMapper squareClassMapper;
+  @Autowired private SquareClassMapper squareClassMapper;
 
-    @Autowired
-    private SquareMapper squareMapper;
+  @Autowired private SquareMapper squareMapper;
 
-    @Override
-    public SquareClassPageVO GetList(Integer page, Integer limit) {
-        Page<SquareClass> SquareClassPage = new Page<>(page,limit);
-        SquareClassPageVO classPageVO = new SquareClassPageVO();
-        List<SquareClass> result = new ArrayList<>();
-        QueryWrapper<SquareClass> wrapper= new QueryWrapper<>();
-        wrapper.orderByDesc("id");
+  @Override
+  public SquareClassPageVO GetList(Integer page, Integer limit) {
+    Page<SquareClass> SquareClassPage = new Page<>(page, limit);
+    SquareClassPageVO classPageVO = new SquareClassPageVO();
+    List<SquareClass> result = new ArrayList<>();
+    QueryWrapper<SquareClass> wrapper = new QueryWrapper<>();
+    wrapper.orderByDesc("id");
 
-        Page<SquareClass> resultPage = this.squareClassMapper.selectPage(SquareClassPage, wrapper);
-        List<SquareClass> squareClasses = resultPage.getRecords();
-        for (SquareClass squareClasse : squareClasses) {
-            Integer id = squareClasse.getId();
-            QueryWrapper<Square> queryWrapper = new QueryWrapper<>();
-            queryWrapper.eq("sort_class", id);
-            Integer count = squareMapper.selectCount(queryWrapper);
-            squareClasse.setNum(count);
-            result.add(squareClasse);
-        }
-        long total = resultPage.getTotal();
-        classPageVO.setData(result);
-        classPageVO.setTotal(total);
-        return classPageVO;
+    Page<SquareClass> resultPage = this.squareClassMapper.selectPage(SquareClassPage, wrapper);
+    List<SquareClass> squareClasses = resultPage.getRecords();
+    for (SquareClass squareClasse : squareClasses) {
+      Integer id = squareClasse.getId();
+      QueryWrapper<Square> queryWrapper = new QueryWrapper<>();
+      queryWrapper.eq("sort_class", id);
+      Integer count = squareMapper.selectCount(queryWrapper);
+      squareClasse.setNum(count);
+      result.add(squareClasse);
     }
+    long total = resultPage.getTotal();
+    classPageVO.setData(result);
+    classPageVO.setTotal(total);
+    return classPageVO;
+  }
 }

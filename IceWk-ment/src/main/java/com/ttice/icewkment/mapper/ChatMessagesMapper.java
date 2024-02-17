@@ -5,5 +5,4 @@ import com.ttice.icewkment.entity.ChatMessages;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ChatMessagesMapper extends BaseMapper<ChatMessages> {
-}
+public interface ChatMessagesMapper extends BaseMapper<ChatMessages> {}

@@ -7,9 +7,7 @@ import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 
 /**
- * <p>
- *  Mapper 接口
- * </p>
+ * Mapper 接口
  *
  * @author admin
  * @since 2022-03-28
@@ -17,9 +15,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ResourceMapper extends BaseMapper<Resource> {
 
-    @Select("update resource set hits=IFNULL(hits,0)+1 where id = ${id}")
-    Boolean resourceBrowse(@Param("id") Integer id);
+  @Select("update resource set hits=IFNULL(hits,0)+1 where id = ${id}")
+  Boolean resourceBrowse(@Param("id") Integer id);
 
-    @Select("update resource set love_num=IFNULL(love_num,0)+1 where id = ${id}")
-    Boolean resourceLoveBrowse(@Param("id") Integer id);
+  @Select("update resource set love_num=IFNULL(love_num,0)+1 where id = ${id}")
+  Boolean resourceLoveBrowse(@Param("id") Integer id);
 }

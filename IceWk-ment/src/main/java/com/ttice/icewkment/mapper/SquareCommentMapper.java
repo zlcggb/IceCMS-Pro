@@ -7,9 +7,7 @@ import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 
 /**
- * <p>
- *  Mapper 接口
- * </p>
+ * Mapper 接口
  *
  * @author admin
  * @since 2022-02-19
@@ -17,8 +15,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface SquareCommentMapper extends BaseMapper<SquareComment> {
 
-    @Select("update square_comment set love_num=IFNULL(love_num,0)+1 where id = ${id}")
-    Boolean resourceLoveBrowse(@Param("id") Integer id);
-
+  @Select("update square_comment set love_num=IFNULL(love_num,0)+1 where id = ${id}")
+  Boolean resourceLoveBrowse(@Param("id") Integer id);
 }
-

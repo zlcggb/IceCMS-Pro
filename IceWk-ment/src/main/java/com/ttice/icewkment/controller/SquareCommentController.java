@@ -1,6 +1,5 @@
 package com.ttice.icewkment.controller;
 
-
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ttice.icewkment.entity.Square;
 import com.ttice.icewkment.entity.SquareComment;
@@ -18,9 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * <p>
- *  前端控制器
- * </p>
+ * 前端控制器
  *
  * @author admin
  * @since 2022-02-19
@@ -30,62 +27,49 @@ import java.util.List;
 @RequestMapping("/squareComment")
 public class SquareCommentController {
 
-    @Autowired
-    private SquareMapper squareMapper;
+  @Autowired private SquareMapper squareMapper;
 
-    @Autowired
-    private SquareService squareService;
+  @Autowired private SquareService squareService;
 
-    @Autowired
-    private SquareCommentMapper squareCommentMapper;
+  @Autowired private SquareCommentMapper squareCommentMapper;
 
-    @Autowired
-    private SquareClassService squareClassService;
+  @Autowired private SquareClassService squareClassService;
 
-    @Autowired
-    private UserMapper userMapper;
+  @Autowired private UserMapper userMapper;
 
-    @Autowired
-    private SquareCommentService squareCommentService;
+  @Autowired private SquareCommentService squareCommentService;
 
-    @ApiOperation(value = "获取全部圈子评论(分页)")
-    @ApiImplicitParam(name = "otherName",value = "otherName",required = true)
-    @GetMapping("/getAllSquare/{page}/{limit}")
-    public List<SquareComment> getAllArticle(
-            @PathVariable("page") Integer page,
-            @PathVariable("limit") Integer limit
-    ) {
+  @ApiOperation(value = "获取全部圈子评论(分页)")
+  @ApiImplicitParam(name = "otherName", value = "otherName", required = true)
+  @GetMapping("/getAllSquare/{page}/{limit}")
+  public List<SquareComment> getAllArticle(
+      @PathVariable("page") Integer page, @PathVariable("limit") Integer limit) {
 
-        return squareCommentService.VoList(page, limit);
-    }
+    return squareCommentService.VoList(page, limit);
+  }
 
-    @ApiOperation(value = "根据id删除圈子评论")
-    @ApiImplicitParam(name = "id",value = "文章id",required = true)
-    @GetMapping("/DelectSquareById/{id}")
-    public boolean DelectSquareById(
-            @PathVariable("id") Integer id
-    ) {
-        //根据id删除
-        QueryWrapper<SquareComment> wrapper= new QueryWrapper<SquareComment>();
-        wrapper.eq("id",id);
-        squareCommentMapper.delete(wrapper);
-        return this.squareCommentService.removeById(id);
-    }
+  @ApiOperation(value = "根据id删除圈子评论")
+  @ApiImplicitParam(name = "id", value = "文章id", required = true)
+  @GetMapping("/DelectSquareById/{id}")
+  public boolean DelectSquareById(@PathVariable("id") Integer id) {
+    // 根据id删除
+    QueryWrapper<SquareComment> wrapper = new QueryWrapper<SquareComment>();
+    wrapper.eq("id", id);
+    squareCommentMapper.delete(wrapper);
+    return this.squareCommentService.removeById(id);
+  }
 
-    @ApiOperation(value = "根据id修改圈子内容评论")
-    @ApiImplicitParam(name = "id",value = "文章id",required = true)
-    @GetMapping("/ChangeSquareById/{id}/{content}")
-    public Integer ChangeSquareById(
-            @PathVariable("id") Integer id,
-            @PathVariable("content") String content
-    ) {
+  @ApiOperation(value = "根据id修改圈子内容评论")
+  @ApiImplicitParam(name = "id", value = "文章id", required = true)
+  @GetMapping("/ChangeSquareById/{id}/{content}")
+  public Integer ChangeSquareById(
+      @PathVariable("id") Integer id, @PathVariable("content") String content) {
 
-        SquareComment squareComment = new SquareComment();
-        squareComment.setContent(content);
-        QueryWrapper<SquareComment> wrapper= new QueryWrapper<SquareComment>();
-        wrapper.eq("id",id);
+    SquareComment squareComment = new SquareComment();
+    squareComment.setContent(content);
+    QueryWrapper<SquareComment> wrapper = new QueryWrapper<SquareComment>();
+    wrapper.eq("id", id);
 
-        return squareCommentMapper.update(squareComment,wrapper);
-    }
+    return squareCommentMapper.update(squareComment, wrapper);
+  }
 }
-

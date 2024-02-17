@@ -6,9 +6,7 @@ import com.ttice.icewkment.entity.ResourceClass;
 import org.springframework.stereotype.Repository;
 
 /**
- * <p>
- *  服务类
- * </p>
+ * 服务类
  *
  * @author admin
  * @since 2022-03-28
@@ -16,6 +14,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ResourceClassService extends IService<ResourceClass> {
 
-    ResourceClassPageVO GetList(Integer page, Integer limit);
-
+  ResourceClassPageVO GetList(Integer page, Integer limit);
 }

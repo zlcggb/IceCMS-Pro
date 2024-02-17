@@ -9,7 +9,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface EmailDetectionMapper extends BaseMapper<EmailDetection> {
 
-    @Select("SELECT * FROM email_detection WHERE email = #{email} ORDER BY id DESC LIMIT 1")
-    EmailDetection getOneEmail(@Param("email") String email);
-
+  @Select("SELECT * FROM email_detection WHERE email = #{email} ORDER BY id DESC LIMIT 1")
+  EmailDetection getOneEmail(@Param("email") String email);
 }

@@ -9,9 +9,9 @@ import java.io.Serializable;
 @TableName("v_product")
 public class VipProduct implements Serializable {
 
-    private Integer id;
+  private Integer id;
 
-    private String title; //商品名称
+  private String title; // 商品名称
 
-    private Integer price; //价格（分）
+  private Integer price; // 价格（分）
 }

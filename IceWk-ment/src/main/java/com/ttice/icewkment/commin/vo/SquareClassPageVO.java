@@ -7,6 +7,6 @@ import java.util.List;
 
 @Data
 public class SquareClassPageVO {
-    private List<SquareClass> data;
-    private Long total;
+  private List<SquareClass> data;
+  private Long total;
 }

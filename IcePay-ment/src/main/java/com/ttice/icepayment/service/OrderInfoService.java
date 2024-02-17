@@ -10,39 +10,41 @@ import java.util.List;
 @Repository
 public interface OrderInfoService extends IService<OrderInfo> {
 
-    OrderInfo createOrderByWxProductId(Long productId , String payMent);
+  OrderInfo createOrderByWxProductId(Long productId, String payMent);
 
-    OrderInfo createOrderTempByWxResourceId(Long productId , String payMent);
+  OrderInfo createOrderTempByWxResourceId(Long productId, String payMent);
 
-    OrderInfo createOrderLoginByWxResourceId(Long productId , String payMent, Integer userid);
+  OrderInfo createOrderLoginByWxResourceId(Long productId, String payMent, Integer userid);
 
-    OrderInfo createOrderForVipIntegralLoginByPrice(Integer price , String payMent, Integer userid);
+  OrderInfo createOrderForVipIntegralLoginByPrice(Integer price, String payMent, Integer userid);
 
-    OrderInfo createOrderForVipLoginByPrice(Integer price , String payMent, Integer userid, Integer payid);
+  OrderInfo createOrderForVipLoginByPrice(
+      Integer price, String payMent, Integer userid, Integer payid);
 
-    OrderInfo createOrderByAliProductId(Long productId , String payMent);
+  OrderInfo createOrderByAliProductId(Long productId, String payMent);
 
-    OrderInfo createOrderTempByAliResourceId(Long productId , String payMent);
+  OrderInfo createOrderTempByAliResourceId(Long productId, String payMent);
 
-    OrderInfo createOrderLoginByAliResourceId(Long productId , String payMent, Integer userid);
+  OrderInfo createOrderLoginByAliResourceId(Long productId, String payMent, Integer userid);
 
-    OrderInfo createOrdervipIntegralLoginByPrice(Integer price , String payMent, Integer userid);
+  OrderInfo createOrdervipIntegralLoginByPrice(Integer price, String payMent, Integer userid);
 
-    OrderInfo createOrdervipLoginByPrice(Integer price , String payMent, Integer userid, Integer payid);
+  OrderInfo createOrdervipLoginByPrice(
+      Integer price, String payMent, Integer userid, Integer payid);
 
-    void saveCodeUrl(String orderNo, String codeUrl,String payMent);
+  void saveCodeUrl(String orderNo, String codeUrl, String payMent);
 
-    List<OrderInfo> listOrderByCreateTimeDesc();
+  List<OrderInfo> listOrderByCreateTimeDesc();
 
-    List<OrderInfo> listOrderById(Integer userId);
+  List<OrderInfo> listOrderById(Integer userId);
 
-    void updateStatusByOrderNo(String orderNo, OrderStatus orderStatus);
+  void updateStatusByOrderNo(String orderNo, OrderStatus orderStatus);
 
-    String getOrderStatus(String orderNo);
+  String getOrderStatus(String orderNo);
 
-    String getOrderStatusBytrue(String userid,String resourceid);
+  String getOrderStatusBytrue(String userid, String resourceid);
 
-    List<OrderInfo> getNoPayOrderByDuration(int minutes);
+  List<OrderInfo> getNoPayOrderByDuration(int minutes);
 
-    OrderInfo getOrderByOrderNo(String orderNo);
+  OrderInfo getOrderByOrderNo(String orderNo);
 }

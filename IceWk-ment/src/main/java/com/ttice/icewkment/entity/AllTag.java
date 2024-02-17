@@ -11,15 +11,10 @@ import java.io.Serializable;
 @EqualsAndHashCode(callSuper = false)
 public class AllTag implements Serializable {
 
-    /**
-     * id
-     */
-    @TableId(type = IdType.AUTO)
-    private Integer id;
+  /** id */
+  @TableId(type = IdType.AUTO)
+  private Integer id;
 
-    /**
-     * 所厲栏目id
-     */
-    private String tagName;
-
+  /** 所厲栏目id */
+  private String tagName;
 }

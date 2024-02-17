@@ -11,7 +11,7 @@ import lombok.Data;
 @Data
 public class AlipayResultEntity {
 
-    private Boolean success = false;
+  private Boolean success = false;
 
-    private String message = "";
+  private String message = "";
 }

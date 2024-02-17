@@ -23,83 +23,85 @@ import java.util.Map;
 
 @Service
 @Slf4j
-public class PaymentInfoServiceImpl extends ServiceImpl<PaymentInfoMapper, PaymentInfo> implements PaymentInfoService {
+public class PaymentInfoServiceImpl extends ServiceImpl<PaymentInfoMapper, PaymentInfo>
+    implements PaymentInfoService {
 
-    @Autowired
-    PaymentInfoMapper paymentInfoMapper;
+  @Autowired PaymentInfoMapper paymentInfoMapper;
 
-    /**
-     * 记录支付宝支付日志
-     * @param request
-     */
-    @Override
-    public void createAliPaymentInfo(HttpServletRequest request) throws IOException {
+  /**
+   * 记录支付宝支付日志
+   *
+   * @param request
+   */
+  @Override
+  public void createAliPaymentInfo(HttpServletRequest request) throws IOException {
 
-
-        // 获取订单号
-        String orderNo = request.getParameter("out_trade_no");
-//        //业务编号(trade_no)
-        String transactionId = request.getParameter("trade_no");
-//        //支付类型
-        String tradeType = request.getParameter("notify_type");
-//        //交易状态
-        String tradeState = request.getParameter("trade_status");
-            //交易数组信息
-        String fundBillList = request.getParameter("fund_bill_list");
-//        //用户实际支付金额
-        Integer payerTotal = null ;
-        Double temp = null;
-        try {
-            String buyerPayAmount = request.getParameter("buyer_pay_amount");
-            temp = Double.valueOf(buyerPayAmount);
-            payerTotal = (int) (temp*100);//单位：分
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        PaymentInfo paymentInfo = new PaymentInfo();
-        paymentInfo.setOrderNo(orderNo);
-        paymentInfo.setPaymentType(PayType.ALIPAY.getType());
-        paymentInfo.setTransactionId(transactionId);
-        paymentInfo.setTradeType(tradeType);
-        paymentInfo.setTradeState(tradeState);
-        paymentInfo.setPayerTotal(payerTotal);
-        paymentInfo.setContent(fundBillList);
-
-        paymentInfoMapper.insert(paymentInfo);
+    // 获取订单号
+    String orderNo = request.getParameter("out_trade_no");
+    //        //业务编号(trade_no)
+    String transactionId = request.getParameter("trade_no");
+    //        //支付类型
+    String tradeType = request.getParameter("notify_type");
+    //        //交易状态
+    String tradeState = request.getParameter("trade_status");
+    // 交易数组信息
+    String fundBillList = request.getParameter("fund_bill_list");
+    //        //用户实际支付金额
+    Integer payerTotal = null;
+    Double temp = null;
+    try {
+      String buyerPayAmount = request.getParameter("buyer_pay_amount");
+      temp = Double.valueOf(buyerPayAmount);
+      payerTotal = (int) (temp * 100); // 单位：分
+    } catch (Exception e) {
+      e.printStackTrace();
     }
-    /**
-     * 记录微信支付日志
-     * @param plainText
-     */
-    @Override
-    public void createWxPaymentInfo(String plainText) {
+    PaymentInfo paymentInfo = new PaymentInfo();
+    paymentInfo.setOrderNo(orderNo);
+    paymentInfo.setPaymentType(PayType.ALIPAY.getType());
+    paymentInfo.setTransactionId(transactionId);
+    paymentInfo.setTradeType(tradeType);
+    paymentInfo.setTradeState(tradeState);
+    paymentInfo.setPayerTotal(payerTotal);
+    paymentInfo.setContent(fundBillList);
 
-        log.info("记录支付日志");
+    paymentInfoMapper.insert(paymentInfo);
+  }
 
-        Gson gson = new Gson();
-        HashMap plainTextMap = gson.fromJson(plainText, HashMap.class);
+  /**
+   * 记录微信支付日志
+   *
+   * @param plainText
+   */
+  @Override
+  public void createWxPaymentInfo(String plainText) {
 
-        //订单号
-        String orderNo = (String)plainTextMap.get("out_trade_no");
-        //业务编号
-        String transactionId = (String)plainTextMap.get("transaction_id");
-        //支付类型
-        String tradeType = (String)plainTextMap.get("trade_type");
-        //交易状态
-        String tradeState = (String)plainTextMap.get("trade_state");
-        //用户实际支付金额
-        Map<String, Object> amount = (Map)plainTextMap.get("amount");
-        Integer payerTotal = ((Double) amount.get("payer_total")).intValue();
+    log.info("记录支付日志");
 
-        PaymentInfo paymentInfo = new PaymentInfo();
-        paymentInfo.setOrderNo(orderNo);
-        paymentInfo.setPaymentType(PayType.WXPAY.getType());
-        paymentInfo.setTransactionId(transactionId);
-        paymentInfo.setTradeType(tradeType);
-        paymentInfo.setTradeState(tradeState);
-        paymentInfo.setPayerTotal(payerTotal);
-        paymentInfo.setContent(plainText);
+    Gson gson = new Gson();
+    HashMap plainTextMap = gson.fromJson(plainText, HashMap.class);
 
-        baseMapper.insert(paymentInfo);
-    }
+    // 订单号
+    String orderNo = (String) plainTextMap.get("out_trade_no");
+    // 业务编号
+    String transactionId = (String) plainTextMap.get("transaction_id");
+    // 支付类型
+    String tradeType = (String) plainTextMap.get("trade_type");
+    // 交易状态
+    String tradeState = (String) plainTextMap.get("trade_state");
+    // 用户实际支付金额
+    Map<String, Object> amount = (Map) plainTextMap.get("amount");
+    Integer payerTotal = ((Double) amount.get("payer_total")).intValue();
+
+    PaymentInfo paymentInfo = new PaymentInfo();
+    paymentInfo.setOrderNo(orderNo);
+    paymentInfo.setPaymentType(PayType.WXPAY.getType());
+    paymentInfo.setTransactionId(transactionId);
+    paymentInfo.setTradeType(tradeType);
+    paymentInfo.setTradeState(tradeState);
+    paymentInfo.setPayerTotal(payerTotal);
+    paymentInfo.setContent(plainText);
+
+    baseMapper.insert(paymentInfo);
+  }
 }

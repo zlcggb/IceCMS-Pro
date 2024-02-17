@@ -16,44 +16,40 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * <p>
- *  服务实现类
- *  ArticleClass实现分页功能
- * </p>
+ * 服务实现类 ArticleClass实现分页功能
  *
  * @author admin
  * @since 2022-02-19
  */
 @Service
-public class ArticleClassServiceImpl extends ServiceImpl<ArticleClassMapper,ArticleClass> implements ArticleClassService {
+public class ArticleClassServiceImpl extends ServiceImpl<ArticleClassMapper, ArticleClass>
+    implements ArticleClassService {
 
-    @Autowired
-    private ArticleClassMapper articleClassMapper;
+  @Autowired private ArticleClassMapper articleClassMapper;
 
-    @Autowired
-    private ArticleMapper articleMapper;
+  @Autowired private ArticleMapper articleMapper;
 
-    @Override
-    public ArticleClassPageVO GetList(Integer page, Integer limit) {
-        Page<ArticleClass> ArticleClassPage = new Page<>(page,limit);
-        ArticleClassPageVO classPageVO = new ArticleClassPageVO();
-        List<ArticleClass> result = new ArrayList<>();
-        QueryWrapper<ArticleClass> wrapper= new QueryWrapper<>();
-        wrapper.orderByDesc("id");
+  @Override
+  public ArticleClassPageVO GetList(Integer page, Integer limit) {
+    Page<ArticleClass> ArticleClassPage = new Page<>(page, limit);
+    ArticleClassPageVO classPageVO = new ArticleClassPageVO();
+    List<ArticleClass> result = new ArrayList<>();
+    QueryWrapper<ArticleClass> wrapper = new QueryWrapper<>();
+    wrapper.orderByDesc("id");
 
-        Page<ArticleClass> resultPage = this.articleClassMapper.selectPage(ArticleClassPage, wrapper);
-        List<ArticleClass> articleClasses = resultPage.getRecords();
-        for (ArticleClass articleClasse : articleClasses) {
-            Integer id = articleClasse.getId();
-            QueryWrapper<Article> queryWrapper = new QueryWrapper<>();
-            queryWrapper.eq("sort_class", id);
-            Integer count = articleMapper.selectCount(queryWrapper);
-            articleClasse.setNum(count);
-            result.add(articleClasse);
-        }
-        long total = resultPage.getTotal();
-        classPageVO.setData(result);
-        classPageVO.setTotal(total);
-        return classPageVO;
+    Page<ArticleClass> resultPage = this.articleClassMapper.selectPage(ArticleClassPage, wrapper);
+    List<ArticleClass> articleClasses = resultPage.getRecords();
+    for (ArticleClass articleClasse : articleClasses) {
+      Integer id = articleClasse.getId();
+      QueryWrapper<Article> queryWrapper = new QueryWrapper<>();
+      queryWrapper.eq("sort_class", id);
+      Integer count = articleMapper.selectCount(queryWrapper);
+      articleClasse.setNum(count);
+      result.add(articleClasse);
     }
+    long total = resultPage.getTotal();
+    classPageVO.setData(result);
+    classPageVO.setTotal(total);
+    return classPageVO;
+  }
 }

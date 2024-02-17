@@ -11,15 +11,16 @@ import java.io.Serializable;
 @EqualsAndHashCode(callSuper = false)
 public class SquareClass implements Serializable {
 
-    @TableId(type = IdType.AUTO)
-    private Integer id;
-    private String  name;
-    private Boolean isFree;
-    private Integer price;
-    private Integer father;
-    private String otherName;
-    private String describes;
-    private String imgclass;
-    private Integer top;
-    private Integer num;
+  @TableId(type = IdType.AUTO)
+  private Integer id;
+
+  private String name;
+  private Boolean isFree;
+  private Integer price;
+  private Integer father;
+  private String otherName;
+  private String describes;
+  private String imgclass;
+  private Integer top;
+  private Integer num;
 }

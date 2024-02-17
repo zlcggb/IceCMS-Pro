@@ -8,10 +8,10 @@ import java.io.Serializable;
 @Data
 public class AccountProfile implements Serializable {
 
-    private String userId;
+  private String userId;
 
-    private Integer userAge;
+  private Integer userAge;
 
-    @TableField("USERNAME")
-    private String username;
+  @TableField("USERNAME")
+  private String username;
 }

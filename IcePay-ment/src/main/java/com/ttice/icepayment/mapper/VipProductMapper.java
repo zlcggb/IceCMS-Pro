@@ -5,6 +5,4 @@ import com.ttice.icepayment.entity.VipProduct;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface VipProductMapper extends BaseMapper<VipProduct> {
-
-}
+public interface VipProductMapper extends BaseMapper<VipProduct> {}

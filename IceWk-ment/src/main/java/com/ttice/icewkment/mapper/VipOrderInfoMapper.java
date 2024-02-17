@@ -8,15 +8,10 @@ import com.ttice.icewkment.entity.OrderInfo;
 import org.springframework.stereotype.Repository;
 
 /**
- * <p>
- *  Mapper 接口
- * </p>
+ * Mapper 接口
  *
  * @author admin
  * @since 2022-02-19
  */
 @Repository
-public interface VipOrderInfoMapper extends BaseMapper<OrderInfo> {
-
-}
-
+public interface VipOrderInfoMapper extends BaseMapper<OrderInfo> {}

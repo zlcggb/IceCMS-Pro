@@ -9,9 +9,9 @@ import java.util.List;
 @Repository
 public interface RefundInfoService extends IService<RefundInfo> {
 
-    RefundInfo createRefundByOrderNo(String orderNo, String reason);
+  RefundInfo createRefundByOrderNo(String orderNo, String reason);
 
-    void updateRefund(String content);
+  void updateRefund(String content);
 
-    List<RefundInfo> getNoRefundOrderByDuration(int minutes);
+  List<RefundInfo> getNoRefundOrderByDuration(int minutes);
 }

@@ -6,9 +6,7 @@ import com.ttice.icewkment.entity.Article;
 import org.springframework.stereotype.Repository;
 
 /**
- * <p>
- *  服务类
- * </p>
+ * 服务类
  *
  * @author admin
  * @since 2022-02-19
@@ -16,7 +14,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ArticleService extends IService<Article> {
 
-    ArticlePageVO VoList(Integer page, Integer limit, Integer click);
+  ArticlePageVO VoList(Integer page, Integer limit, Integer click);
 
-    ArticlePageVO FindVoList(Integer page, Integer limit, String content);
+  ArticlePageVO FindVoList(Integer page, Integer limit, String content);
 }

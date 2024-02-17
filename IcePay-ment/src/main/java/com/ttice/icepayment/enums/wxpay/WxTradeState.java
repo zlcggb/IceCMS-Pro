@@ -7,28 +7,18 @@ import lombok.Getter;
 @Getter
 public enum WxTradeState {
 
-    /**
-     * 支付成功
-     */
-    SUCCESS("SUCCESS"),
+  /** 支付成功 */
+  SUCCESS("SUCCESS"),
 
-    /**
-     * 未支付
-     */
-    NOTPAY("NOTPAY"),
+  /** 未支付 */
+  NOTPAY("NOTPAY"),
 
-    /**
-     * 已关闭
-     */
-    CLOSED("CLOSED"),
+  /** 已关闭 */
+  CLOSED("CLOSED"),
 
-    /**
-     * 转入退款
-     */
-    REFUND("REFUND");
+  /** 转入退款 */
+  REFUND("REFUND");
 
-    /**
-     * 类型
-     */
-    private final String type;
+  /** 类型 */
+  private final String type;
 }

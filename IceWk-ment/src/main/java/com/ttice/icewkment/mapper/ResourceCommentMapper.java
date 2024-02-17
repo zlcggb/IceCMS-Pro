@@ -5,14 +5,10 @@ import com.ttice.icewkment.entity.ResourceComment;
 import org.springframework.stereotype.Repository;
 
 /**
- * <p>
- *  Mapper 接口
- * </p>
+ * Mapper 接口
  *
  * @author admin
  * @since 2022-03-28
  */
 @Repository
-public interface ResourceCommentMapper extends BaseMapper<ResourceComment> {
-
-}
+public interface ResourceCommentMapper extends BaseMapper<ResourceComment> {}

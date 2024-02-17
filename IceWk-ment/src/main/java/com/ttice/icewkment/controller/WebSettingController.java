@@ -1,6 +1,5 @@
 package com.ttice.icewkment.controller;
 
-
 import com.ttice.icewkment.entity.DispositionCarousel;
 import com.ttice.icewkment.entity.Setting;
 import com.ttice.icewkment.mapper.DispositionCarouselMapper;
@@ -14,9 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 /**
- * <p>
- *  前端控制器
- * </p>
+ * 前端控制器
  *
  * @author admin
  * @since 2022-02-19
@@ -26,27 +23,20 @@ import java.util.List;
 @RequestMapping("/WebSitting")
 public class WebSettingController {
 
-    @Autowired
-    private DispositionCarouselMapper disposition_carouselMapper;
+  @Autowired private DispositionCarouselMapper disposition_carouselMapper;
 
-    @Autowired
-    private SettingMapper settingMapper;
+  @Autowired private SettingMapper settingMapper;
 
-    @ApiOperation(value = "获取首页轮播图")
-    @GetMapping("/getCarousel")
-    public List<DispositionCarousel> getCarousel(
+  @ApiOperation(value = "获取首页轮播图")
+  @GetMapping("/getCarousel")
+  public List<DispositionCarousel> getCarousel() {
 
-    ) {
-        return this.disposition_carouselMapper.selectAll();
-    }
+    return this.disposition_carouselMapper.selectAll();
+  }
 
-    @ApiOperation(value = "获取所有设置")
-    @GetMapping("/getSetting")
-    public Setting getSetting(
-    ) {
-        return settingMapper.selectOne(null);
-    }
-
-
+  @ApiOperation(value = "获取所有设置")
+  @GetMapping("/getSetting")
+  public Setting getSetting() {
+    return settingMapper.selectOne(null);
+  }
 }
-

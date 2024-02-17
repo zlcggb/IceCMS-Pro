@@ -12,15 +12,15 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode(callSuper = false)
 public class ChatMessages implements Serializable {
 
-    @TableId(type = IdType.AUTO)
-    private Integer id;
-    private String  text;
-    private Integer fromUserId;
+  @TableId(type = IdType.AUTO)
+  private Integer id;
 
-    private Integer toUserId;
+  private String text;
+  private Integer fromUserId;
 
-//    @ApiModelProperty(value = "创建时间")
-//    @TableField(fill = FieldFill.INSERT)//创建注解::自动填充 -DEFAULT没有时，INSERT插入时
-    private LocalDateTime time;
+  private Integer toUserId;
 
+  //    @ApiModelProperty(value = "创建时间")
+  //    @TableField(fill = FieldFill.INSERT)//创建注解::自动填充 -DEFAULT没有时，INSERT插入时
+  private LocalDateTime time;
 }

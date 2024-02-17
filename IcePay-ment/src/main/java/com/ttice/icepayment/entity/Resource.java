@@ -9,192 +9,118 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * <p>
- * 
- * </p>
- *
  * @author admin
  * @since 2022-03-28
  */
 @Data
-  @EqualsAndHashCode(callSuper = false)
-    public class Resource implements Serializable {
+@EqualsAndHashCode(callSuper = false)
+public class Resource implements Serializable {
 
-    private static final long serialVersionUID=1L;
+  private static final long serialVersionUID = 1L;
 
-      /**
-     * id
-     */
-        @TableId(value = "id", type = IdType.AUTO)
-      private Integer id;
+  /** id */
+  @TableId(value = "id", type = IdType.AUTO)
+  private Integer id;
 
-      /**
-     * 所厲栏目Class
-     */
-      private String sortClass;
+  /** 所厲栏目Class */
+  private String sortClass;
 
-      /**
-     * 文章标题
-     */
-      private String title;
-      /**
-       * 价格
-       */
-      private Integer price;
-      /**
-       * 是否免费(0免费 ， 1付费）
-       */
-      private Integer isFree;
+  /** 文章标题 */
+  private String title;
 
-      /**
-     * 标题颜色
-     */
-      private String titleColor;
+  /** 价格 */
+  private Integer price;
 
-      /**
-     * 标题大小
-     */
-      private String titlefontSize;
+  /** 是否免费(0免费 ， 1付费） */
+  private Integer isFree;
 
-      /**
-     * 标题字形
-     */
-      private Integer titlefontType;
+  /** 标题颜色 */
+  private String titleColor;
 
-      /**
-     * 完整标题
-     */
-      private String fullTitle;
+  /** 标题大小 */
+  private String titlefontSize;
 
-      /**
-     * 副标题
-     */
-      private String subhead;
+  /** 标题字形 */
+  private Integer titlefontType;
 
-      /**
-     * 简介
-     */
-      private String intro;
+  /** 完整标题 */
+  private String fullTitle;
 
-      /**
-     * 文章内容
-     */
-      private String content;
+  /** 副标题 */
+  private String subhead;
 
-      /**
-     * 作者
-     */
-      private String author;
+  /** 简介 */
+  private String intro;
 
-      /**
-     * 来源
-     */
-      private String copyfrom;
+  /** 文章内容 */
+  private String content;
 
-      /**
-     * 录入者
-     */
-      private String inputer;
+  /** 作者 */
+  private String author;
 
-      /**
-     * 转向连接
-     */
-      private String httpUrl;
+  /** 来源 */
+  private String copyfrom;
 
-      /**
-     * 关健字
-     */
-      private String keyword;
+  /** 录入者 */
+  private String inputer;
 
-      /**
-     * 点击数
-     */
-      private Integer hits;
+  /** 转向连接 */
+  private String httpUrl;
 
-      /**
-     * 评论数
-     */
-      private Integer postNum;
+  /** 关健字 */
+  private String keyword;
 
-      /**
-     * 是否评论
-     */
-      private String commentDisabled;
+  /** 点击数 */
+  private Integer hits;
 
-      /**
-     * 是否顶制
-     */
-      private Integer ontop;
+  /** 评论数 */
+  private Integer postNum;
 
-      /**
-     * 是否推荐
-     */
-      private Integer iselite;
+  /** 是否评论 */
+  private String commentDisabled;
 
-      /**
-     * 是否删除
-     */
-      private Integer deleted;
+  /** 是否顶制 */
+  private Integer ontop;
 
-      /**
-     * 添加时间
-     */
-      private LocalDateTime addTime;
+  /** 是否推荐 */
+  private Integer iselite;
 
-      /**
-     * 更新时间
-     */
-      private LocalDateTime updateTime;
+  /** 是否删除 */
+  private Integer deleted;
 
-      /**
-     * 生成时间
-     */
-      private LocalDateTime createTime;
+  /** 添加时间 */
+  private LocalDateTime addTime;
 
-      /**
-     * 最后评论时间
-     */
-      private LocalDateTime lastPost;
+  /** 更新时间 */
+  private LocalDateTime updateTime;
 
-      /**
-     * 重要性
-     */
-      private Integer ownerTag;
+  /** 生成时间 */
+  private LocalDateTime createTime;
 
-      /**
-     * 自定义备注
-     */
-      private String ownerRemark;
+  /** 最后评论时间 */
+  private LocalDateTime lastPost;
 
-      /**
-     * htm地址
-     */
-      private String htmlPath;
+  /** 重要性 */
+  private Integer ownerTag;
 
-      /**
-     * 上传文件地址
-     */
-      private String filePath;
+  /** 自定义备注 */
+  private String ownerRemark;
 
-      /**
-     * 模板地址
-     */
-      private String tempPath;
+  /** htm地址 */
+  private String htmlPath;
 
-      /**
-     * 缩略图地址
-     */
-      private String thumb;
+  /** 上传文件地址 */
+  private String filePath;
 
-      /**
-     * 生成状态
-     */
-      private String status;
+  /** 模板地址 */
+  private String tempPath;
 
-      /**
-     * 文章状态身份
-     */
-      private Integer articleStatus;
+  /** 缩略图地址 */
+  private String thumb;
 
+  /** 生成状态 */
+  private String status;
 
+  /** 文章状态身份 */
+  private Integer articleStatus;
 }

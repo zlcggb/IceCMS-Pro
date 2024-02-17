@@ -4,12 +4,9 @@ import lombok.Data;
 
 import java.util.List;
 
-/**
- * 分页VO
- */
-
+/** 分页VO */
 @Data
 public class ResourcePageVO {
-    private List<ResourceVO> data;
-    private Long total;
+  private List<ResourceVO> data;
+  private Long total;
 }

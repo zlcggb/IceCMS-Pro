@@ -7,18 +7,16 @@ import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 
 /**
- * <p>
- *  Mapper 接口
- * </p>
+ * Mapper 接口
  *
  * @author admin
  * @since 2022-02-19
  */
 @Repository
 public interface ArticleMapper extends BaseMapper<Article> {
-    @Select("update article set hits=IFNULL(hits,0)+1 where id = ${id}")
-    Boolean articlesBrowse(@Param("id") Integer id);
+  @Select("update article set hits=IFNULL(hits,0)+1 where id = ${id}")
+  Boolean articlesBrowse(@Param("id") Integer id);
 
-    @Select("update article set love_num=IFNULL(love_num,0)+1 where id = ${id}")
-    Boolean articlesLoveBrowse(@Param("id") Integer id);
+  @Select("update article set love_num=IFNULL(love_num,0)+1 where id = ${id}")
+  Boolean articlesLoveBrowse(@Param("id") Integer id);
 }

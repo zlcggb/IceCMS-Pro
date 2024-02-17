@@ -11,13 +11,14 @@ import java.io.Serializable;
 @EqualsAndHashCode(callSuper = false)
 public class ArticleClass implements Serializable {
 
-    @TableId(type = IdType.AUTO)
-    private Integer id;
-    private String  name;
-    private Integer father;
-    private String otherName;
-    private String describes;
-    private String imgclass;
-    private Boolean top;
-    private Integer num;
+  @TableId(type = IdType.AUTO)
+  private Integer id;
+
+  private String name;
+  private Integer father;
+  private String otherName;
+  private String describes;
+  private String imgclass;
+  private Boolean top;
+  private Integer num;
 }

@@ -11,23 +11,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * <p>
- *  服务实现类
- * </p>
+ * 服务实现类
  *
  * @author admin
  * @since 2022-03-28
  */
 @Service
-public class ResourceCommentServiceImpl extends ServiceImpl<ResourceCommentMapper, ResourceComment> implements ResourceCommentService {
+public class ResourceCommentServiceImpl extends ServiceImpl<ResourceCommentMapper, ResourceComment>
+    implements ResourceCommentService {
 
-    @Autowired
-    private ResourceCommentMapper resourceCommentMapper;
+  @Autowired private ResourceCommentMapper resourceCommentMapper;
 
-    @Override
-    public int GetCommentNum(Integer resourceId) {
-        QueryWrapper<ResourceComment> wrapper = new QueryWrapper<>();
-        wrapper.eq("resource_id",resourceId);
-        return resourceCommentMapper.selectCount(wrapper);
-    }
+  @Override
+  public int GetCommentNum(Integer resourceId) {
+    QueryWrapper<ResourceComment> wrapper = new QueryWrapper<>();
+    wrapper.eq("resource_id", resourceId);
+    return resourceCommentMapper.selectCount(wrapper);
+  }
 }

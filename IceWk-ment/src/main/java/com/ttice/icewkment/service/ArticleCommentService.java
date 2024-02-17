@@ -7,6 +7,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ArticleCommentService extends IService<ArticleComment> {
-    int GetCommentNum(Integer articleId);
-
+  int GetCommentNum(Integer articleId);
 }

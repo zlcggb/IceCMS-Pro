@@ -11,9 +11,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 /**
- * <p>
- *  服务类
- * </p>
+ * 服务类
  *
  * @author admin
  * @since 2022-02-19
@@ -21,5 +19,5 @@ import java.util.List;
 @Repository
 public interface SquareService extends IService<Square> {
 
-    SquarePageVO VoList(String otherName, Integer page, Integer limit);
+  SquarePageVO VoList(String otherName, Integer page, Integer limit);
 }
