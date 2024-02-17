@@ -12,6 +12,41 @@
           <el-option label="OSS" value="oss"></el-option>
         </el-select>
       </el-form-item>
+      <el-form-item v-if="storageMode === 'oss' && cloudProvider === 'tencent'" label="云服务提供商">
+  <el-select  v-model="cloudProvider" class="input-width" placeholder="选择云服务提供商">
+    <el-option label="腾讯云" value="tencent"></el-option>
+    <el-option label="阿里云" value="aliyun"></el-option>
+    <el-option label="七牛云" value="qiniu"></el-option>
+  </el-select>
+</el-form-item>
+
+<div v-if="storageMode === 'oss' && cloudProvider === 'tencent'" label="腾讯云配置">
+  <!-- 腾讯云相关设置项 -->
+        <el-form-item v-if="storageMode === 'oss'" label="访问域名">
+  <el-input v-model="ossConfig.domain" class="input-width" placeholder="请输入访问域名"></el-input>
+</el-form-item>
+<el-form-item v-if="storageMode === 'oss'" label="存储桶名称">
+  <el-input v-model="ossConfig.bucketName" class="input-width" placeholder="请输入存储桶名称"></el-input>
+</el-form-item>
+<el-form-item v-if="storageMode === 'oss'" label="SecretId">
+  <el-input v-model="ossConfig.secretId" class="input-width" placeholder="请输入SecretId"></el-input>
+</el-form-item>
+<el-form-item v-if="storageMode === 'oss'" label="SecretKey">
+  <el-input v-model="ossConfig.secretKey" class="input-width" placeholder="请输入SecretKey"></el-input>
+</el-form-item>
+<el-form-item v-if="storageMode === 'oss'" label="存储桶区域">
+  <el-input v-model="ossConfig.region" class="input-width" placeholder="请输入存储桶区域"></el-input>
+</el-form-item>
+</div>
+<el-form-item v-if="storageMode === 'oss' && cloudProvider === 'aliyun'" label="阿里云配置">
+  <!-- 阿里云相关设置项 -->
+</el-form-item>
+<el-form-item v-if="storageMode === 'oss' && cloudProvider === 'qiniu'" label="七牛云配置">
+  <!-- 七牛云相关设置项 -->
+</el-form-item>
+
+
+
       <el-form-item label="图片大小限制（MB）">
         <el-input-number v-model="imageSizeLimit" class="input-width" :min="1" :max="20"></el-input-number>
       </el-form-item>
@@ -41,10 +76,29 @@ const storageMode = ref('local'); // 默认存储模式为本地
 const imageSizeLimit = ref(5);
 const allowedImageTypes = ref(['jpeg', 'png']);
 const autoCompress = ref(true);
+const cloudProvider = ref('tencent'); // 默认云服务提供商为腾讯云
+const tencentConfig = ref({
+  // 腾讯云相关配置项
+});
+
+const aliyunConfig = ref({
+  // 阿里云相关配置项
+});
+
+const qiniuConfig = ref({
+  // 七牛云相关配置项
+});
+const ossConfig = ref({
+  domain: '',
+  bucketName: '',
+  secretId: '',
+  secretKey: '',
+  region: ''
+});
 
 const saveSettings = () => {
   // 实现保存设置的逻辑
-  console.log('Settings saved:', { storageMode, imageSizeLimit, allowedImageTypes, autoCompress });
+  console.log('Settings saved:', { storageMode, imageSizeLimit, allowedImageTypes, autoCompress, ossConfig });
 };
 
 const resetSettings = () => {
@@ -53,7 +107,19 @@ const resetSettings = () => {
   imageSizeLimit.value = 5;
   allowedImageTypes.value = ['jpeg', 'png'];
   autoCompress.value = true;
+  ossConfig.value = {
+    domain: '',
+    bucketName: '',
+    secretId: '',
+    secretKey: '',
+    region: ''
+  };
+   cloudProvider.value = 'tencent';
+  tencentConfig.value = { /* 重置腾讯云配置项 */ };
+  aliyunConfig.value = { /* 重置阿里云配置项 */ };
+  qiniuConfig.value = { /* 重置七牛云配置项 */ };
 };
+
 </script>
 
 <style scoped>
