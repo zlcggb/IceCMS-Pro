@@ -43,12 +43,11 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
         </dependency>
-
         <!--alibaba字符串工具包-->
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
-            <version>1.2.79</version>
+            <version>2.0.45</version>
         </dependency>
         <!--Swagger-UI API文档生产工具-->
         <dependency>
@@ -88,18 +87,17 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.31</version>
             <scope>runtime</scope>
         </dependency>
-
         <!--email-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.projectlombok</groupId>
-            <version>1.18.24</version>
+            <version>1.18.30</version>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
