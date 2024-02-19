@@ -24,7 +24,7 @@
     </properties>
     <!--声明你儿子 -->
     <modules>
-        <module>IceWk-ment</module>
+        <module>IceCMS-ment</module>
         <module>IceCMS-main</module>
         <module>IcePay-ment</module>
     </modules>
