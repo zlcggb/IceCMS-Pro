@@ -14,6 +14,14 @@ import NProgress from "../progress";
 import { getToken, formatToken } from "@/utils/auth";
 import { useUserStoreHook } from "@/store/modules/user";
 
+import { isUrl, openLink, storageLocal, isAllEmpty } from "@pureadmin/utils";
+import {
+  type DataInfo,
+  removeToken,
+  multipleTabsKey
+} from "@/utils/auth";
+const userKey = "user-info";
+
 const { VITE_APP_BASE_API } = import.meta.env;
 // 相关配置请参考：www.axios-js.com/zh-cn/docs/#axios-request-config-1
 const defaultConfig: AxiosRequestConfig = {
@@ -62,8 +70,16 @@ class PureHttp {
 
   /** 请求拦截 */
   private httpInterceptorsRequest(): void {
+    
+
     PureHttp.axiosInstance.interceptors.request.use(
       async (config: PureHttpRequestConfig): Promise<any> => {
+        // 优先判断是否存在token添加到头部
+        const userInfo = storageLocal().getItem<DataInfo<number>>(userKey);
+        if (userInfo != null) {
+          config.headers.Authorization = userInfo.accessToken;
+          return config;
+        }
         // 开启进度条动画
         NProgress.start();
         // 优先判断post/get等方法是否传入回调，否则执行初始化设置等回调

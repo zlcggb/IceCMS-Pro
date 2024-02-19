@@ -101,7 +101,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
       int acnum = articleCommentService.GetCommentNum(aid);
       articleVO.setCommentNum(acnum);
       // 获取对应分类
-      String sortClass = article.getSortClass();
+      String sortClass = String.valueOf(article.getSortClass());
       ArticleClass articleClass = articleClassMapper.selectById(sortClass);
       String classname = articleClass.getName();
       articleVO.setClassName(classname);

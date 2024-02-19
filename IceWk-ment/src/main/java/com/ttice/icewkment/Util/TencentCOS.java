@@ -8,7 +8,9 @@ import com.qcloud.cos.exception.CosClientException;
 import com.qcloud.cos.exception.CosServiceException;
 import com.qcloud.cos.model.*;
 import com.qcloud.cos.region.Region;
+import com.ttice.icewkment.entity.CosInfo;
 import com.ttice.icewkment.entity.Setting;
+import com.ttice.icewkment.mapper.CosInfoMapper;
 import com.ttice.icewkment.mapper.SettingMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -21,7 +23,7 @@ import java.util.Random;
 @Component
 public class TencentCOS {
 
-  @Autowired private SettingMapper settingMapper;
+  @Autowired private CosInfoMapper cosInfoMapper;
 
   public static TencentCOS tencentCOS;
 
@@ -37,7 +39,7 @@ public class TencentCOS {
    */
   public static String uploadfile(File localFile) throws CosClientException {
 
-    Setting setting = tencentCOS.settingMapper.selectOne(null);
+    CosInfo setting = tencentCOS.cosInfoMapper.selectOne(null);
     // 设置访问域名
     String intage = setting.getCosIntage();
     // 此处填写的存储桶名称

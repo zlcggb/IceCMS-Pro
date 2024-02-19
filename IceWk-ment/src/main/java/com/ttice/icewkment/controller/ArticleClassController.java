@@ -68,7 +68,7 @@ public class ArticleClassController {
     QueryWrapper<ArticleClass> wrapperClass = new QueryWrapper<ArticleClass>();
     wrapperClass.eq("name", article.getSortClass());
     ArticleClass articleClass = articleClassMapper.selectOne(wrapperClass);
-    article.setSortClass(articleClass.getId().toString());
+    article.setSortClass(Integer.valueOf(articleClass.getId().toString()));
     if (articleDB == null) {
       articleService.save(article);
     } else {

@@ -1,5 +1,6 @@
 package com.ttice.icewkment.entity;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
@@ -10,7 +11,7 @@ import java.io.Serializable;
 public class OrderInfo implements Serializable {
 
   private String title; // 订单标题
-
+  @TableId // 指定主键
   private String orderNo; // 商户订单编号
 
   private Long userId; // 用户id

@@ -40,21 +40,32 @@ import java.util.stream.Collectors;
 @RequestMapping("/article")
 public class ArticleController {
 
-  @Autowired private ArticleService articleService;
+  private ArticleService articleService;
+  private ArticleClassMapper articleClassMapper;
+  private ArticleCommentMapper articleCommentMapper;
+  private UserMapper userMapper;
+  private ArticleCommentService articleCommentService;
 
-  @Autowired private ArticleClassMapper articleClassMapper;
-
-  @Autowired private ArticleCommentMapper articleCommentMapper;
-
-  @Autowired private UserMapper userMapper;
-
-  @Autowired private ArticleCommentService articleCommentService;
+  @Autowired
+  public void  ArticleSM(
+          ArticleService articleService,
+          ArticleClassMapper articleClassMapper,
+          ArticleCommentMapper articleCommentMapper,
+          UserMapper userMapper,
+          ArticleCommentService articleCommentService
+  ) {
+    this.articleService = articleService;
+    this.articleClassMapper = articleClassMapper;
+    this.articleCommentMapper = articleCommentMapper;
+    this.userMapper = userMapper;
+    this.articleCommentService = articleCommentService;
+  }
 
   @RequiresAuthentication // 需要登陆认证的接口
   @ApiOperation(value = "新增文章(修改)")
   @ApiImplicitParam(name = "article", value = "文章", required = true)
   @PostMapping("/create")
-  public Integer add(@RequestBody Article article) throws ParseException {
+  public Result add(@RequestBody Article article) throws ParseException {
     // 生成随机数注入
     int number = MathUtils.randomDigitNumber(7);
     article.setArticleStatus(number);
@@ -63,27 +74,27 @@ public class ArticleController {
     wrapper.eq("title", article.getTitle());
     Article articleDB = articleService.getOne(wrapper);
     QueryWrapper<ArticleClass> wrapperClass = new QueryWrapper<>();
-    wrapperClass.eq("name", article.getSortClass());
+    wrapperClass.eq("id", article.getSortClass());
     ArticleClass articleClass = articleClassMapper.selectOne(wrapperClass);
-    article.setSortClass(articleClass.getId().toString());
+    article.setSortClass(Integer.valueOf(articleClass.getId().toString()));
     if (articleDB == null) {
       articleService.save(article);
     } else {
       articleService.update(article, wrapper);
     }
-    return article.getId();
+    return Result.succ(article.getId());
   }
 
   @RequiresAuthentication // 需要登陆认证的接口
   @ApiOperation(value = "根据id删除文章")
   @ApiImplicitParam(name = "id", value = "文章id", required = true)
   @GetMapping("/DelectArticleById/{id}")
-  public boolean DelectArticleById(@PathVariable("id") Integer id) {
+  public Result DelectArticleById(@PathVariable("id") Integer id) {
     // 根据文章id删除评论
     QueryWrapper<ArticleComment> wrapper = new QueryWrapper<ArticleComment>();
     wrapper.eq("article_id", id);
     articleCommentMapper.delete(wrapper);
-    return this.articleService.removeById(id);
+    return Result.succ(this.articleService.removeById(id));
   }
 
   // 暂时无用
@@ -101,14 +112,14 @@ public class ArticleController {
   @GetMapping("/getArticleById/{id}")
   public Article getArticleById(@PathVariable("id") Integer id) {
     Article article = articleService.getById(id);
-    String sortClass = article.getSortClass();
+    String sortClass = String.valueOf(article.getSortClass());
     QueryWrapper<ArticleClass> wrapper = new QueryWrapper<>();
     wrapper.eq("id", sortClass);
     ArticleClass articleClass = articleClassMapper.selectOne(wrapper);
     String name = articleClass.getName();
     Article articleBuffer = new Article();
     BeanUtils.copyProperties(article, articleBuffer);
-    articleBuffer.setSortClass(name);
+    articleBuffer.setSortClass(Integer.valueOf(name));
     return articleBuffer;
   }
 
@@ -177,7 +188,7 @@ public class ArticleController {
       int acnum = articleCommentService.GetCommentNum(aid);
       articleVO.setCommentNum(acnum);
       // 获取对应分类
-      String sortClass = article.getSortClass();
+      String sortClass = String.valueOf(article.getSortClass());
       ArticleClass articleClass = articleClassMapper.selectById(sortClass);
       String classname = articleClass.getName();
       articleVO.setClassName(classname);

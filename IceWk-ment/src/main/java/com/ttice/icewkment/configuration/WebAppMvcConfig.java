@@ -51,7 +51,7 @@ public class WebAppMvcConfig implements WebMvcConfigurer {
     if (!file.exists()) {
       file.mkdirs();
     }
-    System.out.println("静态资源处理：" + webPath + "/logistics/");
+    System.out.println("静态资源处理地址：" + webPath + "/logistics/");
 
     registry
         .addResourceHandler("/logistics/**")

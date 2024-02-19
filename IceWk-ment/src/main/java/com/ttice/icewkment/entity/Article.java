@@ -28,7 +28,7 @@ public class Article implements Serializable {
   private Integer id;
 
   /** 所厲栏目id */
-  private String sortClass;
+  private Integer sortClass;
 
   /** 文章标题 */
   private String title;

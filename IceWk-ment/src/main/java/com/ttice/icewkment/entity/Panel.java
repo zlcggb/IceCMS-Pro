@@ -1,5 +1,6 @@
 package com.ttice.icewkment.entity;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 
 /**
@@ -13,7 +14,7 @@ import lombok.Data;
  */
 @Data
 public class Panel {
-
+  @TableId // 指定主键
   private Integer CustomerNum;
   private Integer CommentNum;
 

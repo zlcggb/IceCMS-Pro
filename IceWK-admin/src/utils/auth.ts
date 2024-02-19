@@ -31,7 +31,6 @@ export const sessionKey = "user-info";
  * 后端处理token
  */
 export function setTokenFromBackend(data): void {
-  console.log(data);
   const cookieString = JSON.stringify(data);
   Cookies.set(TokenKey, cookieString, {
     sameSite: 'None', // 添加这一行
@@ -45,7 +44,7 @@ export function setTokenFromBackend(data): void {
   // 创建一个符合 DataInfo<number> 接口的对象
   const userInfo: DataInfo<number> = {
     accessToken: data.token,
-    expires: Date.now() + 1000 * 60 * 60 * 24, // 假设过期时间为当前时间加一天
+    expires: Date.now() + 1000 * 60 * 60 * 24, // 过期时间为当前时间加一天
     refreshToken: "your_refresh_token_here",
     username: data.name,
     roles: ["user_role_1"]

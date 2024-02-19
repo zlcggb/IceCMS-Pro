@@ -115,7 +115,6 @@ router.beforeEach((to: ToRouteType, _from, next) => {
     }
   }
   const userInfo = storageLocal().getItem<DataInfo<number>>(userKey);
-  console.log("userInfo", userInfo);
   NProgress.start();
   const externalLink = isUrl(to?.name as string);
   if (!externalLink) {

@@ -44,14 +44,14 @@ public class WebArticleController {
   @GetMapping("/getArticleById/{id}")
   public Article getArticleById(@PathVariable("id") Integer id) {
     Article article = articleService.getById(id);
-    String sortClass = article.getSortClass();
+    String sortClass = String.valueOf(article.getSortClass());
     QueryWrapper<ArticleClass> wrapper = new QueryWrapper<>();
     wrapper.eq("id", sortClass);
     ArticleClass articleClass = articleClassMapper.selectOne(wrapper);
     String name = articleClass.getName();
     Article articleBuffer = new Article();
     BeanUtils.copyProperties(article, articleBuffer);
-    articleBuffer.setSortClass(name);
+    articleBuffer.setSortClass(Integer.valueOf(name));
     return articleBuffer;
   }
 
@@ -205,7 +205,7 @@ public class WebArticleController {
       User users = userMapper.searchName(author);
       String profile = users.getProfile();
       // 获取对应分类
-      String sortClass = article.getSortClass();
+      String sortClass = String.valueOf(article.getSortClass());
       ArticleClass articleClass = articleClassMapper.selectById(sortClass);
       String classname = articleClass.getName();
 
