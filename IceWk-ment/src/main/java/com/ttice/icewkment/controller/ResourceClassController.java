@@ -83,7 +83,7 @@ public class ResourceClassController {
   @RequiresAuthentication // 需要登陆认证的接口
   @ApiOperation(value = "获取全部分类列表")
   @GetMapping("/getAllClassName")
-  public List<ClassNameVO> getAllClassName() {
+  public Result getAllClassName() {
     List<ClassNameVO> result = new ArrayList<>();
 
     QueryWrapper<ResourceClass> wrapper = new QueryWrapper<ResourceClass>();
@@ -95,6 +95,6 @@ public class ResourceClassController {
       BeanUtils.copyProperties(resourceClass, classNameVO);
       result.add(classNameVO);
     }
-    return result;
+    return Result.succ(result);
   }
 }

@@ -2,6 +2,7 @@ package com.ttice.icewkment.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ttice.icewkment.Util.MathUtils;
+import com.ttice.icewkment.commin.lang.Result;
 import com.ttice.icewkment.commin.vo.ArticleClassPageVO;
 import com.ttice.icewkment.commin.vo.ClassNameVO;
 import com.ttice.icewkment.entity.Article;
@@ -101,11 +102,11 @@ public class ArticleClassController {
   @RequiresAuthentication // 需要登陆认证的接口
   @ApiOperation(value = "获取全部分类列表")
   @GetMapping("/getAllClassName")
-  public List<ClassNameVO> getAllClassName() {
+  public Result getAllClassName() {
     List<ClassNameVO> result = new ArrayList<>();
 
     QueryWrapper<ArticleClass> wrapper = new QueryWrapper<ArticleClass>();
-    wrapper.select("name");
+    wrapper.select("name","id");
     ClassNameVO classNameVO = null;
     List<ArticleClass> articleClasses = articleClassMapper.selectList(wrapper);
     for (ArticleClass articleClass : articleClasses) {
@@ -113,7 +114,7 @@ public class ArticleClassController {
       BeanUtils.copyProperties(articleClass, classNameVO);
       result.add(classNameVO);
     }
-    return result;
+    return Result.succ(result);
   }
 
   @RequiresAuthentication // 需要登陆认证的接口

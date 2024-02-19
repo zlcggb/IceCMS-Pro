@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module version="4">
   <component name="FacetManager">
+    <content url="file://$MODULE_DIR$">
+      <excludeFolder url="file://$MODULE_DIR$/node_modules" />
+    </content>
     <facet type="web" name="Web">
       <configuration>
         <webroots />
