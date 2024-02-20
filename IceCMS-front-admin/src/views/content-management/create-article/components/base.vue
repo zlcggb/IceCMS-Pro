@@ -12,17 +12,25 @@ const mode = "default";
 const editorRef = shallowRef();
 
 // 内容 HTML
-const valueHtml = ref("<p>你好</p>");
+const valueHtml = ref("<p></p>");
 
 // 模拟 ajax 异步获取内容
 onMounted(() => {
   setTimeout(() => {
-    valueHtml.value = "<p>我是模拟的异步数据</p>";
-  }, 1500);
+    valueHtml.value = "<p></p>";
+  }, 150);
+});
+
+// 暴露给父组件的内容
+defineExpose({
+  getValueHtml() {
+    return valueHtml.value;
+  }
 });
 
 const toolbarConfig: any = { excludeKeys: "fullScreen" };
 const editorConfig = { placeholder: "请输入内容..." };
+const emit = defineEmits(['updateContent']);
 
 const handleCreated = editor => {
   // 记录 editor 实例，重要！
@@ -35,6 +43,7 @@ onBeforeUnmount(() => {
   if (editor == null) return;
   editor.destroy();
 });
+
 </script>
 
 <template>

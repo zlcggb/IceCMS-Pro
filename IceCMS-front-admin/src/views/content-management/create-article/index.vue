@@ -15,11 +15,48 @@ const publishTime = ref('');
 const summary = ref('');
 const category = ref('');
 const tags = ref<string[]>([]);
+const tagList = ref<string[]>(["标签1", "标签2", "标签3"]); // 可选的标签列表，根据需要调整
+
 const carouselImage = ref('');
 const generateImage = ref(false); // Define generateImage variable
 
+const authorList = ref([
+  {
+    "id": 20,
+    "name": "电到"
+  },
+  {
+    "id": 21,
+    "name": "阿萨德"
+  }
+]);
+const classList = ref([
+  {
+    "id": 20,
+    "name": "基础教程"
+  },
+  {
+    "id": 21,
+    "name": "新手入门"
+  }
+]);
+
+const baseComponentRef = ref(null);
+const content = ref('');
+
+
+// 当需要获取 valueHtml 时，调用这个方法
+const fetchValueHtmlFromBase = () => {
+  if (baseComponentRef.value) {
+    const valueHtml = baseComponentRef.value.getValueHtml();
+    content.value = valueHtml; // Use .value to assign a new value
+  }
+};
+
 function confirmArticle() {
   console.log('title:', title.value);
+  fetchValueHtmlFromBase();
+  console.log('content:', content.value);
   ArticleAPI.newAaticle({
     title: title.value,
     sortClass: 20
@@ -62,15 +99,17 @@ function handleUploadSuccess(response: any, file: ElUploadFile) {
           创建文章
         </div>
         <div class="card-header">
-          <Base v-if="activeNames === '1'" />
+          <Base ref="baseComponentRef" v-if="activeNames === '1'" />
         </div>
         <el-form label-width="80px" style="margin-top: 20px">
           <el-form-item label="标题">
             <el-input v-model="title" placeholder="请输入标题"></el-input>
           </el-form-item>
           <el-form-item label="作者">
-            <el-input v-model="author" placeholder="请输入作者"></el-input>
-          </el-form-item>
+            <el-select v-model="category" placeholder="请选择作者">
+              <el-option v-for="item in authorList" :key="item.id" :label="item.name" :value="item.id">
+              </el-option>
+            </el-select> </el-form-item>
           <el-form-item label="发布时间">
             <el-date-picker v-model="publishTime" type="datetime" placeholder="请选择发布时间"></el-date-picker>
           </el-form-item>
@@ -78,16 +117,22 @@ function handleUploadSuccess(response: any, file: ElUploadFile) {
             <el-input v-model="summary" type="textarea" placeholder="请输入简介"></el-input>
           </el-form-item>
           <el-form-item label="分类">
-            <el-input v-model="category" placeholder="请输入分类"></el-input>
+            <el-select v-model="category" placeholder="请选择分类">
+              <el-option v-for="item in classList" :key="item.id" :label="item.name" :value="item.id">
+              </el-option>
+            </el-select>
           </el-form-item>
           <el-form-item label="标签">
-            <el-input v-model="tags" placeholder="请输入标签，用逗号分隔"></el-input>
+            <el-select v-model="tags" multiple filterable allow-create default-first-option placeholder="请输入标签">
+              <el-option v-for="item in tagList" :key="item" :label="item" :value="item">
+              </el-option>
+            </el-select>
           </el-form-item>
           <el-form-item label="图片文字">
             <el-switch v-model="generateImage" active-color="#13ce66" inactive-color="#ff4949">生成图片文字</el-switch>
             <span v-if="generateImage">{{ carouselImage }}</span>
           </el-form-item>
-          <el-form-item v-if="generateImage" label="主图上传">
+          <el-form-item v-if="!generateImage" label="主图上传">
             <el-upload class="upload-demo" action="/upload" :on-success="handleUploadSuccess"
               :before-upload="beforeUpload" drag multiple list-type="picture-card">
               <i class="el-icon-plus"></i>
