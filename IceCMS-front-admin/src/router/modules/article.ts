@@ -11,7 +11,7 @@ export default {
   },
   children: [
     {
-      path: "/content-management/create-article",
+      path: "/content-management/create-article/:articleId?",
       name: "CreateArticle",
       component: () => import("@/views/content-management/create-article/index.vue"),
       meta: {

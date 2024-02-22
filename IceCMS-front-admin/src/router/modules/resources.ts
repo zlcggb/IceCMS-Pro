@@ -11,7 +11,7 @@ export default {
   },
   children: [
     {
-      path: "/resources-management/create-article",
+      path: "/resources-management/create-article/:articleId?",
       name: "CreateResources",
       component: () => import("@/views/resources-management/create-article/index.vue"),
       meta: {

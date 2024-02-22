@@ -11,7 +11,7 @@ import javax.annotation.Resource;
 import java.util.List;
 
 @CrossOrigin // 开放前端的跨域访问
-@io.swagger.annotations.Api(tags = "测试商品订单管理")
+@io.swagger.annotations.Api(tags = "商品订单管理")
 @RestController
 @RequestMapping("/Pay-api/order-info")
 public class OrderInfoController {

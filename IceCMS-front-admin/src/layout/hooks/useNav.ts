@@ -2,7 +2,6 @@ import { storeToRefs } from "pinia";
 import { getConfig } from "@/config";
 import { useRouter } from "vue-router";
 import { emitter } from "@/utils/mitt";
-import userAvatar from "@/assets/user.jpg";
 import { getTopMenu } from "@/router/utils";
 import { useGlobal } from "@pureadmin/utils";
 import type { routeMetaType } from "../types";
@@ -38,6 +37,10 @@ export function useNav() {
     return useUserStoreHook()?.username;
   });
 
+  /** 用户头像 */
+  const avatar = computed(() => {
+    return useUserStoreHook()?.avatar;
+  });
   /** 设置国际化选中后的样式 */
   const getDropdownItemStyle = computed(() => {
     return (locale, t) => {
@@ -154,7 +157,7 @@ export function useNav() {
     isCollapse,
     pureApp,
     username,
-    userAvatar,
+    avatar,
     avatarsStyle,
     tooltipEffect,
     getDropdownItemStyle,

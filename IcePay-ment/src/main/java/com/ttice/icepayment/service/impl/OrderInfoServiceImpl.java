@@ -1,19 +1,16 @@
 package com.ttice.icepayment.service.impl;
 
 import com.ttice.icepayment.entity.OrderInfo;
-import com.ttice.icepayment.entity.Product;
 import com.ttice.icepayment.entity.Resource;
 import com.ttice.icepayment.entity.VipProduct;
 import com.ttice.icepayment.enums.OrderStatus;
 import com.ttice.icepayment.mapper.OrderInfoMapper;
-import com.ttice.icepayment.mapper.ProductMapper;
 import com.ttice.icepayment.mapper.PayResourceMapper;
 import com.ttice.icepayment.mapper.VipProductMapper;
 import com.ttice.icepayment.service.OrderInfoService;
 import com.ttice.icepayment.util.OrderNoUtils;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import io.swagger.models.auth.In;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,7 +24,6 @@ import java.util.List;
 public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo>
     implements OrderInfoService {
 
-  @Autowired private ProductMapper productMapper;
 
   @Autowired private PayResourceMapper resourceMapper;
 
@@ -145,30 +141,6 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
     return orderInfo;
   }
 
-  @Override
-  public OrderInfo createOrderByAliProductId(Long productId, String payMent) {
-
-    // 查找已存在但未支付的订单
-    OrderInfo orderInfo = this.getNoPayOrderByProductId(productId, payMent);
-    if (orderInfo != null) {
-      return orderInfo;
-    }
-
-    // 获取商品信息
-    Product product = productMapper.selectById(productId);
-
-    // 生成订单
-    orderInfo = new OrderInfo();
-    orderInfo.setTitle(product.getTitle());
-    orderInfo.setOrderNo(OrderNoUtils.getOrderNo()); // 订单号
-    orderInfo.setPayMent(payMent);
-    orderInfo.setProductId(productId);
-    orderInfo.setTotalFee(product.getPrice()); // 分
-    orderInfo.setOrderStatus(OrderStatus.NOTPAY.getType());
-    baseMapper.insert(orderInfo);
-
-    return orderInfo;
-  }
 
   @Override
   public OrderInfo createOrderTempByWxResourceId(Long resourceId, String payMent) {
@@ -272,31 +244,6 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
     orderInfo.setPayMent(payMent);
     orderInfo.setProductId(resourceId);
     orderInfo.setTotalFee(resource.getPrice()); // 分
-    orderInfo.setOrderStatus(OrderStatus.NOTPAY.getType());
-    baseMapper.insert(orderInfo);
-
-    return orderInfo;
-  }
-
-  @Override
-  public OrderInfo createOrderByWxProductId(Long productId, String payMent) {
-
-    // 查找已存在但未支付的订单
-    OrderInfo orderInfo = this.getNoPayOrderByProductId(productId, "微信");
-    if (orderInfo != null) {
-      return orderInfo;
-    }
-
-    // 获取商品信息
-    Product product = productMapper.selectById(productId);
-
-    // 生成订单
-    orderInfo = new OrderInfo();
-    orderInfo.setTitle(product.getTitle());
-    orderInfo.setOrderNo(OrderNoUtils.getOrderNo()); // 订单号
-    orderInfo.setPayMent(payMent);
-    orderInfo.setProductId(productId);
-    orderInfo.setTotalFee(product.getPrice()); // 分
     orderInfo.setOrderStatus(OrderStatus.NOTPAY.getType());
     baseMapper.insert(orderInfo);
 

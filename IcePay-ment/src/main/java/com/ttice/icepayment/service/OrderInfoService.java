@@ -10,8 +10,6 @@ import java.util.List;
 @Repository
 public interface OrderInfoService extends IService<OrderInfo> {
 
-  OrderInfo createOrderByWxProductId(Long productId, String payMent);
-
   OrderInfo createOrderTempByWxResourceId(Long productId, String payMent);
 
   OrderInfo createOrderLoginByWxResourceId(Long productId, String payMent, Integer userid);
@@ -20,8 +18,6 @@ public interface OrderInfoService extends IService<OrderInfo> {
 
   OrderInfo createOrderForVipLoginByPrice(
       Integer price, String payMent, Integer userid, Integer payid);
-
-  OrderInfo createOrderByAliProductId(Long productId, String payMent);
 
   OrderInfo createOrderTempByAliResourceId(Long productId, String payMent);
 

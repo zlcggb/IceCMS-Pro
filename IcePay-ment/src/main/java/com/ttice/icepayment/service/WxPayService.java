@@ -1,13 +1,14 @@
 package com.ttice.icepayment.service;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.security.GeneralSecurityException;
 import java.util.Map;
 
 @Repository
 public interface WxPayService {
-  Map<String, Object> nativePay(Long productId) throws Exception;
+//  Map<String, Object> nativePay(Long productId) throws Exception;
 
   Map<String, Object> nativePayTemp(Long productId) throws Exception;
 
@@ -30,6 +31,7 @@ public interface WxPayService {
 
   String queryRefund(String orderNo) throws Exception;
 
+  @Transactional(rollbackFor = Exception.class)
   void checkRefundStatus(String refundNo) throws Exception;
 
   void processRefund(Map<String, Object> bodyMap) throws Exception;
@@ -37,6 +39,4 @@ public interface WxPayService {
   String queryBill(String billDate, String type) throws Exception;
 
   String downloadBill(String billDate, String type) throws Exception;
-
-  Map<String, Object> nativePayV2(Long productId, String remoteAddr) throws Exception;
 }

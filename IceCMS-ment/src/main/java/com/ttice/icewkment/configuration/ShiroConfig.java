@@ -18,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -67,13 +66,15 @@ public class ShiroConfig {
     // test 所以可以这样写？
     // filterMap.put("/WebArticle/**","jwt");
     // filterMap.put("/WebArticle/**","perms[admin:all]");
-    // 需要身份检验的页面§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§
+    // 需要身份检验的页面
     filterMap.put("/article/**", "jwt");
     filterMap.put("/articleClass/**", "jwt");
     filterMap.put("/ArticleComment/**", "jwt");
     filterMap.put("/resource/**", "jwt");
     filterMap.put("/ResourceClass/**", "jwt");
     filterMap.put("/ResourceComment/**", "jwt");
+    filterMap.put("/Sitting/**", "jwt");
+
     // user主要需要未登陆登陆认证所以放开
     // filterMap.put("/User/**", "jwt");
     // 主要通过注解方式校验权限

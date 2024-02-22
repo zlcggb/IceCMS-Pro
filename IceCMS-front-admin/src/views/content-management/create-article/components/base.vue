@@ -28,8 +28,31 @@ defineExpose({
   }
 });
 
+const { VITE_APP_BASE_API } = import.meta.env;
+const uploadUrl = ref(`${VITE_APP_BASE_API}/FileApi/updateimage`);
+
 const toolbarConfig: any = { excludeKeys: "fullScreen" };
-const editorConfig = { placeholder: "请输入内容..." };
+const editorConfig = { placeholder: "请输入内容...", MENU_CONF: {} };
+// 更多详细配置看 https://www.wangeditor.com/v5/menu-config.html#%E4%B8%8A%E4%BC%A0%E5%9B%BE%E7%89%87
+editorConfig.MENU_CONF["uploadImage"] = {
+  // 服务端上传地址，根据实际业务改写
+  server: uploadUrl.value,
+  // form-data 的 fieldName，根据实际业务改写
+  fieldName: "editormd-image-file", // 更新为后端期望的字段名
+  // 选择文件时的类型限制，根据实际业务改写
+  allowedFileTypes: ["image/png", "image/jpg", "image/jpeg"],
+  // 自定义插入图片
+  customInsert(res: any, insertFn) {
+    // res.url是后端返回的图片地址，根据实际业务改写
+    if (res.url) {
+      setTimeout(() => {
+        // insertFn插入图片进编辑器
+        insertFn(res.url);
+      }, 2000);
+    }
+  }
+};
+
 const emit = defineEmits(['updateContent']);
 
 const handleCreated = editor => {

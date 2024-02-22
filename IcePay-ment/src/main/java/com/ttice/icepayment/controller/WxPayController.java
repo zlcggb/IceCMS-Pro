@@ -30,32 +30,6 @@ public class WxPayController {
 
   @Resource private Verifier verifier;
 
-  @ApiOperation("调用统一下单API，生成支付二维码（调试）")
-  @ApiImplicitParam(name = "productId", value = "商品id", required = true)
-  @PostMapping("/test-native/{productId}")
-  public R nativePayTest(@PathVariable Long productId) throws Exception {
-
-    log.info("发起支付请求 v3");
-
-    // 返回支付二维码连接和订单号
-    Map<String, Object> map = wxPayService.nativePay(productId);
-
-    return R.ok().setData(map);
-  }
-
-  @ApiOperation("调用统一下单API，生成支付二维码（临时）")
-  @ApiImplicitParam(name = "resourceId", value = "商品id", required = true)
-  @PostMapping("/temp-native/{resourceId}")
-  public R nativePayTemp(@PathVariable Long resourceId) throws Exception {
-
-    log.info("发起支付请求 v3");
-
-    // 返回支付二维码连接和订单号
-    Map<String, Object> map = wxPayService.nativePayTemp(resourceId);
-
-    return R.ok().setData(map);
-  }
-
   @ApiOperation("调用统一下单API，生成支付二维码（登陆）")
   @ApiImplicitParams({
     @ApiImplicitParam(name = "productId", value = "资源id", required = true),

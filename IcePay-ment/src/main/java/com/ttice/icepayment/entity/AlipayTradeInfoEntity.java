@@ -31,19 +31,4 @@ public class AlipayTradeInfoEntity {
   /** 订单描述 */
   private String body;
 
-  /*
-  private List<GoodsDetail> goodsDetailList;
-
-  @Data
-  public static class GoodsDetail {
-      private String alipay_goods_id;
-      private String body;
-      private String goods_category;
-      private String goods_id;
-      private String goods_name;
-      private String price;
-      private Long quantity;
-      private String show_url;
-  }
-  */
 }

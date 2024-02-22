@@ -14,6 +14,8 @@ export const useUserStore = defineStore({
   state: (): userType => ({
     // 用户名
     username: storageLocal().getItem<DataInfo<number>>(userKey)?.username ?? "",
+    // 头像
+    avatar: storageLocal().getItem<DataInfo<number>>(userKey)?.avatar ?? "",
     // 页面级别权限
     roles: storageLocal().getItem<DataInfo<number>>(userKey)?.roles ?? [],
     // 前端生成的验证码（按实际需求替换）
@@ -96,3 +98,4 @@ export const useUserStore = defineStore({
 export function useUserStoreHook() {
   return useUserStore(store);
 }
+

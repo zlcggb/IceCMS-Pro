@@ -19,7 +19,7 @@ import java.util.Map;
 @Repository
 public interface AlipayService {
 
-  Map<String, Object> ftofPay(Long productId) throws Exception;
+//  Map<String, Object> ftofPay(Long productId) throws Exception;
 
   Map<String, Object> ftofTempPay(Long productId) throws Exception;
 

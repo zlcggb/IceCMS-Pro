@@ -11,14 +11,8 @@
       </el-form-item>
       <el-form-item label="当前标签">
         <div class="tag-list">
-          <el-tag
-            v-for="tag in tags"
-            :key="tag.id"
-            closable
-            @close="removeTag(tag)"
-            class="tag-item"
-            :style="{ backgroundColor: tag.color }"
-          >{{ tag.name }}</el-tag>
+          <el-tag v-for="tag in tags" :key="tag.id" closable @close="removeTag(tag)" class="tag-item"
+            :style="{ backgroundColor: tag.color }">{{ tag.tagName }}</el-tag>
         </div>
       </el-form-item>
       <div class="button-container">
@@ -29,10 +23,42 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue'; import { getAllTag, setSTag } from '@/api/setting/tag'; // 确保路径正确
 
 const newTag = ref('');
 const tags = ref([{ id: 1, name: '标签1', color: getRandomColor() }, { id: 2, name: '标签2', color: getRandomColor() }]);
+
+// 获取所有标签并为每个标签添加随机颜色
+const fetchTags = async () => {
+  try {
+    const response = await getAllTag();
+    if (response.code === 200 && response.data) {
+      // 遍历每个标签并添加随机颜色
+      tags.value = response.data.map(tag => ({
+        ...tag,
+        color: getRandomColor() // 调用 getRandomColor 函数获取随机颜色
+      }));
+    }
+  } catch (error) {
+    console.error('Error fetching tags:', error);
+  }
+};
+
+// 添加标签
+const addTag = async () => {
+  if (newTag.value.trim() !== '') {
+    try {
+      await setSTag({ tagName: newTag.value.trim() });
+      fetchTags(); // 重新获取标签
+      newTag.value = ''; // 清空输入框
+    } catch (error) {
+      console.error('Error adding tag:', error);
+    }
+  }
+};
+
+// 页面挂载时获取标签
+onMounted(fetchTags);
 
 function getRandomColor() {
   const letters = '0123456789ABCDEF';
@@ -42,13 +68,6 @@ function getRandomColor() {
   }
   return color;
 }
-
-const addTag = () => {
-  if (newTag.value.trim() !== '') {
-    tags.value.push({ id: Date.now(), name: newTag.value.trim(), color: getRandomColor() });
-    newTag.value = ''; // 清空输入框
-  }
-};
 
 const removeTag = (tagToRemove) => {
   tags.value = tags.value.filter(tag => tag.id !== tagToRemove.id);

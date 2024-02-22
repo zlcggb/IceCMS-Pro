@@ -28,16 +28,6 @@ public class AlipayForQrcodeController {
 
   @Autowired private AlipayConfig alipayConfig;
 
-  @ApiOperation("调用统一下单API，生成支付二维码（临时）")
-  @ApiImplicitParam(name = "resourceId", value = "商品id", required = true)
-  @PostMapping(value = "/temp-ftof/{resourceId}")
-  public R buildAlipayQrcodeUrlTemp(@PathVariable Long resourceId) throws Exception {
-
-    // 返回支付二维码连接和订单号
-    Map<String, Object> map = alipayService.ftofTempPay(resourceId);
-
-    return R.ok().setData(map);
-  }
 
   @ApiOperation("调用统一下单API，生成支付二维码（登陆）")
   @ApiImplicitParams({
@@ -82,17 +72,6 @@ public class AlipayForQrcodeController {
 
     // 返回支付二维码连接和订单号
     Map<String, Object> map = alipayService.ftofvipLoginPay(price, userid, payid);
-
-    return R.ok().setData(map);
-  }
-
-  @ApiOperation("调用统一下单API，生成支付二维码（测试）")
-  @ApiImplicitParam(name = "productId", value = "商品id", required = true)
-  @PostMapping(value = "/test-ftof/{productId}")
-  public R buildAlipayQrcodeUrlTest(@PathVariable Long productId) throws Exception {
-
-    // 返回支付二维码连接和订单号
-    Map<String, Object> map = alipayService.ftofPay(productId);
 
     return R.ok().setData(map);
   }

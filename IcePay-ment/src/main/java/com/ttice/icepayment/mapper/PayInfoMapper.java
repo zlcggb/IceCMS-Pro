@@ -11,4 +11,5 @@ public interface PayInfoMapper extends BaseMapper<PayInfo> {
   // 假设每个配置都是唯一的，我们使用 LIMIT 1 来确保只获取一条记录
   @Select("SELECT * FROM t_pay_info LIMIT 1")
   PayInfo getAlipayConfig();
+
 }

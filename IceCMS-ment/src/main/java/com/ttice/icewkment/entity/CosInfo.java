@@ -1,5 +1,6 @@
 package com.ttice.icewkment.entity;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -11,6 +12,7 @@ import java.io.Serializable;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
+@TableName("s_cos_info")
 public class CosInfo implements Serializable {
 
     private Integer id;
@@ -24,4 +26,6 @@ public class CosInfo implements Serializable {
     private String cosSecretKey;
 
     private String cosClientConfig;
+
+    private Boolean isCos;
 }

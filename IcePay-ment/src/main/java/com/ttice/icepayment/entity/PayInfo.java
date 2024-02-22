@@ -1,11 +1,21 @@
 package com.ttice.icepayment.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+import java.io.Serializable;
 
 @Data
+@EqualsAndHashCode(callSuper = false)
 @TableName("t_pay_info")
-public class PayInfo extends BaseEntity {
+public class PayInfo  implements Serializable {
+
+  @TableId(type = IdType.AUTO)
+  private Integer id;
+
   // Alipay information
 
   // 支付宝app_id

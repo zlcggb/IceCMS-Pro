@@ -12,6 +12,8 @@ export interface DataInfo<T> {
   refreshToken: string;
   /** 用户名 */
   username?: string;
+  /** 当前登陆用户的头像 */
+  avatar?: string;
   /** 当前登陆用户的角色 */
   roles?: Array<string>;
 }
@@ -39,18 +41,18 @@ export function setTokenFromBackend(data): void {
   Cookies.set(multipleTabsKey, 'multiple-tabs');
   useUserStoreHook().SET_USERNAME(data.name);
   // useUserStoreHook().SET_ROLES([data.currentUser.roleKey]);
-  // storageLocal().setItem(sessionKey, data);
-
   // 创建一个符合 DataInfo<number> 接口的对象
   const userInfo: DataInfo<number> = {
     accessToken: data.token,
     expires: Date.now() + 1000 * 60 * 60 * 24, // 过期时间为当前时间加一天
     refreshToken: "your_refresh_token_here",
     username: data.name,
+    avatar: data.profile,
     roles: ["user_role_1"]
   };
   // 使用 storageLocal().setItem 方法存储 userInfo 对象到本地存储
   localStorage.setItem(userKey, JSON.stringify(userInfo));
+  console.log('userInfo', userInfo);
 }
 
 /** 获取`token` */

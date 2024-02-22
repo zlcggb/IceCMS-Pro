@@ -28,6 +28,4 @@ public class Setting implements Serializable {
   private String sitLogo;
 
   private boolean imageFormat;
-
-  private Boolean isCos;
 }

@@ -23,26 +23,35 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @Configuration
 public class Knife4jOrSwagger2Config {
 
-  @Bean(value = "defaultApi2")
-  public Docket defaultApi2() {
-    Docket docket =
-        new Docket(DocumentationType.SWAGGER_2)
+  @Bean(value = "frontendApi")
+  public Docket frontendApi() {
+    return new Docket(DocumentationType.SWAGGER_2)
             .apiInfo(apiInfo())
-            // 分组名称
-            .groupName("ICE分组")
+            .groupName("前端分组")
             .select()
-            // 这里指定Controller扫描包路径
-            .apis(RequestHandlerSelectors.withClassAnnotation(RestController.class))
+            // 前端控制器的包路径
+            .apis(RequestHandlerSelectors.basePackage("com.ttice.icewkment.controller.frontend"))
             .paths(PathSelectors.any())
             .build();
-    return docket;
+  }
+
+  @Bean(value = "backendApi")
+  public Docket backendApi() {
+    return new Docket(DocumentationType.SWAGGER_2)
+            .apiInfo(apiInfo())
+            .groupName("后台分组")
+            .select()
+            // 后台控制器的包路径
+            .apis(RequestHandlerSelectors.basePackage("com.ttice.icewkment.controller.backend"))
+            .paths(PathSelectors.any())
+            .build();
   }
 
   private ApiInfo apiInfo() {
     return new ApiInfoBuilder()
-        .title("Spring Boot Knife4j or swagger-bootstrap-ui API V1.0")
-        .description("swagger-bootstrap-ui-demo RESTful APIs")
-        .version("1.0")
+        .title("Spring Boot IceCMS API V3.4")
+        .description("IceCMS RESTful APIs")
+        .version("3.4")
         .build();
   }
 }
