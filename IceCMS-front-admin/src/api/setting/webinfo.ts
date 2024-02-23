@@ -1,11 +1,11 @@
 import { http } from "@/utils/http";
 
-/**  oss(获取)  */
-export const getCosSetting = () => {
-  return http.request<ResponseData<[]>>("get", "/Sitting/getCosSetting");
+// 获取设置信息
+export const getSettingInfo = () => {
+  return http.request<ResponseData<[]>>("post", "/Sitting/getSetting");
 };
 
-/**  oss(修改)  */
-export const setCosInfo = (data?: object) => {
-  return http.request<ResponseData<[]>>("post", "/Sitting/setCosInfo", { data });
+// 修改设置信息
+export const setSettingInfo = (data: object) => {
+  return http.request<ResponseData<[]>>("post", "/Sitting/setSetting", { data });
 };

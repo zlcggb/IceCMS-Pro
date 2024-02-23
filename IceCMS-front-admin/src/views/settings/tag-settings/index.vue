@@ -23,10 +23,11 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'; import { getAllTag, setSTag } from '@/api/setting/tag'; // 确保路径正确
+import { ref, onMounted } from 'vue';
+import { getAllTag, setSTag, deleteSTag } from '@/api/setting/tag'; // 确保路径正确
 
 const newTag = ref('');
-const tags = ref([{ id: 1, name: '标签1', color: getRandomColor() }, { id: 2, name: '标签2', color: getRandomColor() }]);
+const tags = ref('');
 
 // 获取所有标签并为每个标签添加随机颜色
 const fetchTags = async () => {
@@ -69,9 +70,16 @@ function getRandomColor() {
   return color;
 }
 
-const removeTag = (tagToRemove) => {
-  tags.value = tags.value.filter(tag => tag.id !== tagToRemove.id);
+// 删除标签
+const removeTag = async (tagToRemove) => {
+  try {
+    await deleteSTag(tagToRemove.id); // 调用删除标签的 API
+    fetchTags(); // 重新获取标签
+  } catch (error) {
+    console.error('Error deleting tag:', error);
+  }
 };
+
 </script>
 
 <style scoped>

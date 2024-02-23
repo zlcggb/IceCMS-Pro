@@ -11,13 +11,22 @@ export default {
   },
   children: [
     {
-      path: "/content-management/create-article/:articleId?",
+      path: "/content-management/create-article",
       name: "CreateArticle",
       component: () => import("@/views/content-management/create-article/index.vue"),
       meta: {
         icon: "create",
         title: $t("menus.hsCreateArticle"),
         showParent: true
+      }
+    },
+    {
+      path: "/content-management/edit-article/:articleId",
+      name: "EditArticle",
+      component: () => import("@/views/content-management/create-article/index.vue"),
+      meta: {
+        showLink: false, // 这个路由不会在菜单中显示
+        title: $t("menus.hsEditArticle")
       }
     },
     {

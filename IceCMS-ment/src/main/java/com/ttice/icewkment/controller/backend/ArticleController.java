@@ -110,7 +110,7 @@ public class ArticleController {
   @ApiOperation(value = "根据id获取文章")
   @ApiImplicitParam(name = "id", value = "文章id", required = true)
   @GetMapping("/getArticleById/{id}")
-  public Article getArticleById(@PathVariable("id") Integer id) {
+  public Result getArticleById(@PathVariable("id") Integer id) {
     Article article = articleService.getById(id);
     String sortClass = String.valueOf(article.getSortClass());
     QueryWrapper<ArticleClass> wrapper = new QueryWrapper<>();
@@ -120,7 +120,7 @@ public class ArticleController {
     Article articleBuffer = new Article();
     BeanUtils.copyProperties(article, articleBuffer);
     articleBuffer.setSortClass(Integer.valueOf(name));
-    return articleBuffer;
+    return Result.succ(articleBuffer);
   }
 
   @RequiresAuthentication // 需要登陆认证的接口
@@ -130,16 +130,16 @@ public class ArticleController {
     @ApiImplicitParam(name = "limit", value = "总量", required = true)
   })
   @GetMapping("/getAllArticle/{page}/{limit}")
-  public ArticlePageVO getAllArticle(
+  public Result getAllArticle(
       @PathVariable("page") Integer page, @PathVariable("limit") Integer limit) {
-    return this.articleService.VoList(page, limit, 0);
+    return Result.succ(this.articleService.VoList(page, limit, 0));
   }
 
   @RequiresAuthentication // 需要登陆认证的接口
   @ApiOperation(value = "根据name获取文章")
   @ApiImplicitParam(name = "id", value = "文章name", required = true)
   @GetMapping("/getArticleByName/{name}/{page}/{limit}")
-  public ArticlePageVO getArticleByName(
+  public Result getArticleByName(
       @PathVariable("name") String name,
       @PathVariable("page") Integer page,
       @PathVariable("limit") Integer limit) {
@@ -155,7 +155,7 @@ public class ArticleController {
     articlePageVO.setTotal(articlePage.getTotal());
     articlePageVO.setPages(articlePageVO.getPages());
 
-    return articlePageVO;
+    return Result.succ(articlePageVO);
   }
 
   @RequiresAuthentication // 需要登陆认证的接口

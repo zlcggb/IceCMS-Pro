@@ -11,13 +11,22 @@ export default {
   },
   children: [
     {
-      path: "/resources-management/create-article/:articleId?",
+      path: "/resources-management/create-article",
       name: "CreateResources",
       component: () => import("@/views/resources-management/create-article/index.vue"),
       meta: {
         icon: "create",
         title: $t("menus.hsCreateResources"), // Assuming translation keys are adjusted as needed
         showParent: true
+      }
+    },
+    {
+      path: "/resources-management/edit-article/:articleId",
+      name: "EditResources",
+      component: () => import("@/views/resources-management/create-article/index.vue"),
+      meta: {
+        showLink: false, // 这个路由不会在菜单中显示
+        title: $t("menus.hsEditArticle")
       }
     },
     {

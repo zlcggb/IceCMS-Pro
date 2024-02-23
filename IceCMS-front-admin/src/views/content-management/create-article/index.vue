@@ -211,13 +211,13 @@ function handleExceed(files, fileList) {
 .card-header {
   padding: 15px;
   border-bottom: 1px solid #ebeef5;
-  background-color: #f5f5f5;
+  background-color: #409EFF;
   /* 背景色 */
   font-size: 24px;
   /* 字体大小 */
   font-weight: bold;
   /* 字体加粗 */
-  color: #333;
+  color: #ffffff;
   /* 字体颜色 */
   text-align: center;
   /* 文本居中 */
@@ -238,10 +238,6 @@ function handleExceed(files, fileList) {
   margin: 0 auto;
 }
 
-.card-header {
-  padding: 15px;
-  border-bottom: 1px solid #ebeef5;
-}
 
 .el-collapse-item__header {
   padding-left: 10px;

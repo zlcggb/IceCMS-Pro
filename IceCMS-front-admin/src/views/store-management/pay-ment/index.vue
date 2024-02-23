@@ -146,9 +146,9 @@ const saveSettings = async () => {
     if (response && response.code === 0) {
       console.log('支付配置保存成功');
       // 可以添加进一步的成功处理逻辑
-              ElNotification({
+      ElNotification({
         title: '成功',
-        message: '图片上传设置保存成功',
+        message: '保存成功',
         type: 'success',
       });
     } else {
