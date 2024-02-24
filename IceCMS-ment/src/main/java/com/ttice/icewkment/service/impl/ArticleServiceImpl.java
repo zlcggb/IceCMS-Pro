@@ -56,8 +56,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
     for (Article article : articles) {
 
       // 根据作者名称查询对应的头像地址
-      String author = article.getAuthor();
-      User users = userMapper.searchName(author);
+      Integer authorId = article.getAuthorId();
+      User users = userMapper.searchId(authorId);
       String profile = users.getProfile();
       articleVO = new ArticleVO();
       articleVO.setProfile(profile);
@@ -91,11 +91,17 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
     for (Article article : articles) {
 
       // 根据作者名称查询对应的头像地址
-      String author = article.getAuthor();
-      User users = userMapper.searchName(author);
+      Integer authorId = article.getAuthorId();
+      User users = userMapper.searchId(authorId);
       String profile = users.getProfile();
       articleVO = new ArticleVO();
       articleVO.setProfile(profile);
+
+      //根据作者id获取对应的用户名
+      String author = users.getName();
+      articleVO.setAuthor(author);
+
+
       // 根据文章id获取对应的评论数
       Integer aid = article.getId();
       int acnum = articleCommentService.GetCommentNum(aid);

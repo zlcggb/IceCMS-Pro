@@ -16,6 +16,8 @@ export interface DataInfo<T> {
   avatar?: string;
   /** 当前登陆用户的角色 */
   roles?: Array<string>;
+  /** 当前登陆用户的id */
+  userId?: number;
 }
 
 export const userKey = "user-info";
@@ -48,11 +50,11 @@ export function setTokenFromBackend(data): void {
     refreshToken: "your_refresh_token_here",
     username: data.name,
     avatar: data.profile,
-    roles: ["user_role_1"]
+    roles: ["user_role_1"],
+    userId: data.userid
   };
   // 使用 storageLocal().setItem 方法存储 userInfo 对象到本地存储
   localStorage.setItem(userKey, JSON.stringify(userInfo));
-  console.log('userInfo', userInfo);
 }
 
 /** 获取`token` */

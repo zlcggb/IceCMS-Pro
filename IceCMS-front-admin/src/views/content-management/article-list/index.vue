@@ -1,17 +1,17 @@
 <template>
   <div>
     <el-dialog v-model="dialogVisible" title="添加新文章" width="500px" :before-close="handleClose">
-      <el-form :model="articleForm">
-        <el-form-item label="标题" required :rules="[{ required: true, message: '请输入标题', trigger: 'blur' }]">
+      <el-form :rules="rules" :model="articleForm">
+        <el-form-item label="标题" prop="title">
           <el-input v-model="articleForm.title"></el-input>
         </el-form-item>
-            <el-form-item label="分类" prop="category" required :rules="[{ required: true, message: '请选择分类', trigger: 'blur' }]">
-              <el-select v-model="articleForm.sortClass" placeholder="请选择分类">
-                <el-option v-for="item in classList" :key="item.id" :label="item.name" :value="item.id">
-                </el-option>
-              </el-select>
-            </el-form-item>
-        <el-form-item label="作者" required :rules="[{ required: true, message: '请输入名称', trigger: 'blur' }]">
+        <el-form-item label="分类" prop="sortClass">
+          <el-select v-model="articleForm.sortClass" placeholder="请选择分类">
+            <el-option v-for="item in classList" :key="item.id" :label="item.name" :value="item.id">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="作者" prop="author">
           <el-input v-model="articleForm.author"></el-input>
         </el-form-item>
         <el-form-item label="发布日期">
@@ -30,17 +30,17 @@
     </el-dialog>
     <!-- 编辑文章的对话框 -->
     <el-dialog v-model="editDialogVisible" title="编辑文章" width="500px" :before-close="handleCloseEdit">
-      <el-form :model="editArticleForm">
-        <el-form-item label="标题" required
-          :rules="[{ required: true, message: '请输入标题', trigger: 'blur' }]">
+      <el-form :rules="rules" :model="editArticleForm">
+        <el-form-item label="标题" prop="title">
           <el-input v-model="editArticleForm.title"></el-input>
         </el-form-item>
-         <el-select v-model="articleForm.sortClass" placeholder="请选择分类">
-                  <el-option v-for="item in classList" :key="item.id" :label="item.name" :value="item.id">
-                  </el-option>
-                </el-select>
-        <el-form-item label="作者" required
-          :rules="[{ required: true, message: '请输入作者姓名', trigger: 'blur' }]">
+        <el-form-item label="分类" prop="sortClass">
+          <el-select v-model="articleForm.sortClass" placeholder="请选择分类">
+            <el-option v-for="item in classList" :key="item.id" :label="item.name" :value="item.id">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="作者" prop="author">
           <el-input v-model="editArticleForm.author"></el-input>
         </el-form-item>
         <el-form-item label="发布时间">
@@ -75,16 +75,29 @@
           </template>
         </el-table-column>
         <el-table-column prop="id" label="ID" width="80"></el-table-column>
-        <el-table-column prop="title" label="标题"></el-table-column>
-        <el-table-column prop="author" label="作者"></el-table-column>
+        <el-table-column prop="title" label="标题">
+             <template #default="scope">
+          <a class="article-link">{{ scope.row.title }}</a>
+        </template>
+        </el-table-column>
+    <el-table-column prop="author" label="作者">
+      <template #default="scope">
+        <div class="author-container">
+          <span>{{ scope.row.author }}</span>
+          <el-avatar :src="scope.row.profile" size="small"></el-avatar>
+        </div>
+      </template>
+    </el-table-column>
+        <el-table-column prop="className" label="分类">
+        </el-table-column>
+
         <el-table-column prop="addTime" label="发布日期"
           :formatter="(row, column, cellValue) => dayjs(cellValue).format('YYYY-MM-DD  HH:mm')"></el-table-column>
         <el-table-column label="操作" width="180">
           <template #default="scope">
             <el-button type="primary" plain size="small" @click.stop="editArticle(scope.row)"
-              @click="editArticle(scope.row)">修改</el-button>
-            <el-button type="danger" plain size="small" @click.stop="confirmDeleteArticle(scope.row.id)"
-              @click="confirmDeleteArticle(scope.row.id)">删除</el-button>
+              @click="editArticle(scope.row)">编辑</el-button>
+            <el-button type="danger" plain size="small" @click.stop="confirmDeleteArticle(scope.row.id)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -102,7 +115,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
 import { ElMessageBox, ElNotification } from 'element-plus';
-import { newAaticle, getAllArticles, createArticle, updateArticles, deleteArticle } from '@/api/function/article'; // 请确保路径正确
+import { deleteArticlesBatch, getAllArticles, createArticle, updateArticles, deleteArticle } from '@/api/function/article'; // 请确保路径正确
 import type { Article } from './types';
 import { useRouter } from 'vue-router'
 import dayjs from 'dayjs';
@@ -115,6 +128,20 @@ const selectedArticles = ref<Article[]>([]);
 const currentPage = ref(1);
 const pageSize = ref(5);
 const totalArticles = ref(0);
+
+// 规则
+const rules = ref({
+  title: [
+    { required: true, message: '请输入标题', trigger: 'blur' }
+  ],
+  sortClass: [
+    { required: true, message: '请输入分类', trigger: 'blur' }
+  ],
+  author: [
+    { required: true, message: '请输入作者', trigger: 'blur' }
+  ],
+  // 其他规则...
+});
 
 const classList = ref([
   {
@@ -207,12 +234,19 @@ const submitArticle = async () => {
 // 更新文章
 const updateArticle = async () => {
   try {
-    // await updateArticle(editArticleForm.value);
+    // 先复制 articleForm 的内容
+    const formData = { ...editArticleForm.value };
+
+    // 格式化日期字段
+    if (formData.addTime) {
+      formData.addTime = dayjs(formData.addTime).format('YYYY-MM-DD HH:mm:ss');
+    }
+    await updateArticles(formData, editArticleForm.value.id);
     fetchArticles(); // 重新获取文章列表
     editDialogVisible.value = false;
     ElNotification({
-      title: 'Success',
-      message: 'Article updated successfully',
+      title: '成功',
+      message: '文章更新成功',
       type: 'success',
     });
   } catch (error) {
@@ -222,17 +256,30 @@ const updateArticle = async () => {
 
 // 删除文章
 const confirmDeleteArticle = async (articleId) => {
-  try {
-    await deleteArticle(articleId);
-    fetchArticles(); // 重新获取文章列表
-    ElNotification({
-      title: 'Deleted',
-      message: 'Article deleted successfully',
-      type: 'success',
+  // 弹出确认框
+  ElMessageBox.confirm('你确定要删除此文章吗?')
+    .then(() => {
+      // 如果用户点击了确认按钮
+      try {
+        deleteArticle(articleId);
+        fetchArticles(); // 重新获取文章列表
+        ElNotification({
+          title: '删除文章',
+          message: '文章删除成功',
+          type: 'success',
+        });
+      } catch (error) {
+        console.error('Error deleting article:', error);
+      }
+    })
+    .catch(() => {
+      // 如果用户点击了取消按钮
+      ElNotification({
+        title: '取消删除',
+        message: '文章未被删除',
+        type: 'info',
+      });
     });
-  } catch (error) {
-    console.error('Error deleting article:', error);
-  }
 };
 
 const editDialogVisible = ref(false);
@@ -241,6 +288,7 @@ const editArticleForm = ref({
   title: '',
   author: '',
   addTime: '',
+  className: '',
   thumb: '',
 });
 
@@ -249,6 +297,7 @@ const articleForm = ref({
   sortClass: '',
   author: '',
   addTime: '',
+  className: '',
   thumb: '',
 });
 
@@ -265,21 +314,6 @@ const editArticle = (article: Article) => {
   editDialogVisible.value = true;
 };
 
-// const updateArticle = () => {
-//   const index = articles.value.findIndex(article => article.id === editArticleForm.value.id);
-//   if (index !== -1) {
-//     articles.value[index] = { ...editArticleForm.value };
-//     editDialogVisible.value = false;
-//     ElNotification({
-//       title: 'Success',
-//       message: 'Article updated successfully',
-//       type: 'success',
-//     });
-//   }
-// };
-
-
-
 const handleClose = (done: () => void) => {
   ElMessageBox.confirm('你确定要关闭此页面?')
     .then(() => done())
@@ -287,24 +321,9 @@ const handleClose = (done: () => void) => {
 };
 
 const showAddArticleDialog = () => {
-  articleForm.value = { title: '', author: '', addTime: '', thumb: '', sortClass: '' }; // Reset form
+  articleForm.value = { title: '', author: '', className: '', addTime: '', thumb: '', sortClass: '' }; // Reset form
   dialogVisible.value = true;
 };
-
-// const submitArticle = () => {
-//   const newArticle: Article = {
-//     id: Math.max(0, ...articles.value.map(a => a.id)) + 1,
-//     ...articleForm.value,
-//     publishDate: articleForm.value.publishDate || new Date().toISOString().slice(0, 10),
-//   };
-//   articles.value.push(newArticle);
-//   dialogVisible.value = false;
-//   ElNotification({
-//     title: 'Success',
-//     message: 'Article added successfully',
-//     type: 'success',
-//   });
-// };
 
 const filteredArticles = computed(() => {
   return articles.value.filter(article => article.title.includes(searchQuery.value));
@@ -314,44 +333,49 @@ const handleSelectionChange = (val: Article[]) => {
   selectedArticles.value = val;
 };
 
-const confirmDeleteSelected = () => {
+const confirmDeleteSelected = async () => {
   if (selectedArticles.value.length === 0) {
     ElNotification({
-      title: 'No Selection',
-      message: 'No articles selected',
+      title: '没有选择文章',
+      message: '请选择要删除的文章',
       type: 'warning',
     });
     return;
   }
-  ElMessageBox.confirm('Are you sure to delete selected articles?')
-    .then(() => {
-      const idsToDelete = new Set(selectedArticles.value.map(a => a.id));
-      articles.value = articles.value.filter(article => !idsToDelete.has(article.id));
+
+  try {
+    await ElMessageBox.confirm('你确定要删除此文章吗?');
+
+    // Extract IDs of selected articles
+    const idsToDelete = selectedArticles.value.map(a => a.id);
+
+    // Call the API to delete articles
+    const response = await deleteArticlesBatch(idsToDelete);
+
+    // Check if deletion was successful based on your API response structure
+    if (response.code === 200) {
+      // Filter out deleted articles from the articles array
+      fetchArticles(); // 重新获取文章列表
       selectedArticles.value = [];
+
       ElNotification({
-        title: 'Deleted',
-        message: 'The selected articles have been deleted',
+        title: '删除成功',
+        message: '成功删除文章',
         type: 'success',
       });
-    })
-    .catch(() => { });
+    } else {
+      // Handle unsuccessful deletion
+      ElNotification({
+        title: '失败',
+        message: '删除文章失败',
+        type: 'error',
+      });
+    }
+  } catch (error) {
+    // Handle cancellation or error
+    console.error('Deletion cancelled or failed:', error);
+  }
 };
-
-// const confirmDeleteArticle = (articleId: number) => {
-//   ElMessageBox.confirm('Are you sure to delete this article?')
-//     .then(() => {
-//       const index = articles.value.findIndex(article => article.id === articleId);
-//       if (index !== -1) {
-//         articles.value.splice(index, 1);
-//         ElNotification({
-//           title: 'Deleted',
-//           message: 'Article deleted successfully',
-//           type: 'success',
-//         });
-//       }
-//     })
-//     .catch(() => { });
-// };
 </script>
 
 <style scoped>
@@ -461,4 +485,14 @@ const confirmDeleteSelected = () => {
 :deep(.el-pagination) {
   float: right;
 }
+/* 调整作者信息和头像的样式 */
+.author-container {
+  display: flex;
+  align-items: center; /* 垂直居中 */
+  gap: 10px; /* 文字和头像之间的距离 */
+}
+
+/* Remove the empty ruleset */
+  /* 可以添加更多样式来调整文字显示 */
+/* } */
 </style>

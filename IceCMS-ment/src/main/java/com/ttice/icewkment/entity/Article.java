@@ -54,8 +54,8 @@ public class Article implements Serializable {
   /** 文章内容 */
   private String content;
 
-  /** 作者 */
-  private String author;
+  /** 作者id */
+  private Integer authorId;
 
   /** 来源 */
   private String copyfrom;

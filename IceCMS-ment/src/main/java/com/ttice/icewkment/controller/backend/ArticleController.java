@@ -97,7 +97,23 @@ public class ArticleController {
     return Result.succ(this.articleService.removeById(id));
   }
 
-  // 暂时无用
+  @RequiresAuthentication // 需要登陆认证的接口
+  @ApiOperation(value = "批量删除文章")
+  @ApiImplicitParam(name = "arr", value = "文章id", required = true)
+  @PostMapping("/DeleteArticleBatch")
+  public Result DeleteArticleBatch(@RequestBody int[] arr) {
+    System.out.println(arr);
+    List<Integer> list = Arrays.stream(arr).boxed().collect(Collectors.toList());
+    articleService.removeByIds(list);
+
+    // 根据文章id删除评论
+    QueryWrapper<ArticleComment> wrapper = new QueryWrapper<ArticleComment>();
+    wrapper.in("article_id", list);
+    articleCommentMapper.delete(wrapper);
+
+    return Result.succ(null);
+  }
+
   @RequiresAuthentication // 需要登陆认证的接口
   @ApiOperation(value = "根据id修改文章")
   @ApiImplicitParam(name = "id", value = "文章id", required = true)
@@ -158,19 +174,6 @@ public class ArticleController {
     return Result.succ(articlePageVO);
   }
 
-  @RequiresAuthentication // 需要登陆认证的接口
-  @ApiOperation(value = "批量删除文章")
-  @ApiImplicitParam(name = "arr", value = "文章id", required = true)
-  @PostMapping("/DeleteArticleBatch")
-  public Result DeleteArticleBatch(@RequestBody int[] arr) {
-    System.out.println(arr);
-    List<Integer> list = Arrays.stream(arr).boxed().collect(Collectors.toList());
-
-    articleService.removeByIds(list);
-
-    return Result.succ(null);
-  }
-
   public List<ArticleVO> ArticleToArticleVo(List<Article> articleList) {
     List<ArticleVO> result = new ArrayList<>();
 
@@ -178,8 +181,8 @@ public class ArticleController {
 
       ArticleVO articleVO = null;
       // 根据作者名称查询对应的头像地址
-      String author = article.getAuthor();
-      User users = userMapper.searchName(author);
+      Integer authorId = article.getAuthorId();
+      User users = userMapper.searchId(authorId);
       String profile = users.getProfile();
       articleVO = new ArticleVO();
       articleVO.setProfile(profile);

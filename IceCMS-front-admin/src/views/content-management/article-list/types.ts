@@ -4,4 +4,6 @@ export interface Article {
   author: string;
   addTime: string;
   thumb: string;
+  profile: string;
+  className: string;
 }

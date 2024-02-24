@@ -26,6 +26,7 @@ const {
   onPanel,
   resolvePath,
   username,
+  userProfile,
   avatar,
   getDivStyle,
   avatarsStyle,
@@ -137,6 +138,12 @@ watch(
           <p v-if="username" class="dark:text-white">{{ username }}</p>
         </span>
         <template #dropdown>
+            <el-dropdown-menu class="userinfo">
+              <el-dropdown-item @click="userProfile">
+                <IconifyIconOffline :icon="LogoutCircleRLine" style="margin: 5px" />
+                个人中心
+              </el-dropdown-item>
+            </el-dropdown-menu>
           <el-dropdown-menu class="logout">
             <el-dropdown-item @click="logout">
               <IconifyIconOffline

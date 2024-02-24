@@ -70,7 +70,7 @@ const { t, locale, translationCh, translationEn } = useTranslationLang();
           <p v-if="username" class="dark:text-white">{{ username }}</p>
         </span>
         <template #dropdown>
-          <el-dropdown-menu class="logout">
+          <el-dropdown-menu class="userinfo">
             <el-dropdown-item @click="userProfile">
               <IconifyIconOffline :icon="LogoutCircleRLine" style="margin: 5px" />
               个人中心

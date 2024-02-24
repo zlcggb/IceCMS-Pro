@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
+import io.swagger.models.auth.In;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -65,8 +66,8 @@ public class Resource implements Serializable {
   /** 文章内容 */
   private String content;
 
-  /** 作者 */
-  private String author;
+  /** 作者id */
+  private Integer authorId;
 
   /** 来源 */
   private String copyfrom;

@@ -10,20 +10,27 @@ export const getAllArticles = (page, limit) => {
   return http.request<ResponseData<[]>>("get", `/article/getAllArticle/${page}/${limit}`);
 };
 
-// 写createArticle, updateArticle, deleteArticle方法
+// 新增文章
 export const createArticle = (data: object) => {
   return http.request<ResponseData<[]>>("post", "/article/create", { data });
 };
 
-export const updateArticles = (data: object) => {
-  return http.request<ResponseData<[]>>("post", "/article/update", { data });
+// 修改文章
+export const updateArticles = (data: object, id) => {
+  return http.request<ResponseData<[]>>("post", `/article/ReviseArticleById/${id}`, { data });
 };
 
+// 删除文章
 export const deleteArticle = (id: string) => {
-  return http.request<ResponseData<[]>>("delete", `/article/delete/${id}`);
+  return http.request<ResponseData<[]>>("get", `/article/DelectArticleById/${id}`);
 };
 
 // 获取文章详情
 export const getArticleDetail = (id: string) => {
-  return http.request<ResponseData<[]>>("get", `/article/getArticleDetail/${id}`);
+  return http.request<ResponseData<[]>>("get", `/article/getArticleById/${id}`);
+};
+
+// 批量删除文章
+export const deleteArticlesBatch = (ids: number[]) => {
+  return http.request<ResponseData<[]>>("post", "/article/DeleteArticleBatch", { data: ids });
 };

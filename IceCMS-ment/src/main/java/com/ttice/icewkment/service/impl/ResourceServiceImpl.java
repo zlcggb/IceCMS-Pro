@@ -10,6 +10,7 @@ import com.ttice.icewkment.entity.User;
 import com.ttice.icewkment.mapper.ResourceMapper;
 import com.ttice.icewkment.mapper.UserMapper;
 import com.ttice.icewkment.service.ResourceService;
+import io.swagger.models.auth.In;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -49,8 +50,8 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource>
     for (Resource resource : resources) {
 
       // 根据作者名称查询对应的头像地址
-      String author = resource.getAuthor();
-      User users = userMapper.searchName(author);
+      Integer authorId = resource.getAuthorId();
+      User users = userMapper.searchId(authorId);
       String profile = users.getProfile();
       resourceVO = new ResourceVO();
       resourceVO.setProfile(profile);
@@ -80,13 +81,19 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource>
     List<Resource> resources = resultPage.getRecords();
 
     for (Resource resource : resources) {
-      String author = resource.getAuthor();
+      // 根据作者id查询对应的头像地址
+      Integer authorId = resource.getAuthorId();
       QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
-      userQueryWrapper.eq("USERNAME", author);
+      userQueryWrapper.eq("user_id", authorId);
       User user = userMapper.selectOne(userQueryWrapper);
       String profile = user.getProfile();
+
       resourceVO = new ResourceVO();
       resourceVO.setAuthorThumb(profile);
+      //设置用户名称
+      String author = user.getUsername();
+      resourceVO.setAuthor(author);
+
       BeanUtils.copyProperties(resource, resourceVO);
       result.add(resourceVO);
     }
@@ -129,9 +136,9 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource>
     List<Resource> resources = resultPage.getRecords();
 
     for (Resource resource : resources) {
-      String author = resource.getAuthor();
+      Integer authorId = resource.getAuthorId();
       QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
-      userQueryWrapper.eq("USERNAME", author);
+      userQueryWrapper.eq("user_id", authorId);
       User user = userMapper.selectOne(userQueryWrapper);
       String profile = user.getProfile();
       resourceVO = new ResourceVO();
@@ -188,9 +195,9 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource>
 
     List<Resource> resources = resourceMapper.selectList(wrapper);
     for (Resource resource : resources) {
-      String author = resource.getAuthor();
+      Integer authorId = resource.getAuthorId();
       QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
-      userQueryWrapper.eq("USERNAME", author);
+      userQueryWrapper.eq("user_id", authorId);
       User user = userMapper.selectOne(userQueryWrapper);
       String profile = user.getProfile();
       resourceVO = new ResourceVO();

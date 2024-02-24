@@ -14,6 +14,7 @@ import com.ttice.icewkment.service.ArticleService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.models.auth.In;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -201,8 +202,8 @@ public class WebArticleController {
       // 获取对应评论数量
       int acnum = articleCommentService.GetCommentNum(aid);
       // 根据作者名称查询对应的头像地址
-      String author = article.getAuthor();
-      User users = userMapper.searchName(author);
+      Integer authorId = article.getAuthorId();
+      User users = userMapper.searchId(authorId);
       String profile = users.getProfile();
       // 获取对应分类
       String sortClass = String.valueOf(article.getSortClass());
