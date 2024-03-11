@@ -48,7 +48,7 @@ export function useColumns() {
       cellRenderer: () => {
         return (
           <a
-            href="https://github.com/pure-admin/vue-pure-admin"
+            href="https://github.com/Thecosy/IceCMS-Pro"
             target="_blank"
           >
             <span style="color: var(--el-color-primary)">完整版代码链接</span>
@@ -57,12 +57,12 @@ export function useColumns() {
       }
     },
     {
-      label: "精简版代码地址",
+      label: "开源版代码地址",
       className: "pure-version",
       cellRenderer: () => {
         return (
           <a
-            href="https://github.com/pure-admin/pure-admin-thin"
+            href="https://github.com/Thecosy/IceCMS"
             target="_blank"
           >
             <span style="color: var(--el-color-primary)">精简版代码链接</span>
@@ -76,7 +76,7 @@ export function useColumns() {
       cellRenderer: () => {
         return (
           <a
-            href="https://yiming_chang.gitee.io/pure-admin-doc"
+            href="https://www.icecms.cn"
             target="_blank"
           >
             <span style="color: var(--el-color-primary)">文档链接</span>
@@ -90,7 +90,7 @@ export function useColumns() {
       cellRenderer: () => {
         return (
           <a
-            href="https://yiming_chang.gitee.io/vue-pure-admin"
+            href="https://www.icmcmspro.com"
             target="_blank"
           >
             <span style="color: var(--el-color-primary)">预览链接</span>

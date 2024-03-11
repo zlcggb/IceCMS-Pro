@@ -8,7 +8,9 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ArticleCommentService extends IService<ArticleComment> {
+
   int GetCommentNum(Integer articleId);
+
   ArticleCommentPageVO VoList(Integer page, Integer limit, Integer click);
 
 }

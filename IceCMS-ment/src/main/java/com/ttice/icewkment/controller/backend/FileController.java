@@ -131,6 +131,38 @@ public class FileController {
     return null;
   }
 
+  @ApiOperation(value = "上传视频")
+  @ApiImplicitParam(name = "file", value = "视频Formate", required = true)
+  @PostMapping("/updatevideo")
+  public JSONObject videoUpload(@RequestParam("editormd-video-file") MultipartFile video) throws IOException {
+      JSONObject jsonObject = new JSONObject();
+      // 查询图片上传方式
+      CosInfo cosInfo = cosInfoMapper.selectOne(null);
+      Boolean isCos = cosInfo.getIsCos();
+      String fileNames = "";
+      if (isCos) {
+          // 获取文件名
+          String fileName = video.getOriginalFilename();
+          // 获取文件后缀
+          String prefix = fileName.substring(fileName.lastIndexOf("."));
+          // 用uuid做为文件名，防止生成的临时文件重复
+          final File excelFile = File.createTempFile("videoFile-" + System.currentTimeMillis(), prefix);
+          // 将MultipartFile转为File
+          video.transferTo(excelFile);
+          // 调用腾讯云工具上传文件
+          fileNames = TencentCOS.uploadfile(excelFile);
+      } else {
+          // 调用本地上传文件
+          fileNames = localUpImg(video);
+      }
+      // 程序结束时，删除临时文件
+      // TencentCOS.deletefile(String.valueOf(excelFile));
+      // 存入图片jsonObject
+      jsonObject.put("url", fileNames);
+      // 返回图片名称
+      return jsonObject;
+  }
+
   /**
    * @Description: file 转 MultipartFile
    *

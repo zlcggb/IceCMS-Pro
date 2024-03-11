@@ -2,6 +2,15 @@
 import "@wangeditor/editor/dist/css/style.css";
 import { Editor, Toolbar } from "@wangeditor/editor-for-vue";
 import { onBeforeUnmount, ref, shallowRef, onMounted } from "vue";
+import { defineProps } from 'vue';
+import * as ArticleAPI from "@/api/res_function/resourse";
+
+const props = defineProps({
+  data: {
+    type: String, // 或者其他你期望的类型
+    default: ''
+  }
+});
 
 defineOptions({
   name: "BaseEditor"
@@ -12,13 +21,30 @@ const mode = "default";
 const editorRef = shallowRef();
 
 // 内容 HTML
-const valueHtml = ref("<p></p>");
+const valueHtml = ref('');
+
+const fetchData = async (articleId) => {
+  try {
+    const response = await ArticleAPI.getArticleById(articleId);
+    if (response.code === 200) {
+      // classList.value = response.data;
+      console.log(response)
+      const res: {
+        [x: string]: string; title: string
+      } = Array.isArray(response.data) ? { title: '' } : response.data;
+      valueHtml.value = res.content
+    }
+  } catch (error) {
+    console.error('Error fetching articles:', error);
+  }
+};
 
 // 模拟 ajax 异步获取内容
 onMounted(() => {
   setTimeout(() => {
-    valueHtml.value = "<p></p>";
-  }, 150);
+    // valueHtml.value = '';
+  }, 1500);
+  fetchData(props.data);
 });
 
 // 暴露给父组件的内容
@@ -71,18 +97,8 @@ onBeforeUnmount(() => {
 
 <template>
   <div class="wangeditor">
-    <Toolbar
-      :editor="editorRef"
-      :defaultConfig="toolbarConfig"
-      :mode="mode"
-      style="border-bottom: 1px solid #ccc"
-    />
-    <Editor
-      v-model="valueHtml"
-      :defaultConfig="editorConfig"
-      :mode="mode"
-      style="height: 500px; overflow-y: hidden"
-      @onCreated="handleCreated"
-    />
+    <Toolbar :editor="editorRef" :defaultConfig="toolbarConfig" :mode="mode" style="border-bottom: 1px solid #ccc" />
+    <Editor v-model="valueHtml" :defaultConfig="editorConfig" :mode="mode" style="height: 500px; overflow-y: hidden"
+      @onCreated="handleCreated" />
   </div>
 </template>

@@ -38,46 +38,21 @@ const {
 
 <template>
   <div class="main">
-    <el-form
-      ref="formRef"
-      :inline="true"
-      :model="form"
-      class="search-form bg-bg_color w-[99/100] pl-8 pt-[12px]"
-    >
+    <el-form ref="formRef" :inline="true" :model="form" class="search-form bg-bg_color w-[99/100] pl-8 pt-[12px]">
       <el-form-item label="角色名称：" prop="name">
-        <el-input
-          v-model="form.name"
-          placeholder="请输入角色名称"
-          clearable
-          class="!w-[180px]"
-        />
+        <el-input v-model="form.name" placeholder="请输入角色名称" clearable class="!w-[180px]" />
       </el-form-item>
       <el-form-item label="角色标识：" prop="code">
-        <el-input
-          v-model="form.code"
-          placeholder="请输入角色标识"
-          clearable
-          class="!w-[180px]"
-        />
+        <el-input v-model="form.code" placeholder="请输入角色标识" clearable class="!w-[180px]" />
       </el-form-item>
       <el-form-item label="状态：" prop="status">
-        <el-select
-          v-model="form.status"
-          placeholder="请选择状态"
-          clearable
-          class="!w-[180px]"
-        >
+        <el-select v-model="form.status" placeholder="请选择状态" clearable class="!w-[180px]">
           <el-option label="已启用" value="1" />
           <el-option label="已停用" value="0" />
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button
-          type="primary"
-          :icon="useRenderIcon('search')"
-          :loading="loading"
-          @click="onSearch"
-        >
+        <el-button type="primary" :icon="useRenderIcon('search')" :loading="loading" @click="onSearch">
           搜索
         </el-button>
         <el-button :icon="useRenderIcon(Refresh)" @click="resetForm(formRef)">
@@ -86,52 +61,26 @@ const {
       </el-form-item>
     </el-form>
 
-    <PureTableBar
-      title="角色管理（仅演示，操作后不生效）"
-      :columns="columns"
-      @refresh="onSearch"
-    >
+    <PureTableBar title="角色管理" :columns="columns" @refresh="onSearch">
       <template #buttons>
-        <el-button
-          type="primary"
-          :icon="useRenderIcon(AddFill)"
-          @click="openDialog()"
-        >
+        <el-button type="primary" :icon="useRenderIcon(AddFill)" @click="openDialog()">
           新增角色
         </el-button>
       </template>
       <template v-slot="{ size, dynamicColumns }">
-        <pure-table
-          align-whole="center"
-          showOverflowTooltip
-          table-layout="auto"
-          :loading="loading"
-          :size="size"
-          adaptive
-          :data="dataList"
-          :columns="dynamicColumns"
-          :pagination="pagination"
-          :paginationSmall="size === 'small' ? true : false"
-          :header-cell-style="{
+        <pure-table align-whole="center" showOverflowTooltip table-layout="auto" :loading="loading" :size="size" adaptive
+          :data="dataList" :columns="dynamicColumns" :pagination="pagination"
+          :paginationSmall="size === 'small' ? true : false" :header-cell-style="{
             background: 'var(--el-fill-color-light)',
             color: 'var(--el-text-color-primary)'
-          }"
-          @selection-change="handleSelectionChange"
-          @page-size-change="handleSizeChange"
-          @page-current-change="handleCurrentChange"
-        >
+          }" @selection-change="handleSelectionChange" @page-size-change="handleSizeChange"
+          @page-current-change="handleCurrentChange">
           <template #operation="{ row }">
-            <el-button
-              class="reset-margin"
-              link
-              type="primary"
-              :size="size"
-              :icon="useRenderIcon(EditPen)"
-              @click="openDialog('修改', row)"
-            >
+            <el-button class="reset-margin" link type="primary" :size="size" :icon="useRenderIcon(EditPen)"
+              @click="openDialog('修改', row)">
               修改
             </el-button>
-            <el-button
+            <!-- <el-button
               class="reset-margin"
               link
               type="primary"
@@ -140,19 +89,10 @@ const {
               @click="handleMenu"
             >
               菜单权限
-            </el-button>
-            <el-popconfirm
-              :title="`是否确认删除角色名称为${row.name}的这条数据`"
-              @confirm="handleDelete(row)"
-            >
+            </el-button> -->
+            <el-popconfirm :title="`是否确认删除角色名称为${row.name}的这条数据`" @confirm="handleDelete(row)">
               <template #reference>
-                <el-button
-                  class="reset-margin"
-                  link
-                  type="primary"
-                  :size="size"
-                  :icon="useRenderIcon(Delete)"
-                >
+                <el-button class="reset-margin" link type="primary" :size="size" :icon="useRenderIcon(Delete)">
                   删除
                 </el-button>
               </template>

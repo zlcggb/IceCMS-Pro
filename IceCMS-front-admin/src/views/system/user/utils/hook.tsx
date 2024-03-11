@@ -13,7 +13,7 @@ import type { FormItemProps, RoleFormItemProps } from "../utils/types";
 import { hideTextAtIndex, getKeyList, isAllEmpty } from "@pureadmin/utils";
 import {
   getRoleIds,
-  getDeptList,
+  // getDeptList,
   getUserList,
   getAllRoleList
 } from "@/api/system";
@@ -264,16 +264,16 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
   }
 
   async function onSearch() {
-    loading.value = true;
-    const { data } = await getUserList(toRaw(form));
-    dataList.value = data.list;
-    pagination.total = data.total;
-    pagination.pageSize = data.pageSize;
-    pagination.currentPage = data.currentPage;
+    // loading.value = true;
+    // const { data } = await getUserList(toRaw(form));
+    // dataList.value = data.list;
+    // pagination.total = data.total;
+    // pagination.pageSize = data.pageSize;
+    // pagination.currentPage = data.currentPage;
 
-    setTimeout(() => {
-      loading.value = false;
-    }, 500);
+    // setTimeout(() => {
+    //   loading.value = false;
+    // }, 500);
   }
 
   const resetForm = formEl => {
@@ -486,11 +486,11 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
     treeLoading.value = true;
     onSearch();
 
-    // 归属部门
-    const { data } = await getDeptList();
-    higherDeptOptions.value = handleTree(data);
-    treeData.value = handleTree(data);
-    treeLoading.value = false;
+    // // 归属部门
+    // const { data } = await getDeptList();
+    // higherDeptOptions.value = handleTree(data);
+    // treeData.value = handleTree(data);
+    // treeLoading.value = false;
 
     // 角色列表
     roleOptions.value = (await getAllRoleList()).data;

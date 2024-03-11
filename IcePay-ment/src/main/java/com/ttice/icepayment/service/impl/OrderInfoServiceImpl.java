@@ -11,10 +11,12 @@ import com.ttice.icepayment.service.OrderInfoService;
 import com.ttice.icepayment.util.OrderNoUtils;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import io.swagger.models.auth.In;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
@@ -27,7 +29,41 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
 
   @Autowired private PayResourceMapper resourceMapper;
 
+  @Autowired private OrderInfoMapper orderInfoMapper;
+
   @Autowired private VipProductMapper vipProductMapper;
+
+  @Override
+  public BigDecimal countSales(){
+    List<OrderInfo> todayOrders = orderInfoMapper.selectList(null);
+
+    BigDecimal totalFee = BigDecimal.ZERO;
+    for (OrderInfo order : todayOrders) {
+      totalFee = totalFee.add(BigDecimal.valueOf(order.getTotalFee()));
+    }
+    return totalFee;
+  }
+
+  @Override
+  public Integer countNewOrder() {
+    QueryWrapper<OrderInfo> queryWrapper = new QueryWrapper<>();
+    queryWrapper.apply("DATE(create_time) = CURDATE()");
+    List<OrderInfo> todayOrders = orderInfoMapper.selectList(queryWrapper);
+    return todayOrders.size();
+  }
+
+  @Override
+  public BigDecimal countToday() {
+    QueryWrapper<OrderInfo> queryWrapper = new QueryWrapper<>();
+    queryWrapper.apply("DATE(create_time) = CURDATE()");
+    List<OrderInfo> todayOrders = orderInfoMapper.selectList(queryWrapper);
+
+    BigDecimal totalFee = BigDecimal.ZERO;
+    for (OrderInfo order : todayOrders) {
+      totalFee = totalFee.add(BigDecimal.valueOf(order.getTotalFee()));
+    }
+    return totalFee;
+  }
 
   @Override
   public OrderInfo createOrderTempByAliResourceId(Long ResourceId, String payMent) {

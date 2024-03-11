@@ -2,7 +2,7 @@ import dayjs from "dayjs";
 import editForm from "../form.vue";
 import { handleTree } from "@/utils/tree";
 import { message } from "@/utils/message";
-import { getDeptList } from "@/api/system";
+// import { getDeptList } from "@/api/system";
 import { usePublicHooks } from "../../hooks";
 import { addDialog } from "@/components/ReDialog";
 import { reactive, ref, onMounted, h } from "vue";
@@ -73,21 +73,21 @@ export function useDept() {
   }
 
   async function onSearch() {
-    loading.value = true;
-    const { data } = await getDeptList(); // 这里是返回一维数组结构，前端自行处理成树结构，返回格式要求：唯一id加父节点parentId，parentId取父节点id
-    let newData = data;
-    if (!isAllEmpty(form.name)) {
-      // 前端搜索部门名称
-      newData = newData.filter(item => item.name.includes(form.name));
-    }
-    if (!isAllEmpty(form.status)) {
-      // 前端搜索状态
-      newData = newData.filter(item => item.status === form.status);
-    }
-    dataList.value = handleTree(newData); // 处理成树结构
-    setTimeout(() => {
-      loading.value = false;
-    }, 500);
+    // loading.value = true;
+    // const { data } = await getDeptList(); // 这里是返回一维数组结构，前端自行处理成树结构，返回格式要求：唯一id加父节点parentId，parentId取父节点id
+    // let newData = data;
+    // if (!isAllEmpty(form.name)) {
+    //   // 前端搜索部门名称
+    //   newData = newData.filter(item => item.name.includes(form.name));
+    // }
+    // if (!isAllEmpty(form.status)) {
+    //   // 前端搜索状态
+    //   newData = newData.filter(item => item.status === form.status);
+    // }
+    // dataList.value = handleTree(newData); // 处理成树结构
+    // setTimeout(() => {
+    //   loading.value = false;
+    // }, 500);
   }
 
   function formatHigherDeptOptions(treeList) {

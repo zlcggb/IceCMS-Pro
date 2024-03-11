@@ -13,7 +13,7 @@ import type { FormItemProps, RoleFormItemProps } from "../utils/types";
 import { hideTextAtIndex, getKeyList, isAllEmpty } from "@pureadmin/utils";
 import {
   getRoleIds,
-  getDeptList,
+  // getDeptList,
   getUserList,
   getAllRoleList
 } from "@/api/system";
@@ -57,7 +57,7 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
   const selectedNum = ref(0);
   const pagination = reactive<PaginationProps>({
     total: 0,
-    pageSize: 10,
+    pageSize: 5,
     currentPage: 1,
     background: true
   });
@@ -70,18 +70,18 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
     },
     {
       label: "用户编号",
-      prop: "id",
+      prop: "userId",
       width: 90
     },
     {
       label: "用户头像",
-      prop: "avatar",
+      prop: "profile",
       cellRenderer: ({ row }) => (
         <el-image
           fit="cover"
           preview-teleported={true}
-          src={row.avatar}
-          preview-src-list={Array.of(row.avatar)}
+          src={row.profile}
+          preview-src-list={Array.of(row.profile)}
           class="w-[24px] h-[24px] rounded-full align-middle"
         />
       ),
@@ -94,33 +94,39 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
     },
     {
       label: "用户昵称",
-      prop: "nickname",
+      prop: "name",
       minWidth: 130
     },
     {
       label: "性别",
-      prop: "sex",
+      prop: "gender",
       minWidth: 90,
       cellRenderer: ({ row, props }) => (
         <el-tag
           size={props.size}
-          type={row.sex === 1 ? "danger" : ""}
+          type={row.gender === 1 ? "danger" : ""}
           effect="plain"
         >
-          {row.sex === 1 ? "女" : "男"}
+          {row.gender === 1 ? "女" : "男"}
         </el-tag>
       )
     },
+    // {
+    //   label: "部门",
+    //   prop: "dept.name",
+    //   minWidth: 90
+    // },
+    // {
+    //   label: "手机号码",
+    //   prop: "phone",
+    //   minWidth: 90,
+    //   formatter: ({ phone }) => hideTextAtIndex(phone, { start: 3, end: 6 })
+    // },
     {
-      label: "部门",
-      prop: "dept.name",
-      minWidth: 90
-    },
-    {
-      label: "手机号码",
-      prop: "phone",
+      label: "邮箱",
+      prop: "email",
       minWidth: 90,
-      formatter: ({ phone }) => hideTextAtIndex(phone, { start: 3, end: 6 })
+      // formatter: ({ email }) => hideTextAtIndex(email, { start: 3, end: 6 })
     },
     {
       label: "状态",
@@ -147,6 +153,13 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
       prop: "createTime",
       formatter: ({ createTime }) =>
         dayjs(createTime).format("YYYY-MM-DD HH:mm:ss")
+    },
+    {
+      label: "最近登录",
+      minWidth: 90,
+      prop: "lastLogin",
+      formatter: ({ lastLogin }) =>
+        dayjs(lastLogin).format("YYYY-MM-DD HH:mm:ss")
     },
     {
       label: "操作",
@@ -181,10 +194,8 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
 
   function onChange({ row, index }) {
     ElMessageBox.confirm(
-      `确认要<strong>${
-        row.status === 0 ? "停用" : "启用"
-      }</strong><strong style='color:var(--el-color-primary)'>${
-        row.username
+      `确认要<strong>${row.status === 0 ? "停用" : "启用"
+      }</strong><strong style='color:var(--el-color-primary)'>${row.username
       }</strong>用户吗?`,
       "系统提示",
       {
@@ -232,10 +243,12 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
 
   function handleSizeChange(val: number) {
     console.log(`${val} items per page`);
+    fetchSearch(pagination.currentPage, val)
   }
 
   function handleCurrentChange(val: number) {
     console.log(`current page: ${val}`);
+    fetchSearch(val, pagination.pageSize)
   }
 
   /** 当CheckBox选择项发生变化时会触发该事件 */
@@ -265,11 +278,29 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
 
   async function onSearch() {
     loading.value = true;
-    const { data } = await getUserList(toRaw(form));
-    dataList.value = data.list;
+    // console.log(toRaw(form))
+    const { data } = await getUserList(pagination.currentPage, pagination.pageSize);
+    dataList.value = data.records;
+    console.log(312, data)
     pagination.total = data.total;
-    pagination.pageSize = data.pageSize;
-    pagination.currentPage = data.currentPage;
+    pagination.pageSize = data.size;
+    pagination.currentPage = data.current;
+
+    setTimeout(() => {
+      loading.value = false;
+    }, 500);
+  }
+
+  // 分页改变时获取文章
+  async function fetchSearch(pageNum = 1, limit = pagination.pageSize) {
+    loading.value = true;
+    // console.log(toRaw(form))
+    const { data } = await getUserList(pageNum, limit);
+    dataList.value = data.records;
+    console.log(312, data)
+    pagination.total = data.total;
+    pagination.pageSize = data.size;
+    pagination.currentPage = data.current;
 
     setTimeout(() => {
       loading.value = false;
@@ -308,7 +339,7 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
         formInline: {
           title,
           higherDeptOptions: formatHigherDeptOptions(higherDeptOptions.value),
-          parentId: row?.dept.id ?? 0,
+          // parentId: row?.dept.id ?? 0,
           nickname: row?.nickname ?? "",
           username: row?.username ?? "",
           password: row?.password ?? "",
@@ -487,13 +518,13 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
     onSearch();
 
     // 归属部门
-    const { data } = await getDeptList();
-    higherDeptOptions.value = handleTree(data);
-    treeData.value = handleTree(data);
-    treeLoading.value = false;
+    // const { data } = await getDeptList();
+    // higherDeptOptions.value = handleTree(data);
+    // treeData.value = handleTree(data);
+    // treeLoading.value = false;
 
     // 角色列表
-    roleOptions.value = (await getAllRoleList()).data;
+    // roleOptions.value = (await getAllRoleList()).data;
   });
 
   return {

@@ -23,5 +23,14 @@ public class Role implements Serializable {
 
   private String sort;
 
-  private String description;
+  private Date createTime;
+
+  private Date updateTime;
+
+  private String code;
+
+  private Integer status;
+
+  private String remark;
+
 }

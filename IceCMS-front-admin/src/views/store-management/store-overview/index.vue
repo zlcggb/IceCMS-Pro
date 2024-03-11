@@ -5,25 +5,25 @@
         <el-col :span="6">
           <el-card class="gradient-total-sales">
             <div>总销售额</div>
-            <div>¥100,000</div>
+            <div>{{ listInfos.total }}¥</div>
           </el-card>
         </el-col>
         <el-col :span="6">
           <el-card class="gradient-today-sales">
             <div>今日销售额</div>
-            <div>¥10,000</div>
+            <div>{{ listInfos.today }}¥</div>
           </el-card>
         </el-col>
         <el-col :span="6">
           <el-card class="gradient-user-count">
             <div>用户数量</div>
-            <div>1,000</div>
+            <div>{{ listUserCount }}</div>
           </el-card>
         </el-col>
         <el-col :span="6">
           <el-card class="gradient-new-orders">
             <div>新增订单</div>
-            <div>50</div>
+            <div>{{ listInfos.newOrder }}</div>
           </el-card>
         </el-col>
       </el-row>
@@ -35,11 +35,19 @@
             <span class="font-medium">最近订单列表</span>
           </div>
         </template>
-        <el-table :data="recentOrders" style="width: 100%" stripe>
-          <el-table-column prop="date" label="日期" width="180"></el-table-column>
-          <el-table-column prop="name" label="商品名称"></el-table-column>
-          <el-table-column prop="sales" label="销售量"></el-table-column>
-          <el-table-column prop="amount" label="金额"></el-table-column>
+        <el-table :data="orders" style="width: 100%" stripe>
+          <el-table-column prop="orderNo" label="订单编号" width="120"></el-table-column>
+          <el-table-column prop="userId" label="用户id"></el-table-column>
+          <el-table-column prop="title" label="标题"></el-table-column>
+          <el-table-column prop="payMent" label="支付方式" width="120"></el-table-column>
+          <el-table-column prop="totalFee" label="订单金额" width="120"></el-table-column>
+          <el-table-column prop="orderStatus" label="订单状态" width="120"></el-table-column>
+          <el-table-column prop="updateTime" label="支付时间" width="120"></el-table-column>
+          <el-table-column label="操作" width="120">
+            <template #default="{ row }">
+              <el-button type="text" @click="showOrderDetails(row)">查看详情</el-button>
+            </template>
+          </el-table-column>
         </el-table>
       </el-card>
 
@@ -47,7 +55,7 @@
       <el-card class="user-list">
         <template #header>
           <div class="card-header">
-            <span class="font-medium">用户列表</span>
+            <span class="font-medium">最近用户</span>
           </div>
         </template>
         <el-table :data="userList" style="width: 100%" stripe>
@@ -61,25 +69,68 @@
   </el-container>
 </template>
 
-<script>
-import { ref } from 'vue';
+<script setup>
+import { ref, computed, onMounted } from 'vue';
+import { listByPage } from '@/api/store_function/order'; // 请确保路径正确
+import { listInfo } from '@/api/store_function/store'; // 请确保路径正确
+import { getUserCount } from '@/api/common/user'; // 请确保路径正确
 
-export default {
-  name: 'AdminDashboard',
-  setup() {
-    const recentOrders = ref([
-      { date: '2024-02-14', name: '商品1', sales: 100, amount: '¥1,000' },
-      // 添加更多示例数据...
-    ]);
+// 页面挂载时获取数据
+onMounted(() => {
+  fetchOrder();
+  fetchInfo();
+  fetchUserCount();
 
-    const userList = ref([
-      { id: 1, name: 'User1', email: 'user1@example.com', createdAt: '2024-01-01' },
-      // 添加更多示例数据...
-    ]);
+});
 
-    return { recentOrders, userList };
+const listUserCount = ref([]);
+
+const fetchUserCount = async () => {
+  try {
+    const response = await getUserCount();
+    if (response.code === 200) {
+      console.log(response)
+      const res = response.data;
+      listUserCount.value = res;
+      console.log(123, listUserCount)
+    }
+  } catch (error) {
+    console.error('Error fetching articles:', error);
   }
-}
+};
+
+const listInfos = ref([]);
+
+const fetchInfo = async () => {
+  try {
+    const response = await listInfo();
+    if (response.code === 200) {
+      console.log(response)
+      const res = response.data;
+      listInfos.value = res;
+    }
+  } catch (error) {
+    console.error('Error fetching articles:', error);
+  }
+};
+
+// 订单数据
+const orders = ref([]);
+
+// 分页改变时获取文章
+const fetchOrder = async (limit = 6) => {
+  try {
+    const response = await listByPage(limit);
+    if (response.code === 200) {
+      console.log(response)
+      const res = response.data;
+      orders.value = res.list;
+    }
+  } catch (error) {
+    console.error('Error fetching articles:', error);
+  }
+};
+
 </script>
 
 

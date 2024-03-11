@@ -5,10 +5,16 @@ import com.ttice.icepayment.enums.OrderStatus;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Repository
 public interface OrderInfoService extends IService<OrderInfo> {
+
+  BigDecimal countToday();
+  BigDecimal countSales();
+
+  Integer countNewOrder();
 
   OrderInfo createOrderTempByWxResourceId(Long productId, String payMent);
 

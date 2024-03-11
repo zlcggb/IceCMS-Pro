@@ -2,15 +2,36 @@
 import { ref, onMounted, computed } from "vue";
 import { Base } from "./components";
 import { UploadFile, UploadRawFile, ElMessage } from 'element-plus';// import { ElUploadFile } from "element-plus/lib/el-upload/src/upload.type";
-import * as ArticleAPI from "@/api/function/article";
+import * as ArticleAPI from "@/api/art_function/article";
 import { useRoute } from 'vue-router';
 const route = useRoute();
 const articleId = ref(route.params.articleId);
+import { getAllClassName } from '@/api/art_function/art_category'; // 请确保路径正确
+import { getAllTag } from '@/api/common/tag'; // 请确保路径正确
+import type { Tag } from './types';
+
+import { storageLocal } from "@pureadmin/utils";
+import dayjs from 'dayjs';
+import { ElMessageBox, ElNotification } from 'element-plus';
+
+import Sortable from "sortablejs";
+import { message } from "@/utils/message";
+import { getKeyList, extractFields, downloadByData } from "@pureadmin/utils";
+
+import Add from "@iconify-icons/ep/plus";
+import Eye from "@iconify-icons/ri/eye-line";
+import Delete from "@iconify-icons/ri/delete-bin-7-line";
+import { reactive } from 'vue'
+
+let fetchId = articleId.value
 
 onMounted(() => {
+  fetchClass();
+  fetchTag();
   if (articleId.value) {
     // 如果有 articleId，加载文章数据进行编辑
     console.log('articleId:', articleId.value);
+    fetchData(articleId.value);
   } else {
     // 如果没有 articleId，初始化为创建文章模式
   }
@@ -20,14 +41,132 @@ defineOptions({
   name: "Editor"
 });
 
-const tagList = ref<string[]>(["标签1", "标签2", "标签3"]); // 可选的标签列表，根据需要调整
+const fetchClass = async () => {
+  try {
+    const response = await getAllClassName();
+    if (response.code === 200) {
+      classList.value = response.data;
+    }
+  } catch (error) {
+    console.error('Error fetching articles:', error);
+  }
+};
+
+const fetchTag = async () => {
+  try {
+    const response = await getAllTag();
+    if (response.code === 200) {
+      console.log(response)
+      tagList.value = response.data;
+    }
+  } catch (error) {
+    console.error('Error fetching articles:', error);
+  }
+};
+
+const fetchData = async (articleId) => {
+  try {
+    const response = await ArticleAPI.getArticleById(articleId);
+    if (response.code === 200) {
+      // classList.value = response.data;
+      console.log(response)
+      const res: {
+        [x: string]: string; title: string
+      } = Array.isArray(response.data) ? { title: '' } : response.data;
+      form.value.title = res.title
+      form.value.category = res.sortClass
+      form.value.summary = res.intro
+      form.value.publishTime = res.createTime;
+      // 更新 fileList 中对应文件的 URL
+      fileList.value = [{ name: 'image', url: res.thumb }];
+      fetchTag();
+      const tagsString = res.keyword; // 从 res.keyword 中获取的字符串
+      const tagIds = tagsString.split(',').map(tag => parseInt(tag)); // 将字符串拆分为数组并转换为数字
+      form.value.tags = tagIds; // 将转换后的数组赋值给 form.value.tags
+    }
+  } catch (error) {
+    console.error('Error fetching articles:', error);
+  }
+};
+
+const tagList = ref<Tag[]>([]);
 
 const carouselImage = ref('');
 const generateImage = ref(false); // Define generateImage variable
 
+// 图片上传模块开始
+const fileList = ref([]);
+const curOpenImgIndex = ref(0);
+const dialogVisible = ref(false);
+
 // 拼接环境变量和路径
 const { VITE_APP_BASE_API } = import.meta.env;
 const uploadUrl = ref(`${VITE_APP_BASE_API}/FileApi/updateimage`);
+
+const urlList = computed(() => getKeyList(fileList.value, "url"));
+
+function handleUploadSuccess(response, file) {
+  console.log(response, file);
+  // 假设服务器响应中的 'url' 字段是图片的实际路径
+  const serverUrl = response.url;
+  // 更新 fileList 中对应文件的 URL
+  const fileIndex = fileList.value.findIndex(item => item.uid === file.uid);
+  if (fileIndex !== -1) {
+    fileList.value[fileIndex].url = serverUrl;
+  }
+}
+
+/** 上传文件前校验 */
+const onBefore = file => {
+  if (!["image/jpeg", "image/png", "image/gif"].includes(file.type)) {
+    message("只能上传图片");
+    return false;
+  }
+  const isExceed = file.size / 1024 / 1024 > 2;
+  if (isExceed) {
+    message(`单个图片大小不能超过2MB`);
+    return false;
+  }
+};
+
+/** 超出最大上传数时触发 */
+const onExceed = () => {
+  message("最多上传1张图片，请先删除在上传");
+};
+
+/** 移除上传的文件 */
+const handleRemove = (file: UploadFile) => {
+  fileList.value.splice(fileList.value.indexOf(file), 1);
+};
+
+/** 大图预览 */
+const handlePictureCardPreview = (file: UploadFile) => {
+  curOpenImgIndex.value = fileList.value.findIndex(img => img.uid === file.uid);
+  dialogVisible.value = true;
+};
+
+const getUploadItem = () => document.querySelectorAll("#pure-upload-item");
+
+/** 缩略图拖拽排序 */
+const imgDrop = uid => {
+  const CLASSNAME = "el-upload-list";
+  const _curIndex = fileList.value.findIndex(img => img.uid === uid);
+  getUploadItem()?.[_curIndex]?.classList?.add(`${CLASSNAME}__item-actions`);
+  const wrapper: HTMLElement = document.querySelector(`.${CLASSNAME}`);
+  Sortable.create(wrapper, {
+    handle: `.${CLASSNAME}__item`,
+    onEnd: ({ newIndex, oldIndex }) => {
+      const oldFile = fileList.value[oldIndex];
+      fileList.value.splice(oldIndex, 1);
+      fileList.value.splice(newIndex, 0, oldFile);
+      // fix: https://github.com/SortableJS/Sortable/issues/232 (firefox is ok, but chromium is bad. see https://bugs.chromium.org/p/chromium/issues/detail?id=410328)
+      getUploadItem().forEach(ele => {
+        ele.classList.remove(`${CLASSNAME}__item-actions`);
+      });
+    }
+  });
+};
+// 图片上传模块结束
 
 const formRef = ref(null);
 // 表单数据对象
@@ -38,7 +177,7 @@ const form = ref({
   summary: '',    // 文章简介
   category: '',   // 文章分类
   tags: [],       // 文章标签
-  // 可以根据需要添加更多字段
+  thumb: '',
 });
 // 规则
 const rules = ref({
@@ -51,19 +190,63 @@ const rules = ref({
   // 其他规则...
 });
 
+export interface DataInfo<T> {
+  /** token */
+  accessToken: string;
+  /** `accessToken`的过期时间（时间戳） */
+  expires: T;
+  /** 用于调用刷新accessToken的接口时所需的token */
+  refreshToken: string;
+  /** 用户名 */
+  username?: string;
+  /** 当前登陆用户的头像 */
+  avatar?: string;
+  /** 当前登陆用户的角色 */
+  roles?: Array<string>;
+  /** 当前登陆用户的id */
+  userId?: number;
+}
+
 const confirmArticle = () => {
   formRef.value.validate((valid) => {
     if (valid) {
+      const userKey = "user-info";
+
+      const userid =
+        storageLocal().getItem<DataInfo<number>>(userKey)?.userId ?? "";
+
+      // 先复制 articleForm 的内容
+      const formData = { ...form.value };
+
+      // 格式化日期字段
+      if (formData.publishTime) {
+        formData.publishTime = dayjs(formData.publishTime).format('YYYY-MM-DD HH:mm:ss');
+      }
+      formData.thumb = urlList.value[0];
+
+      console.log(form.value.tags)
+      // 将 form.value.tags 数组转换为逗号分隔的字符串
+      const tagsString = form.value.tags.join(',');
+
       // 验证通过，执行提交逻辑
-      console.log('title:', form.value.title);
       fetchValueHtmlFromBase();
-      console.log('content:', content.value);
       ArticleAPI.newAaticle({
         title: form.value.title,
         sortClass: form.value.category,
+        content: content.value,
+        authorId: userid,
+        intro: form.value.summary,
+        createTime: formData.publishTime,
+        thumb: formData.thumb,
+        keyword: tagsString
       })
         .then(({ code }) => {
           console.log('data:', code);
+          ElNotification({
+            title: '成功',
+            message: '文章创建成功',
+            type: 'success',
+          });
           // 处理成功
         })
         .catch(() => {
@@ -76,31 +259,11 @@ const confirmArticle = () => {
   });
 };
 
-
-const authorList = ref([
-  {
-    "id": 20,
-    "name": "电到"
-  },
-  {
-    "id": 21,
-    "name": "阿萨德"
-  }
-]);
 const classList = ref([
-  {
-    "id": 20,
-    "name": "基础教程"
-  },
-  {
-    "id": 21,
-    "name": "新手入门"
-  }
 ]);
 
 const baseComponentRef = ref(null);
 const content = ref('');
-
 
 // 当需要获取 valueHtml 时，调用这个方法
 const fetchValueHtmlFromBase = () => {
@@ -109,34 +272,6 @@ const fetchValueHtmlFromBase = () => {
     content.value = valueHtml; // Use .value to assign a new value
   }
 };
-
-
-function generateImageText() {
-  // Generate image text logic
-  // Based on the filled title, generate image text
-}
-
-function handleCarouselImageUpload(file: UploadFile) {
-  // Handle uploaded image file
-}
-
-function beforeUpload(file: UploadRawFile) {
-  // console.log('file:', file);
-  // Perform validation or other tasks before uploading
-  return true; // Return false to prevent upload
-}
-const uploadFileList = ref([]);
-function handleUploadSuccess(response: any, file: UploadFile) {
-  // Handle upload success
-  carouselImage.value = response.url; // Assuming response contains the URL of the uploaded image
-}
-function handleExceed(files, fileList) {
-  ElMessage({
-    message: '只能上传一张图片',
-    type: 'warning',
-    showClose: true
-  });
-}
 </script>
 
 <template>
@@ -147,17 +282,12 @@ function handleExceed(files, fileList) {
           {{ articleId ? '编辑文章' : '创建文章' }}
         </div>
         <div class="card-body">
-          <Base ref="baseComponentRef" />
-        </div>
+            <Base :data="Array.isArray(fetchId) ? fetchId.join(',') : fetchId" ref="baseComponentRef" />
+          </div>
         <el-form :model="form" :rules="rules" ref="formRef" label-width="80px" style="margin-top: 20px">
           <el-form-item label="标题" prop="title">
             <el-input v-model="form.title" placeholder="请输入标题"></el-input>
           </el-form-item>
-          <el-form-item label="作者">
-            <el-select v-model="form.author" placeholder="请选择作者">
-              <el-option v-for="item in authorList" :key="item.id" :label="item.name" :value="item.id">
-              </el-option>
-            </el-select> </el-form-item>
           <el-form-item label="发布时间">
             <el-date-picker v-model="form.publishTime" type="datetime" placeholder="请选择发布时间"></el-date-picker>
           </el-form-item>
@@ -172,7 +302,7 @@ function handleExceed(files, fileList) {
           </el-form-item>
           <el-form-item label="标签">
             <el-select v-model="form.tags" multiple filterable allow-create default-first-option placeholder="请输入标签">
-              <el-option v-for="item in tagList" :key="item" :label="item" :value="item">
+              <el-option v-for="(tag, index) in tagList" :key="index" :label="tag.tagName" :value="tag.id">
               </el-option>
             </el-select>
           </el-form-item>
@@ -181,13 +311,49 @@ function handleExceed(files, fileList) {
             <!-- <span v-if="generateImage">{{ carouselImage }}</span> -->
           </el-form-item>
           <el-form-item v-if="!generateImage" label="主图上传">
-            <el-upload class="upload-demo" :action="uploadUrl" name="editormd-image-file"
-              :on-success="handleUploadSuccess" :before-upload="beforeUpload" @exceed="handleExceed" :limit="1" drag
-              multiple list-type="picture-card">
-              <i class="el-icon-plus"></i>
-              <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-              <!-- <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div> -->
-            </el-upload>
+            <div class="updata" shadow="never">
+              <el-upload v-model:file-list="fileList" drag multiple class="pure-upload" list-type="picture-card"
+                accept="image/jpeg,image/png,image/gif" :action="uploadUrl" name="editormd-image-file" :limit="1"
+                :on-exceed="onExceed" :before-upload="onBefore" :on-success="handleUploadSuccess">
+                <IconifyIconOffline :icon="Add" class="m-auto mt-4" width="30" />
+                <template #file="{ file }">
+                  <div v-if="file.status == 'ready' || file.status == 'uploading'" class="mt-[35%] m-auto">
+                    <p class="font-medium">文件上传中</p>
+                    <el-progress class="mt-2" :stroke-width="2" :text-inside="true" :show-text="false"
+                      :percentage="file.percentage" />
+                  </div>
+                  <div v-else @mouseenter.stop="imgDrop(file.uid)">
+                    <img class="el-upload-list__item-thumbnail select-none" :src="file.url" />
+                    <span id="pure-upload-item" :class="[
+                      'el-upload-list__item-actions',
+                      fileList.length > 1 && '!cursor-move'
+                    ]">
+                      <span title="查看" class="hover:text-primary" @click="handlePictureCardPreview(file)">
+                        <IconifyIconOffline :icon="Eye" class="hover:scale-125 duration-100" />
+                      </span>
+                      <span class="el-upload-list__item-delete" @click="handleRemove(file)">
+                        <span title="移除" class="hover:text-[var(--el-color-danger)]">
+                          <IconifyIconOffline :icon="Delete" class="hover:scale-125 duration-100" />
+                        </span>
+                      </span>
+                    </span>
+                  </div>
+                </template>
+              </el-upload>
+              <!-- 有时文档没写并不代表没有，多看源码好处多多😝 https://github.com/element-plus/element-plus/tree/dev/packages/components/image-viewer/src （emm...这让我想起刚开始写这个项目时，很多东西只有英文或者没有文档，需要看源码时，想笑🥹。那些美好时光都给这些坑了，giao） -->
+              <el-image-viewer v-if="dialogVisible" :initialIndex="curOpenImgIndex" :url-list="urlList" :zoom-rate="1.2"
+                :max-scale="7" :min-scale="0.2" @close="dialogVisible = false"
+                @switch="index => (curOpenImgIndex = index)" />
+              <!-- 将自定义内容插入到body里，有了它在图片预览的时候，想插入个分页器或者别的东东在预览区某个位置就很方便咯（用户需求可以很灵活，开源组件库几乎不可能尽善尽美，很多时候寻找别的解决途径或许更好） -->
+              <teleport to="body">
+                <div v-if="fileList[curOpenImgIndex] && dialogVisible" effect="dark" round size="large" type="info"
+                  class="img-name">
+                  <p class="text-[#fff] dark:text-black">
+                    {{ fileList[curOpenImgIndex].name }}
+                  </p>
+                </div>
+              </teleport>
+            </div>
           </el-form-item>
           <!-- 其他表单项 -->
         </el-form>
@@ -264,3 +430,40 @@ function handleExceed(files, fileList) {
 }
 </style>
 
+<style lang="scss" scoped>
+:deep(.card-header) {
+  display: flex;
+
+  .header-right {
+    display: flex;
+    flex: auto;
+    align-items: center;
+    justify-content: flex-end;
+    font-size: 14px;
+  }
+}
+
+:deep(.pure-upload) {
+  .el-upload-dragger {
+    background-color: transparent;
+    border: none;
+  }
+}
+
+.img-name {
+  position: absolute;
+  bottom: 80px;
+  left: 50%;
+  z-index: 4000;
+  padding: 5px 23px;
+  background-color: var(--el-text-color-regular);
+  border-radius: 22px;
+  transform: translateX(-50%);
+
+  /** 将下面的 left: 50%; bottom: 80px; transform: translateX(-50%); 注释掉
+   *  解开下面 left: 40px; top: 40px; 注释，体验不一样的感觉。啊？还是差强人意，自己调整位置吧🥹
+   */
+  // left: 40px;
+  // top: 40px;
+}
+</style>

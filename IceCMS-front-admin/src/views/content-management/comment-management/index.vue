@@ -6,8 +6,10 @@
           <el-input v-model="commentForm.content" type="textarea"></el-input>
         </el-form-item>
         <el-form-item label="文章">
-          <el-input v-model="commentForm.articleId"></el-input>
-        </el-form-item>
+          <el-select v-model="commentForm.articleId" placeholder="请选择分类">
+            <el-option v-for="item in articleList" :key="item.id" :label="item.title" :value="item.id">
+            </el-option>
+          </el-select> </el-form-item>
       </el-form>
       <template #footer>
         <div class="dialog-footer">
@@ -65,8 +67,8 @@
       <!-- 分页组件 -->
       <div class="pagination-container">
         <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage"
-          :page-sizes="[1, 2, 5, 10]" :page-size="pageSize" layout="total, sizes, prev, pager, next"
-          :total="totalArticles"></el-pagination>
+          :page-sizes="[5, 10, 15, 20]" :page-size="pageSize" layout="total, sizes, prev, pager, next"
+          :total="totalArticlesComment"></el-pagination>
       </div>
     </el-card>
   </div>
@@ -76,7 +78,7 @@
 import { ref, computed, onMounted } from 'vue';
 import { ElMessageBox, ElNotification } from 'element-plus';
 import type { Comment } from './types';
-import { getallArticleComments, addArticleComment, updateArticlesComment, deleteArticleCommentById } from '@/api/function/art_comment'; // 请确保路径正确
+import { getallArticleComments, addArticleComment, updateArticlesComment, deleteArticleCommentById, getAllArticleName } from '@/api/art_function/art_comment'; // 请确保路径正确
 import { useRouter } from 'vue-router';
 import { storageLocal } from "@pureadmin/utils";
 
@@ -90,11 +92,12 @@ const navigateToArticle = (articleId) => {
   }
 };
 
+const articleList = ref();
 
 // 引入分页所需的响应式变量
 const currentPage = ref(1);
 const pageSize = ref(5);
-const totalArticles = ref(0);
+const totalArticlesComment = ref(0);
 
 const dialogVisible = ref(false);
 const comments = ref<Comment[]>([]);
@@ -116,13 +119,14 @@ interface CommentResponse {
 // 分页改变时获取文章
 const fetchArticles = async (pageNum = 1, limit = pageSize.value) => {
   try {
+    const responseName = await getAllArticleName();
+    articleList.value = responseName.data
     const response = await getallArticleComments(pageNum, limit) as unknown as { code: number, data: CommentResponse };
     if (response.code === 200) {
       console.log('response:', response);
       const res = response.data;
       comments.value = res.data;
-      console.log('articles:', comments.value);
-      totalArticles.value = res.total;
+      totalArticlesComment.value = res.total;
     }
   } catch (error) {
     console.error('Error fetching articles:', error);
@@ -222,12 +226,11 @@ const submitComment = async () => {
       storageLocal().getItem<DataInfo<number>>(userKey)?.userId ?? "";
     commentForm.value.userId = userid.toString();
     await addArticleComment(commentForm.value);
-    console.log('commentForm:', userid);
     fetchArticles(); // 重新获取评论列表
     dialogVisible.value = false;
     ElNotification({
       title: '成功',
-      message: '文章添加成功',
+      message: '文章评论添加成功',
       type: 'success',
     });
   } catch (error) {

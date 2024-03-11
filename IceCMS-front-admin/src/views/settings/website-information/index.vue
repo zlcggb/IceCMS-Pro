@@ -5,6 +5,7 @@
       <el-radio-button label="articleConfig">文章设置</el-radio-button>
       <el-radio-button label="resourceConfig">资源设置</el-radio-button>
       <el-radio-button label="homeConfig">首页设置</el-radio-button>
+      <el-radio-button label="storeConfig">商城设置</el-radio-button>
     </el-radio-group>
     <div class="content-container">
       <component :is="currentComponent" />
@@ -18,6 +19,7 @@ import SiteConfig from './components/SiteConfig.vue';
 import ArticleConfig from './components/ArticleConfig.vue';
 import ResourceConfig from './components/ResourceConfig.vue';
 import HomeConfig from './components/HomeConfig.vue';
+import StoreConfig from './components/StoreConfig.vue';
 
 const selectedMenu = ref('siteConfig'); // 默认选中网站配置
 
@@ -26,6 +28,7 @@ const componentsMap = {
   articleConfig: ArticleConfig,
   resourceConfig: ResourceConfig,
   homeConfig: HomeConfig,
+  storeConfig: StoreConfig,
 };
 
 const currentComponent = computed(() => componentsMap[selectedMenu.value]);

@@ -1,7 +1,13 @@
 package com.ttice.icepayment.entity;
 
+import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+
+import java.util.Date;
 
 @Data
 @TableName("t_order_info")
@@ -22,6 +28,20 @@ public class OrderInfo extends BaseEntity {
   private String codeUrl; // 订单二维码连接
 
   private String orderStatus; // 订单状态
+
+  /** 更新时间 */
+  @ApiModelProperty(value = "更新时间")
+  @TableField(fill = FieldFill.INSERT_UPDATE) // 更新注解::自动填充
+  @JsonFormat(
+          shape = JsonFormat.Shape.STRING,
+          pattern = "yyyy-MM-dd HH:mm:ss",
+          timezone = "GMT+8") // 返回前端自动把Data类型转换为json类型
+  private Date updateTime;
+
+  /** 生成时间 */
+  @ApiModelProperty(value = "生成时间")
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+  private Date createTime;
 
   private Boolean alreadyDone; // 完成性判断
 }

@@ -10,12 +10,14 @@ import com.ttice.icewkment.Util.JwtUtil;
 import com.ttice.icewkment.commin.lang.Result;
 import com.ttice.icewkment.entity.*;
 import com.ttice.icewkment.mapper.*;
+import com.ttice.icewkment.service.RoleService;
 import com.ttice.icewkment.service.UserService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.models.auth.In;
 import org.apache.commons.lang.StringUtils;
+import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -37,6 +39,8 @@ public class UserController {
   @Autowired private UserRoleMapper userRoleMapper;
 
   @Autowired private RoleMapper roleMapper;
+
+  @Autowired private RoleService roleService;
 
   @Autowired private VipOrderInfoMapper vipOrderInfoMapper;
 
@@ -178,7 +182,7 @@ public class UserController {
     user.setPassword(Newuser.getPassword());
     // 默认信息
     user.setIntro("这个人很懒，什么都没有留下！");
-    user.setCreated(new Date());
+    user.setCreateTime(new Date());
     user.setName("新用户");
     user.setGender(Newuser.getGender());
     user.setName(Newuser.getName());
@@ -191,7 +195,7 @@ public class UserController {
 
     user.setEmail(Newuser.getEmail());
 
-    String is_valid_code = Newuser.getStatus();
+    Integer is_valid_code = Newuser.getStatus();
 
     // 检查邮箱是否存在验证码 验证码是否过期
     QueryWrapper wrapper1 = new QueryWrapper<>();
@@ -571,6 +575,13 @@ public class UserController {
     return Result.succ(resultPage);
   }
 
+  @ApiOperation(value = "获取所有用户数量")
+  @GetMapping("/getUserCount")
+  public  Result getUserCount() {
+    Integer count = userMapper.selectCount(null);
+    return Result.succ(count);
+  }
+
   @ApiOperation(value = "根据姓名搜索用户")
   @ApiImplicitParam(name = "name", value = "username", required = true)
   @GetMapping("/getUserByName/{name}")
@@ -600,5 +611,23 @@ public class UserController {
     userService.update(wrapper);
 
     return Result.succ(null);
+  }
+
+  @ApiOperation(value = "获取全部role")
+  @GetMapping("/getAllRole")
+  public Result getAllRole() {
+      List<Role> roles = roleMapper.selectList(null);
+      return Result.succ(roles);
+  }
+
+  @ApiOperation(value = "启用停用角色")
+  @ApiImplicitParam(name = "id", value = "id", required = true)
+  @GetMapping("/changeRoleStatus/{id}")
+  public Result changeRoleStatus(@PathVariable("id") Integer id) {
+    Role role = roleService.getById(id);
+    // 设置为这个字段在数据库里面相反的
+
+//    role.setStatus(!role.getStatus());
+    return Result.succ(roleService.updateById(role));
   }
 }

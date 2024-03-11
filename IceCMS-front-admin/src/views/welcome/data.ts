@@ -1,54 +1,6 @@
 import { dayjs, cloneDeep, getRandomIntBetween } from "./utils";
-import GroupLine from "@iconify-icons/ri/group-line";
-import Question from "@iconify-icons/ri/question-answer-line";
-import CheckLine from "@iconify-icons/ri/chat-check-line";
-import Smile from "@iconify-icons/ri/star-smile-line";
 
 const days = ["周日", "周一", "周二", "周三", "周四", "周五", "周六"];
-
-/** 用户人数、评论、商品、销量 */
-const chartData = [
-  {
-    icon: GroupLine,
-    bgColor: "#effaff",
-    color: "#41b6ff",
-    duration: 2200,
-    name: "用户人数",
-    value: 36000,
-    percent: "+88%",
-    data: [2101, 5288, 4239, 4962, 6752, 5208, 7450] // 平滑折线图数据
-  },
-  {
-    icon: Question,
-    bgColor: "#fff5f4",
-    color: "#e85f33",
-    duration: 1600,
-    name: "评论",
-    value: 16580,
-    percent: "+70%",
-    data: [2216, 1148, 1255, 788, 4821, 1973, 4379]
-  },
-  {
-    icon: CheckLine,
-    bgColor: "#eff8f4",
-    color: "#26ce83",
-    duration: 1500,
-    name: "商品",
-    value: 16499,
-    percent: "+99%",
-    data: [861, 1002, 3195, 1715, 3666, 2415, 3645]
-  },
-  {
-    icon: Smile,
-    bgColor: "#f6f4fe",
-    color: "#7846e5",
-    duration: 100,
-    name: "销量",
-    value: 100,
-    percent: "+100%",
-    data: [100]
-  }
-];
 
 /** 分析概览 */
 const barChartData = [
@@ -125,10 +77,9 @@ const latestNewsData = cloneDeep(tableData)
   .slice(0, 14)
   .map((item, index) => {
     return Object.assign(item, {
-      date: `${dayjs().subtract(index, "day").format("YYYY-MM-DD")} ${
-        days[dayjs().subtract(index, "day").day()]
-      }`
+      date: `${dayjs().subtract(index, "day").format("YYYY-MM-DD")} ${days[dayjs().subtract(index, "day").day()]
+        }`
     });
   });
 
-export { chartData, barChartData, progressData, tableData, latestNewsData };
+export { barChartData, progressData, tableData, latestNewsData };

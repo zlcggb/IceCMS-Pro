@@ -62,7 +62,7 @@ public class ArticleController {
   }
 
   @RequiresAuthentication // 需要登陆认证的接口
-  @ApiOperation(value = "新增文章(修改)")
+  @ApiOperation(value = "新增文章")
   @ApiImplicitParam(name = "article", value = "文章", required = true)
   @PostMapping("/create")
   public Result add(@RequestBody Article article) throws ParseException {
@@ -73,10 +73,6 @@ public class ArticleController {
     QueryWrapper<Article> wrapper = new QueryWrapper<>();
     wrapper.eq("title", article.getTitle());
     Article articleDB = articleService.getOne(wrapper);
-    QueryWrapper<ArticleClass> wrapperClass = new QueryWrapper<>();
-    wrapperClass.eq("id", article.getSortClass());
-    ArticleClass articleClass = articleClassMapper.selectOne(wrapperClass);
-    article.setSortClass(Integer.valueOf(articleClass.getId().toString()));
     if (articleDB == null) {
       articleService.save(article);
     } else {
@@ -118,8 +114,8 @@ public class ArticleController {
   @ApiOperation(value = "根据id修改文章")
   @ApiImplicitParam(name = "id", value = "文章id", required = true)
   @PostMapping("/ReviseArticleById/{id}")
-  public boolean ReviseArticleById(@RequestBody Article article) {
-    return this.articleService.updateById(article);
+  public Result ReviseArticleById(@RequestBody Article article) {
+    return Result.succ(articleService.updateById(article));
   }
 
   @RequiresAuthentication // 需要登陆认证的接口
@@ -128,15 +124,7 @@ public class ArticleController {
   @GetMapping("/getArticleById/{id}")
   public Result getArticleById(@PathVariable("id") Integer id) {
     Article article = articleService.getById(id);
-    String sortClass = String.valueOf(article.getSortClass());
-    QueryWrapper<ArticleClass> wrapper = new QueryWrapper<>();
-    wrapper.eq("id", sortClass);
-    ArticleClass articleClass = articleClassMapper.selectOne(wrapper);
-    String name = articleClass.getName();
-    Article articleBuffer = new Article();
-    BeanUtils.copyProperties(article, articleBuffer);
-    articleBuffer.setSortClass(Integer.valueOf(name));
-    return Result.succ(articleBuffer);
+    return Result.succ(article);
   }
 
   @RequiresAuthentication // 需要登陆认证的接口
@@ -172,6 +160,16 @@ public class ArticleController {
     articlePageVO.setPages(articlePageVO.getPages());
 
     return Result.succ(articlePageVO);
+  }
+
+  @RequiresAuthentication // 需要登陆认证的接口
+  @ApiOperation(value = "获取全部文章名称")
+  @GetMapping("/getAllArticleName")
+  public Result getAllArticleName() {
+    // 拼装一个id还有一个name对应一个值的json
+    List<Article> articleList = articleService.list();
+    List<ArticleVO> result = ArticleToArticleVo(articleList);
+    return Result.succ(result);
   }
 
   public List<ArticleVO> ArticleToArticleVo(List<Article> articleList) {

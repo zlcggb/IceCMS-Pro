@@ -118,7 +118,7 @@ public class Article implements Serializable {
   private Date lastPost;
 
   /** 自定义厲性 */
-  private Integer ownerTag;
+  private String ownerTag;
 
   /** 自定义备注 */
   private String ownerRemark;

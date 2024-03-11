@@ -57,8 +57,8 @@ public class ArticleCommentServiceImpl extends ServiceImpl<ArticleCommentMapper,
       User users = userMapper.searchId(author);
       String profile = users.getProfile();
       articleCommentVO = new ArticleCommentVO();
-
-
+      // 根据作者id查询对应的名称
+      String name = users.getName();
       // 获取对应文章名称
       Integer articleId = articleComment.getArticleId();
       Article article = articleMapper.selectById(articleId);
@@ -66,6 +66,8 @@ public class ArticleCommentServiceImpl extends ServiceImpl<ArticleCommentMapper,
       articleCommentVO.setArticleName(articleName);
 
       BeanUtils.copyProperties(articleComment, articleCommentVO);
+      articleCommentVO.setUsername(name);
+
       articleCommentVO.setProfile(profile);
       result.add(articleCommentVO);
     }

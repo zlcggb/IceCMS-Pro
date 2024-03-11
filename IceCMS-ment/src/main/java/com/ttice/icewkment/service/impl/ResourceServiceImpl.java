@@ -5,8 +5,11 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ttice.icewkment.commin.vo.ResourcePageVO;
 import com.ttice.icewkment.commin.vo.ResourceVO;
+import com.ttice.icewkment.entity.ArticleClass;
 import com.ttice.icewkment.entity.Resource;
+import com.ttice.icewkment.entity.ResourceClass;
 import com.ttice.icewkment.entity.User;
+import com.ttice.icewkment.mapper.ResourceClassMapper;
 import com.ttice.icewkment.mapper.ResourceMapper;
 import com.ttice.icewkment.mapper.UserMapper;
 import com.ttice.icewkment.service.ResourceService;
@@ -31,6 +34,8 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource>
   @Autowired private ResourceMapper resourceMapper;
 
   @Autowired private UserMapper userMapper;
+
+  @Autowired private ResourceClassMapper resourceClassMapper;
 
   @Override
   public ResourcePageVO FindVoList(Integer page, Integer limit, String content) {
@@ -93,6 +98,12 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource>
       //设置用户名称
       String author = user.getUsername();
       resourceVO.setAuthor(author);
+      // 获取对应分类
+      String sortClass = String.valueOf(resource.getSortClass());
+      ResourceClass resourceClass = resourceClassMapper.selectById(sortClass);
+      String classname = resourceClass.getName();
+      resourceVO.setClassName(classname);
+
 
       BeanUtils.copyProperties(resource, resourceVO);
       result.add(resourceVO);

@@ -7,7 +7,7 @@ import {
 } from "@/api/system/monitor";
 import { reactive, ref, onMounted, toRaw } from "vue";
 import { PaginationProps } from "@pureadmin/table";
-import { CommonUtils } from "@/utils/common";
+// import { CommonUtils } from "@/utils/common";
 
 export function useHook() {
   const pagination: PaginationProps = {
@@ -109,7 +109,7 @@ export function useHook() {
   }
 
   async function getList() {
-    dataList.value = CommonUtils.paginateList(originalDataList, pagination);
+    // dataList.value = CommonUtils.paginateList(originalDataList, pagination);
   }
 
   async function handleLogout(row) {

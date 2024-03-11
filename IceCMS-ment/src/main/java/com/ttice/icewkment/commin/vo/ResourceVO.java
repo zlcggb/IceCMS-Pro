@@ -22,4 +22,6 @@ public class ResourceVO {
   private String profile;
   private Integer hits;
   private String subhead;
+  private String ClassName;
+  private Integer commentNum;
 }

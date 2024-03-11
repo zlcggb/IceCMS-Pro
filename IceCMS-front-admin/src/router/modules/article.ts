@@ -59,5 +59,16 @@ export default {
         showParent: true
       }
     }
+    // ,
+    // {
+    //   path: "/content-management/category-managementk",
+    //   name: "CategoryManagemenkt",
+    //   component: () => import("@/views/upload/index.vue"),
+    //   meta: {
+    //     icon: "category",
+    //     title: $t("menus.hsCategoryManagement"),
+    //     showParent: true
+    //   }
+    // }
   ]
 };

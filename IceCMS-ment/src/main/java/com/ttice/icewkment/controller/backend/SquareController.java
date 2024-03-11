@@ -2,6 +2,7 @@ package com.ttice.icewkment.controller.backend;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ttice.icewkment.Util.MathUtils;
+import com.ttice.icewkment.commin.lang.Result;
 import com.ttice.icewkment.commin.vo.ArticlePageVO;
 import com.ttice.icewkment.commin.vo.SquarePageVO;
 import com.ttice.icewkment.entity.*;
@@ -34,36 +35,58 @@ public class SquareController {
 
   @Autowired private UserMapper userMapper;
 
-  @Autowired private SquareClassService squareClassService;
-
-  @Autowired private SquareCommentService squareCommentService;
-
-  @ApiOperation(value = "根据别名获取全部圈子(分页)")
-  @ApiImplicitParam(name = "otherName", value = "otherName", required = true)
-  @GetMapping("/getAllSquare/{otherName}/{page}/{limit}")
-  public SquarePageVO getAllArticle(
-      @PathVariable("otherName") String otherName,
-      @PathVariable("page") Integer page,
-      @PathVariable("limit") Integer limit) {
-
-    return squareService.VoList(otherName, page, limit);
+  @RequiresAuthentication // 需要登陆认证的接口
+  @ApiOperation(value = "新增圈子")
+  @ApiImplicitParam(name = "square", value = "圈子", required = true)
+  @PostMapping("/create")
+  public Result add(@RequestBody Square square) throws ParseException {
+    QueryWrapper<Square> wrapper = new QueryWrapper<>();
+    wrapper.eq("content", square.getContent());
+    Square squareDB = squareService.getOne(wrapper);
+    if (squareDB == null) {
+      squareService.save(square);
+    } else {
+      squareService.update(square, wrapper);
+    }
+    return Result.succ(square.getId());
   }
 
+  @RequiresAuthentication // 需要登陆认证的接口
+  @ApiOperation(value = "根据别名获取全部圈子(分页)")
+  @ApiImplicitParam(name = "otherName", value = "otherName", required = true)
+  @GetMapping("/getAllSquare/{squareId}/{page}/{limit}")
+  public Result getAllSquare(
+      @PathVariable("squareId") String squareId,
+      @PathVariable("page") Integer page,
+      @PathVariable("limit") Integer limit) {
+    return Result.succ(squareService.VoList(squareId, page, limit));
+  }
+
+  @RequiresAuthentication // 需要登陆认证的接口
+  @ApiOperation(value = "根据id修改资源")
+  @ApiImplicitParam(name = "id", value = "圈子id", required = true)
+  @PostMapping("/ReviseSquareById/{id}")
+  public Result ReviseSquareById(@RequestBody Square square) {
+    return Result.succ(squareService.updateById(square));
+  }
+
+  @RequiresAuthentication // 需要登陆认证的接口
   @ApiOperation(value = "根据id删除圈子")
   @ApiImplicitParam(name = "id", value = "文章id", required = true)
   @GetMapping("/DelectSquareById/{id}")
-  public boolean DelectSquareById(@PathVariable("id") Integer id) {
+  public Result DelectSquareById(@PathVariable("id") Integer id) {
     // 根据id删除
     QueryWrapper<Square> wrapper = new QueryWrapper<Square>();
     wrapper.eq("id", id);
     squareMapper.delete(wrapper);
-    return this.squareService.removeById(id);
+    return Result.succ(squareService.removeById(id));
   }
 
+  @RequiresAuthentication // 需要登陆认证的接口
   @ApiOperation(value = "根据id修改圈子内容")
   @ApiImplicitParam(name = "id", value = "文章id", required = true)
   @GetMapping("/ChangeSquareById/{id}/{content}")
-  public Integer ChangeSquareById(
+  public Result ChangeSquareById(
       @PathVariable("id") Integer id, @PathVariable("content") String content) {
 
     Square square = new Square();
@@ -71,13 +94,14 @@ public class SquareController {
     QueryWrapper<Square> wrapper = new QueryWrapper<Square>();
     wrapper.eq("id", id);
 
-    return squareMapper.update(square, wrapper);
+    return Result.succ(squareMapper.update(square, wrapper));
   }
 
+  @RequiresAuthentication // 需要登陆认证的接口
   @ApiOperation(value = "获取全部圈子用户")
   @GetMapping("/GetAllSquareUser")
-  public List<User> GetAllSquareUser() {
+  public Result GetAllSquareUser() {
 
-    return userMapper.selectList(null);
+    return Result.succ(userMapper.selectList(null));
   }
 }

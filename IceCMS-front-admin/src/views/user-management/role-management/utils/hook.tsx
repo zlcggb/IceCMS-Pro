@@ -151,10 +151,11 @@ export function useRole() {
   async function onSearch() {
     loading.value = true;
     const { data } = await getRoleList(toRaw(form));
-    dataList.value = data.list;
-    pagination.total = data.total;
-    pagination.pageSize = data.pageSize;
-    pagination.currentPage = data.currentPage;
+    dataList.value = data;
+
+    // pagination.total = data.total;
+    // pagination.pageSize = data.pageSize;
+    // pagination.currentPage = data.currentPage;
 
     setTimeout(() => {
       loading.value = false;

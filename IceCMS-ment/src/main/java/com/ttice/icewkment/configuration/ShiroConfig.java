@@ -75,6 +75,8 @@ public class ShiroConfig {
     filterMap.put("/ResourceComment/**", "jwt");
     filterMap.put("/Sitting/**", "jwt");
     filterMap.put("/Tag/**", "jwt");
+    filterMap.put("/squareClass/**", "jwt");
+    filterMap.put("/square/**", "jwt");
 
     // user主要需要未登陆登陆认证所以放开
     // filterMap.put("/User/**", "jwt");

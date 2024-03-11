@@ -3,6 +3,9 @@ package com.ttice.icewkment.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import io.swagger.annotations.ApiModelProperty;
+import io.swagger.models.auth.In;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -42,9 +45,12 @@ public class User implements Serializable {
 
   private String profile;
 
-  private String status;
+  private Integer status;
 
-  private Date created;
+  /** 生成时间 */
+  @ApiModelProperty(value = "生成时间")
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+  private Date createTime;
 
   private Date lastLogin;
 

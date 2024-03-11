@@ -28,7 +28,7 @@ public class Resource implements Serializable {
   private Integer id;
 
   /** 所厲栏目Class */
-  private String sortClass;
+  private Integer sortClass;
 
   /** 文章标题 */
   private String title;
@@ -43,7 +43,7 @@ public class Resource implements Serializable {
   private String resPassword;
 
   /** 是否免费 */
-  private Boolean isFree;
+  private Integer isFree;
 
   /** 标题颜色 */
   private String titleColor;
@@ -150,9 +150,12 @@ public class Resource implements Serializable {
   /** 轮播图地址 */
   private String carousel;
 
+  /** 视频地址 */
+    private String videoAddress;
+
   /** 生成状态 */
   private String status;
 
   /** 文章状态身份 */
-  private Integer articleStatus;
+  private Integer resourceStatus;
 }

@@ -9,19 +9,19 @@ type ResultTable = {
   success: boolean;
   data?: {
     /** 列表数据 */
-    list: Array<any>;
+    records: Array<any>;
     /** 总条目数 */
     total?: number;
     /** 每页显示条目个数 */
-    pageSize?: number;
+    size?: number;
     /** 当前页数 */
-    currentPage?: number;
+    current?: number;
   };
 };
 
 /** 获取用户管理列表 */
-export const getUserList = (data?: object) => {
-  return http.request<ResultTable>("post", "/user", { data });
+export const getUserList = (currentPage, pageSize) => {
+  return http.request<ResultTable>("get", "/User/getUserList/" + currentPage + "/" + pageSize);
 };
 
 /** 用户管理-获取所有角色列表 */
@@ -36,10 +36,10 @@ export const getRoleIds = (data?: object) => {
 
 /** 获取角色管理列表 */
 export const getRoleList = (data?: object) => {
-  return http.request<ResultTable>("post", "/role", { data });
+  return http.request<Result>("get", "/User/getAllRole", { data });
 };
 
 /** 获取部门管理列表 */
-export const getDeptList = (data?: object) => {
-  return http.request<Result>("post", "/dept", { data });
-};
+// export const getDeptList = (data?: object) => {
+//   return http.request<Result>("post", "/dept", { data });
+// };

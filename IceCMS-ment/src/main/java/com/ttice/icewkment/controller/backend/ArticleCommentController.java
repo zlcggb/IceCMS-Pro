@@ -53,7 +53,7 @@ public class ArticleCommentController {
   @GetMapping("/getallArticleComments/{page}/{limit}")
   public Result getallArticleComments(
           @PathVariable("page") Integer page, @PathVariable("limit") Integer limit) {
-    return Result.succ(this.articleCommentService.VoList(page, limit, 0));
+    return Result.succ(articleCommentService.VoList(page, limit, 0));
   }
 
   @ApiOperation(value = "增加评论")
@@ -80,8 +80,6 @@ public class ArticleCommentController {
   @GetMapping("/DeleteArticleCommentById/{id}")
   public Result DeleteArticleCommentById(@PathVariable("id") Integer id) {
     // 根据文章id删除评论
-    QueryWrapper<ArticleComment> wrapper = new QueryWrapper<ArticleComment>();
-
     return Result.succ(articleCommentMapper.deleteById(id));
   }
   @RequiresAuthentication // 需要登陆认证的接口

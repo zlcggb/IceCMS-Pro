@@ -16,14 +16,14 @@ public class R {
 
   public static R ok() {
     R r = new R();
-    r.setCode(0);
+    r.setCode(200);
     r.setMessage("成功");
     return r;
   }
 
   public static R error() {
     R r = new R();
-    r.setCode(-1);
+    r.setCode(400);
     r.setMessage("失败");
     return r;
   }

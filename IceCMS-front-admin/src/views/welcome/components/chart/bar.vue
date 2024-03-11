@@ -41,7 +41,7 @@ watch(
         right: 0
       },
       legend: {
-        data: ["用户人数", "评论数量"],
+        data: ["用户", "评论"],
         textStyle: {
           color: "#606266",
           fontSize: "0.875rem"

@@ -21,6 +21,6 @@ public class SquareClass implements Serializable {
   private String otherName;
   private String describes;
   private String imgclass;
-  private Integer top;
+  private Boolean top;
   private Integer num;
 }

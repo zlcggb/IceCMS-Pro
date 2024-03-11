@@ -78,7 +78,7 @@ Object.keys(devDependencies).forEach(key => {
       <PureDescriptions border :columns="columns" :column="4" />
     </el-card>
 
-    <el-card class="m-4 box-card" shadow="never">
+    <!-- <el-card class="m-4 box-card" shadow="never">
       <template #header>
         <div class="card-header">
           <span class="font-medium">生产环境依赖</span>
@@ -136,7 +136,7 @@ Object.keys(devDependencies).forEach(key => {
           </a>
         </el-descriptions-item>
       </el-descriptions>
-    </el-card>
+    </el-card> -->
   </div>
 </template>
 
