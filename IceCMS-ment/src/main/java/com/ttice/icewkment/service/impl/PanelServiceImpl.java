@@ -23,7 +23,6 @@ public class PanelServiceImpl extends ServiceImpl<PanelMapper, Panel> implements
   @Autowired private UserMapper userMapper;
   @Autowired private ArticleCommentMapper commentMapper;
 
-  @Autowired
   @Override
   public Panel SearchPanelInfo() {
     Panel panel = new Panel();
