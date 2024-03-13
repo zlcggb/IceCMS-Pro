@@ -55,7 +55,7 @@ jobs:
           # 服务器的公网IP
           REMOTE_HOST: ${{ secrets.D_HOST }}
           # 你打包后产物的文件夹
-          SOURCE: "IceCMS-front-admin/build/"
+          SOURCE: "IceCMS-front-admin/dist/"
           # 先清空目标目录
           ARGS: "-avzr --delete"
           # 上传到服务器目标目录
