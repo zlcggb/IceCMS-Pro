@@ -33,7 +33,7 @@ jobs:
       - name: Installing Dependencies
         # 如果命中缓存，就不需要安装依赖，使用缓存即可
         if: steps.cache-dependencies.outputs.cache-hit != 'true'
-        run: npm install
+        run: pnpm install
         working-directory: ./IceCMS-front-admin
       # 打包
       - name: Build
