@@ -29,20 +29,21 @@ jobs:
           path: |
             **/node_modules
           key: ${{runner.OS}}
-      - name: Change to admin directory
-         run:cd IceCMS-front-admin
       # 安装依赖
       - name: Installing Dependencies
+        working-directory: IceCMS-front-admin
         # 如果命中缓存，就不需要安装依赖，使用缓存即可
         if: steps.cache-dependencies.outputs.cache-hit != 'true'
         run: npm install
       # 打包
       - name: Build
+        working-directory: IceCMS-front-admin
         run: |
             npm run build
             zip -r build ./build/**
       # 产物上传服务器
       - name: Upload to Deploy Server
+        working-directory: IceCMS-front-admin
         uses: easingthemes/ssh-deploy@v2.0.7
         env:
           # 免密登录的秘钥
