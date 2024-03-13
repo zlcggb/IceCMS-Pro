@@ -31,19 +31,18 @@ jobs:
           key: ${{runner.OS}}
       # 安装依赖
       - name: Installing Dependencies
-        working-directory: IceCMS-front-admin
         # 如果命中缓存，就不需要安装依赖，使用缓存即可
         if: steps.cache-dependencies.outputs.cache-hit != 'true'
         run: npm install
+        working-directory: ./IceCMS-front-admin
       # 打包
       - name: Build
-        working-directory: IceCMS-front-admin
         run: |
             npm run build
             zip -r build ./build/**
+        working-directory: ./IceCMS-front-admin
       # 产物上传服务器
       - name: Upload to Deploy Server
-        working-directory: IceCMS-front-admin
         uses: easingthemes/ssh-deploy@v2.0.7
         env:
           # 免密登录的秘钥
@@ -53,7 +52,7 @@ jobs:
           # 服务器的公网IP
           REMOTE_HOST: ${{ secrets.D_HOST }}
           # 你打包后产物的文件夹
-          SOURCE: "build/"
+          SOURCE: "IceCMS-front-admin/build/"
           # 先清空目标目录
           ARGS: "-avzr --delete"
           # 上传到服务器目标目录
