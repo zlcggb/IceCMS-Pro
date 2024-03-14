@@ -1161,7 +1161,7 @@ a.text-light:focus,a.text-light:hover {
 }
 
 @font-face {
-	font-family:macwk;src:url(../font/macwk.15d0d30.ttf) format("truetype"),url(../font/macwk.c4e6d48.woff) format("woff"),url(https://cdn.macwk.com/macwk-client/img/macwk.e340a0a.svg#macwk) format("svg");font-weight:400;font-style:normal
+	font-family:macwk;src:url(../font/macwk.15d0d30.ttf) format("truetype");font-weight:400;font-style:normal
 }[class*=" icon-"]:not(.icon-box),[class^=icon-]:not(.icon-box) {
 	font-family: macwk!important;
 	speak: none;
@@ -9124,7 +9124,7 @@ a.active .hover-opacity-normal,a:active .hover-opacity-normal,a:focus .hover-opa
 	position: relative
 }
 
-.soft-layout .layout-content-install:before {
+/* .soft-layout .layout-content-install:before {
 	content: "";
 	top: -220px;
 	left: -450px;
@@ -9133,7 +9133,7 @@ a.active .hover-opacity-normal,a:active .hover-opacity-normal,a:focus .hover-opa
 	background-image: url(data:image/svg+xml;
 	base64,PHN2ZyB3aWR0aD0iNzI1IiBoZWlnaHQ9IjY1MSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+PGRlZnM+PHBhdGggZD0iTTY3OC42MDMgNjQzLjg1OGMxMTEuODItNTkuMTE1LTE1Ljc3LTE4NS4zNDQtMTUuNzctMzIxLjQ4MyAwLTEzNi4xMzgtLjI4NC0zNDAuMzcxLTEzNi40MjItMzIxLjEwNS0xMzYuMTM4IDE5LjI2Ni05NC4yODggMTg3LjE2Ny00NDEuOSAyNjkuMTQ4LTM0Ny42MTQgODEuOTggNDgyLjI3MyA0MzIuNTU0IDU5NC4wOTIgMzczLjQ0eiIgaWQ9ImEiLz48L2RlZnM+PHVzZSBmaWxsPSIjRjRGN0ZFIiB0cmFuc2Zvcm09Im1hdHJpeCgtMSAwIDAgMSA3MjQuNTE4IDApIiB4bGluazpocmVmPSIjYSIgZmlsbC1ydWxlPSJldmVub2RkIi8+PC9zdmc+);opacity: .9;
 	background-repeat: no-repeat
-}
+} */
 
 .soft-layout .layout-content-infos {
 	border-top: 0;

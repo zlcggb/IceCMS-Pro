@@ -56,7 +56,7 @@ public class SquareController {
   @ApiImplicitParam(name = "otherName", value = "otherName", required = true)
   @GetMapping("/getAllSquare/{squareId}/{page}/{limit}")
   public Result getAllSquare(
-      @PathVariable("squareId") String squareId,
+      @PathVariable("squareId") Integer squareId,
       @PathVariable("page") Integer page,
       @PathVariable("limit") Integer limit) {
     return Result.succ(squareService.VoList(squareId, page, limit));

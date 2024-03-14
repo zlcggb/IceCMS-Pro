@@ -1094,7 +1094,7 @@ export default ({
 <style  scoped>
 .gaosiImg {
   filter: blur(20px) opacity(70%) brightness(110%);
-  transition: .3s;
+  transition: .22s;
   ;
   z-index: 8
 }

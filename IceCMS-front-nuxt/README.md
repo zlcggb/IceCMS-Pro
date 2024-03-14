@@ -1,41 +1,8 @@
-
-<div><a href="https://gitee.com/wilkwo/nuxt-web/blob/master/README.md">中文</a>  |  <a href="https://gitee.com/wilkwo/nuxt-web/blob/master/README.en.md">english</a></div>
-
-<h1 align="center" style="margin: 30px 0 30px; font-weight: bold;">nuxt-web</h1>
-<h4 align="center">基于nuxtjs开发的博客系统</h4>
-<p align="center">
-	<a href="https://gitee.com/wilkwo/nuxt-web.git"><img src="https://gitee.com/wilkwo/nuxt-web/badge/star.svg?theme=dark"></a>
-	<a href="https://gitee.com/wilkwo/nuxt-web.git"><img src="https://gitee.com/wilkwo/nuxt-web/badge/fork.svg?theme=dark"></a>
-</p>
-
-
 ### 项目介绍：
 
 - 主要技术: nuxtjs 2.0 、element-ui 2.0
 
 - 主要使用插件： axios、 less 、 highlight.js、 component-cache
-  
-### 目标用户
-
-- 小型站点、个人网站
-- 加qq群一起交流：744203401
-
-
-
-### 关联项目
-
-* 后台管理项目： <a href="https://gitee.com/wilkwo/vueAdmin">vueAdmin</a>
-
-* 后台管理地址：http://admin.dsiab.com
-
-- 体验账号： test / test
-  
-
-
-### 演示地址
-
-* 官网：[https: //www.dsiab.com](https://www.dsiab.com)
-
 
 
 ### 选择nuxt的原因：
@@ -70,13 +37,6 @@
 
 # 下载代码
 
-github: git clone https://gitee.com/wilkwo/nuxt-web.git
-
-或者
-
-gitee: git clone https://github.com/esplori/nuxt-web.git
-
-
 # 安装依赖
 $ npm install
 
@@ -99,13 +59,5 @@ $ npm run generate
 * 如果要使用本地接口，请修改/plugins/baseUrl.js 文件中的baseUrl
   
 * 如果想要在浏览器端调用接口，请修改nuxt.config.js文件中的proxy, 将对应接口转发至本地服务即可
-
-
-### 感谢赞赏
-
-创作不易，你的赞赏和认可是持续更新的动力！
-
-<img src="./assets/img/zanshan.jpeg" alt="赞赏" width="400px" />
-
 
 

@@ -38,7 +38,7 @@ public class SquareServiceImpl extends ServiceImpl<SquareMapper, Square> impleme
   @Autowired private SquareClassService squareClassService;
 
   @Override
-  public SquarePageVO VoList(String squareId, Integer page, Integer limit) {
+  public SquarePageVO VoList(Integer squareId, Integer page, Integer limit) {
 
     Page<Square> squarePage = new Page<>(page, limit);
 

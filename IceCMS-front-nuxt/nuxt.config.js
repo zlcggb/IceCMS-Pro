@@ -35,6 +35,7 @@ export default {
     { src: '~/plugins/global.js', ssr: true },
     { src: '@/plugins/qriously', ssr: false },
     { src: './plugins/tongji.js' },
+    { src: '~/plugins/vue-coreVideo-player.js', ssr: false },
   ],
 
   // Auto import components (https://go.nuxtjs.dev/config-components)

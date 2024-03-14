@@ -320,8 +320,8 @@
                           </div>
                         </div>
                         <div class="topic-header-right">
-                          <span class="topic-date topic-circle"><a target="_blank"><b class="circle-hash"><svg width="16"
-                                  height="16" viewBox="0 0 36 36">
+                          <span class="topic-date topic-circle"><a target="_blank"><b class="circle-hash"><svg
+                                  width="16" height="16" viewBox="0 0 36 36">
                                   <g fill-rule="evenodd">
                                     <path
                                       d="M18 0c9.941 0 18 8.059 18 18 0 2.723-.604 5.304-1.687 7.617v6.445a2.25 2.25 0 0 1-2.096 2.245l-.154.005-6.446.001A17.932 17.932 0 0 1 18 36C8.059 36 0 27.941 0 18S8.059 0 18 0z"
@@ -349,13 +349,13 @@
                         <div class="topic-footer-left">
                           <button v-if="!item.isLike" @click="likeClickMains(item)" class="planettext ">
                             <i class="el-icon-caret-top"></i><span class="el-icon-caret-planettext">{{ item.loveNum > 0
-                              ? '\xa0' + item.loveNum + '\xa0\xa0赞' : '赞'
-                            }}</span><b></b>
+            ? '\xa0' + item.loveNum + '\xa0\xa0赞' : '赞'
+                              }}</span><b></b>
                           </button>
                           <button v-else @click="likeClickMains(item)" class="planettext active">
                             <i class="el-icon-caret-top"></i><span class="el-icon-caret-planettext">{{ item.loveNum > 0
-                              ? item.loveNum + '赞' : '赞'
-                            }}</span><b></b>
+            ? item.loveNum + '赞' : '赞'
+                              }}</span><b></b>
                           </button>
                           <button v-if="!item.isLose" class="planettext" @click="LoseClickMains(item)">
                             <i class="el-icon-caret-bottom"></i>
@@ -420,8 +420,8 @@
                                           <div>
                                             <div class="topic-name-data" v-once>
                                               <a target="_blank"><b>{{
-                                                item.reviewers
-                                              }}</b></a>
+            item.reviewers
+          }}</b></a>
                                               <!---->
                                               <!---->
                                             </div>
@@ -486,14 +486,14 @@
                                         <span @click="likeClick(item)" v-if="!item.isLike" class="like">
                                           <i class="iconfont icon-like"></i>
                                           <span class="like-num">{{ item.loveNum > 0 ? item.loveNum + '人赞' :
-                                            '赞'
-                                          }}</span>
+            '赞'
+                                            }}</span>
                                         </span>
                                         <span @click="likeClick(item)" v-else class="like active">
                                           <i class="iconfont icon-like"></i>
                                           <span class="like-num">{{ item.loveNum > 0 ? item.loveNum + '人赞' :
-                                            '赞'
-                                          }}</span>
+            '赞'
+                                            }}</span>
                                         </span>
                                       </div>
                                     </div>
@@ -503,12 +503,12 @@
                                       v-model="postReplysForm.content">
                                     </el-input>
                                     <el-button size="mini" class="replyBut" type="success" round @click="
-                                      setUpPostReplys(
-                                        item.responderId,
-                                        item.id,
-                                        item.postId
-                                      )
-                                      ">发布</el-button>
+            setUpPostReplys(
+              item.responderId,
+              item.id,
+              item.postId
+            )
+            ">发布</el-button>
                                   </div>
                                   <div class="comments" v-if="item.reply.length > 0">
                                     <div class="reply" v-for="reply in item.reply" :key="reply.id">
@@ -521,7 +521,7 @@
                                             <div class="topic-name">
                                               <div>
                                                 <div v-if="reply.responder != null && reply.responder != item.reviewers
-                                                  " class="topic-name-data">
+            " class="topic-name-data">
                                                   <a target="_blank"><b>{{ reply.reviewers }}{{ "\xa0" }} <i class="
                                                                   el-icon-caret-right " style="
                                                                   font-size: 12px;
@@ -532,8 +532,8 @@
                                                 </div>
                                                 <div v-else class="topic-name-data">
                                                   <a target="_blank"><b>{{
-                                                    reply.reviewers
-                                                  }}</b></a>
+            reply.reviewers
+          }}</b></a>
                                                   <!---->
                                                   <!---->
                                                 </div>
@@ -567,7 +567,7 @@
                                         <div class="topic-footer-left">
                                           <span class="topic-date"><b><time class="b2timeago"
                                                 datetime="2021-12-27 21:58:17" itemprop="datePublished"><span v-text="getTime(reply.addTime)
-                                                  ">
+            ">
                                                 </span> </time></b></span>
                                           <!---->
                                           <!-- <div class="topic-meta-more-box">
@@ -600,30 +600,30 @@
                                             <span @click="likeClicks(reply)" v-if="!reply.isLike" class="like">
                                               <i class="iconfont icon-like"></i>
                                               <span class="like-num">{{ reply.loveNum > 0 ? reply.loveNum + '人赞' :
-                                                '赞'
-                                              }}</span>
+            '赞'
+                                                }}</span>
                                             </span>
                                             <span @click="likeClicks(reply)" v-else class="like active">
                                               <i class="iconfont icon-like"></i>
                                               <span class="like-num">{{ reply.loveNum > 0 ? reply.loveNum + '人赞' :
-                                                '赞'
-                                              }}</span>
+            '赞'
+                                                }}</span>
                                             </span>
                                           </div>
                                         </div>
                                       </div>
                                       <div v-show="reply.isShow" class="reply-box">
                                         <el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="postReplysToUserForm.content
-                                          ">
+            ">
                                         </el-input>
                                         <el-button size="mini" class="replyBut" type="success" round @click="
-                                          setUpPostReplysTouser(
-                                            reply.responderId,
-                                            item.id,
-                                            reply.postId,
-                                            reply.userId
-                                          )
-                                          ">发布</el-button>
+            setUpPostReplysTouser(
+              reply.responderId,
+              item.id,
+              reply.postId,
+              reply.userId
+            )
+            ">发布</el-button>
                                       </div>
                                     </div>
                                   </div>
@@ -713,9 +713,12 @@
         </div>
         <!-- <foot /> -->
         <div v-if="isLoading" class="loading-indicator">
-  <div class="loader"></div>
-  <!-- Add your loading indicator here -->
-</div>
+          <div class="loader"></div>
+          <!-- Add your loading indicator here -->
+        </div>
+        <div v-else>
+          <div class="loading-indicator">我是有底线的</div>
+        </div>
         <div infos="0">
           <div class="
                     adBanner
@@ -758,21 +761,21 @@ export default {
       //清空
       this.squaredata = [];
       //获取全部评论
-      getAllSquare(this.$route.params.square, this.page, 6).then((response) => {
-        // console.log(response);
-        // this.squaredata = this.squaredata.concat(response.data.data)
-        for (let i = 0; i < response.data.data.length; i++) {
-          response.data.data[i].image = JSON.parse(response.data.data[i].image)
-        }
+      // getAllSquare(1, this.page, 6).then((response) => {
+      //   // console.log(response);
+      //   // this.squaredata = this.squaredata.concat(response.data.data)
+      //   for (let i = 0; i < response.data.data.length; i++) {
+      //     response.data.data[i].image = JSON.parse(response.data.data[i].image)
+      //   }
 
-        this.squaredata = response.data.data
-      });
+      //   this.squaredata = response.data.data
+      // });
       //更新菜单数据
-      getArticleClassByotherName(this.$route.params.square).then(
-        (response) => {
-          this.planetInfo = response.data;
-        }
-      );
+      // getArticleClassByotherName(this.$route.params.square).then(
+      //   (response) => {
+      //     this.planetInfo = response.data;
+      //   }
+      // );
     }
 
   },
@@ -877,36 +880,42 @@ export default {
       }
     },
     getSquare() {
-      //判断this.$route.params.square是否存在
-      if (this.$route.params.square) {
-        getArticleClassByotherName(this.$route.params.square).then(
-          (response) => {
-            this.planetInfo = response.data;
-          }
-        );
-        //获取全部评论
-        getAllSquare(this.$route.params.square, this.page, 6).then((response) => {
-          // console.log(response);
-          for (let i = 0; i < response.data.data.length; i++) {
-            response.data.data[i].image = JSON.parse(response.data.data[i].image)
-          }
-          // var str = JSON.parse(response.data.data[0].image)
-          // console.log(str)
-          this.squaredata = this.squaredata.concat(response.data.data)
-          console.group(this.squaredata)
-        });
-      } else {
-        getArticleClassByotherName("circle").then((response) => {
-          this.planetInfo = response.data;
-        });
-        //获取全部评论
-        getAllSquare("circle", this.page, 6).then((response) => {
-          for (let i = 0; i < response.data.data.length; i++) {
-            response.data.data[i].image = JSON.parse(response.data.data[i].image)
-          }
-          this.squaredata = this.squaredata.concat(response.data.data)
-        });
+      if (this.squaredata.length != this.pagetotal) {
+        this.isLoading = true; // 开始加载数据时显示进度
       }
+
+      //判断this.$route.params.square是否存在
+      // if (this.$route.params.square) {
+      getArticleClassByotherName("circle").then(
+        (response) => {
+          this.planetInfo = response.data;
+        }
+      );
+      //获取全部评论
+      getAllSquare(1, this.page, 6).then((response) => {
+        console.log(3123, response);
+        this.pagetotal = response.data.total
+        for (let i = 0; i < response.data.data.length; i++) {
+          response.data.data[i].image = JSON.parse(response.data.data[i].image)
+        }
+        // var str = JSON.parse(response.data.data[0].image)
+        // console.log(str)
+        this.squaredata = this.squaredata.concat(response.data.data)
+        console.group(this.squaredata)
+      });
+
+      // } else {
+      //   getArticleClassByotherName("circle").then((response) => {
+      //     this.planetInfo = response.data;
+      //   });
+      //   //获取全部评论
+      //   getAllSquare("circle", this.page, 6).then((response) => {
+      //     for (let i = 0; i < response.data.data.length; i++) {
+      //       response.data.data[i].image = JSON.parse(response.data.data[i].image)
+      //     }
+      //     this.squaredata = this.squaredata.concat(response.data.data)
+      //   });
+      // }
     },
     fetchData() {
       //数据置空
@@ -917,6 +926,7 @@ export default {
       //获取圈子列表
       getSquareClasslist().then((res) => {
         this.classlist = res.data;
+        console.log(classlist)
       });
     },
     refreshPage() {
@@ -987,13 +997,17 @@ export default {
         var scrollHeight =
           document.documentElement.scrollHeight || document.body.scrollHeight;
         let bottomOfWindow = (scrollTop + windowHeight) - scrollHeight;
-        
+
+        // console.log("bottomOfWindow", this.squaredata.length)
+        // console.log("this.pagetotal",this.pagetotal)
+
         if (bottomOfWindow == 0.5 || bottomOfWindow == 0) {
-          this.isLoading = true; // 开始加载数据时显示进度
           this.page++;
-          this.getSquare().then(() => {
-            this.isLoading = false; // 数据加载完成后隐藏进度
-          });
+          this.getSquare().then(() => { });
+        }
+        if (this.squaredata.length === this.pagetotal) {
+          this.isLoading = false; // 数据加载完成后隐藏进度
+          console.log("没有更多数据了");
         }
       }
     },
@@ -1107,160 +1121,161 @@ export default {
       });
     },
     setUpPostReplysTouser(usersId, id, postId, uId) {
-    this.postReplysToUserForm.postId = postId;
-    this.postReplysToUserForm.parentId = id;
-    this.postReplysToUserForm.toUserId = uId;
-    const user = this.$cookies.get("access-user")
-    this.userJudje = user == null;
-    if (this.userJudje) {
-      // console.log("未登陆");
-      //显示需要登陆
-      this.shownologin = true;
-    } else {
-      // console.log("已登陆");
-      this.postReplysToUserForm.userId = this.user.userid;
-      //显示需要登陆
-      this.shownologin = false;
-    }
-    console.log(this.postReplysToUserForm);
-    addPlanetComment(this.postReplysToUserForm).then((res) => {
-      if (res.code == 0) {
-        // this.$message.success("评论成功");
-        this.fetchData();
+      this.postReplysToUserForm.postId = postId;
+      this.postReplysToUserForm.parentId = id;
+      this.postReplysToUserForm.toUserId = uId;
+      const user = this.$cookies.get("access-user")
+      this.userJudje = user == null;
+      if (this.userJudje) {
+        // console.log("未登陆");
+        //显示需要登陆
+        this.shownologin = true;
       } else {
-        // this.$message.error(res.msg);
+        // console.log("已登陆");
+        this.postReplysToUserForm.userId = this.user.userid;
+        //显示需要登陆
+        this.shownologin = false;
       }
-    });
-  },
-  setReplayPullDown(item) {
-    if (!item.isShow) {
-      this.$set(item, "isShow", false);
-      item.isShow = !item.isShow;
-    } else {
-      item.isShow = !item.isShow;
-    }
-  },
-  setReplaysPullDown(reply) {
-    if (!reply.isShow) {
-      this.$set(reply, "isShow", false);
-
-      reply.isShow = !reply.isShow;
-    } else {
-      reply.isShow = !reply.isShow;
-    }
-  },
-  setPullDown(item) {
-    //设置this.commen为空
-    this.comment = [];
-    if (!item.isShow) {
-      getPlanetIdComment(item.id).then((res) => {
-        this.comment = res.data;
+      console.log(this.postReplysToUserForm);
+      addPlanetComment(this.postReplysToUserForm).then((res) => {
+        if (res.code == 0) {
+          // this.$message.success("评论成功");
+          this.fetchData();
+        } else {
+          // this.$message.error(res.msg);
+        }
       });
-      this.$set(item, "isShow", false);
-      item.isShow = !item.isShow;
-    } else {
-      item.isShow = !item.isShow;
-    }
+    },
+    setReplayPullDown(item) {
+      if (!item.isShow) {
+        this.$set(item, "isShow", false);
+        item.isShow = !item.isShow;
+      } else {
+        item.isShow = !item.isShow;
+      }
+    },
+    setReplaysPullDown(reply) {
+      if (!reply.isShow) {
+        this.$set(reply, "isShow", false);
+
+        reply.isShow = !reply.isShow;
+      } else {
+        reply.isShow = !reply.isShow;
+      }
+    },
+    setPullDown(item) {
+      //设置this.commen为空
+      this.comment = [];
+      if (!item.isShow) {
+        getPlanetIdComment(item.id).then((res) => {
+          this.comment = res.data;
+        });
+        this.$set(item, "isShow", false);
+        item.isShow = !item.isShow;
+      } else {
+        item.isShow = !item.isShow;
+      }
+    },
+
+
+    sitmap() {
+      if (this.$route.params.square) {
+        var images = JSON.stringify(this.imageList);
+        console.log(images);
+
+        this.postForm.image = images
+        createSquare(this.postForm, this.$route.params.square).then((response) => {
+          this.fetchData();
+          this.postForm.content = null;
+        });
+
+      } else {
+        // console.log("circle");
+        var images = JSON.stringify(this.imageList);
+        console.log(images);
+
+        this.postForm.image = images
+        createSquare(this.postForm, "circle").then((response) => {
+          this.fetchData();
+          this.postForm.content = null;
+        });
+      }
+      // this.$message.success("发表成功");
+      // 刷新页面 
+
+
+    },
+    //时间如果是最近一天，则显示时间，如果是最近一周，则显示周几
+
+    getUserInfo() {
+      const user = this.$cookies.get("access-user")
+      this.userJudje = user == null;
+      if (this.userJudje) {
+        // console.log("未登陆");
+        //显示需要登陆
+        this.shownologin = true;
+      } else {
+        // console.log("已登陆");
+        this.user = user;
+        this.postForm.author = this.user.userid;
+        //显示需要登陆
+        this.shownologin = false;
+      }
+    },
   },
 
 
-  sitmap() {
-    if (this.$route.params.square) {
-      var images = JSON.stringify(this.imageList);
-      console.log(images);
-
-      this.postForm.image = images
-      createSquare(this.postForm, this.$route.params.square).then((response) => {
-        this.fetchData();
-        this.postForm.content = null;
-      });
-
-    } else {
-      // console.log("circle");
-      var images = JSON.stringify(this.imageList);
-      console.log(images);
-
-      this.postForm.image = images
-      createSquare(this.postForm, "circle").then((response) => {
-        this.fetchData();
-        this.postForm.content = null;
-      });
-    }
-    // this.$message.success("发表成功");
-    // 刷新页面 
-
-
+  data() {
+    return {
+      pagetotal: 0,
+      isLoading: false,
+      dialogImageUrl: '',
+      dialogVisible: false,
+      fileList: [],
+      imageList: [],
+      newFile: new FormData(), //   1. 定义一个newFile变量（FormData 对象） 
+      sentence: "",
+      page: 1,
+      MyEmoge: "",
+      showDialog: false,
+      planetInfo: {},
+      classlist: "",
+      //二级回复
+      postReplysToUserForm: {
+        content: "",
+        parentId: "",
+        userId: "",
+        toUserId: "",
+        postId: "",
+      },
+      //一级回复
+      postReplysForm: {
+        content: "",
+        parentId: "",
+        userId: "",
+        postId: "",
+      },
+      //一级评论
+      postReplyForm: {
+        content: "",
+        parentId: "",
+        userId: "",
+        postId: "",
+      },
+      squaredata: [],
+      //圈子
+      postForm: {
+        image: [],
+        isLock: false,
+        content: "",
+        author: "",
+        sortClass: "",
+      },
+      shownologin: false,
+      acticve: "nav-link active",
+      comment: [],
+    };
   },
-  //时间如果是最近一天，则显示时间，如果是最近一周，则显示周几
-
-  getUserInfo() {
-    const user = this.$cookies.get("access-user")
-    this.userJudje = user == null;
-    if (this.userJudje) {
-      // console.log("未登陆");
-      //显示需要登陆
-      this.shownologin = true;
-    } else {
-      // console.log("已登陆");
-      this.user = user;
-      this.postForm.author = this.user.userid;
-      //显示需要登陆
-      this.shownologin = false;
-    }
-  },
-  },
-
-
-data() {
-  return {
-    isLoading: false,
-    dialogImageUrl: '',
-    dialogVisible: false,
-    fileList: [],
-    imageList: [],
-    newFile: new FormData(), //   1. 定义一个newFile变量（FormData 对象） 
-    sentence: "",
-    page: 1,
-    MyEmoge: "",
-    showDialog: false,
-    planetInfo: {},
-    classlist: "",
-    //二级回复
-    postReplysToUserForm: {
-      content: "",
-      parentId: "",
-      userId: "",
-      toUserId: "",
-      postId: "",
-    },
-    //一级回复
-    postReplysForm: {
-      content: "",
-      parentId: "",
-      userId: "",
-      postId: "",
-    },
-    //一级评论
-    postReplyForm: {
-      content: "",
-      parentId: "",
-      userId: "",
-      postId: "",
-    },
-    squaredata: [],
-    //圈子
-    postForm: {
-      image: [],
-      isLock: false,
-      content: "",
-      author: "",
-      sortClass: "",
-    },
-    shownologin: false,
-    acticve: "nav-link active",
-    comment: [],
-  };
-},
 };
 </script>
 
@@ -1275,8 +1290,10 @@ data() {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100px; /* 根据您的需要设置高度 */
-  background-color: #F3F5F7; /* 背景颜色 */
+  height: 100px;
+  /* 根据您的需要设置高度 */
+  background-color: #F3F5F7;
+  /* 背景颜色 */
 }
 
 .loader {
@@ -1290,16 +1307,25 @@ data() {
   position: absolute;
   width: 40px;
   height: 40px;
-  border: 8px solid #3498db; /* 边框颜色 */
-  border-top: 8px solid transparent; /* 透明边框，创建圆形 */
+  border: 8px solid #3498db;
+  /* 边框颜色 */
+  border-top: 8px solid transparent;
+  /* 透明边框，创建圆形 */
   border-radius: 50%;
-  animation: spin 1s linear infinite; /* 旋转动画 */
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0) 100%); /* 渐变背景色，尾部渐变为透明 */
+  animation: spin 1s linear infinite;
+  /* 旋转动画 */
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0) 100%);
+  /* 渐变背景色，尾部渐变为透明 */
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .delayImg {
@@ -1643,21 +1669,23 @@ body>.el-container {
 }
 </style>
 <style scoped>
-.myVEmojiPicker     :deep(.category ){
+.myVEmojiPicker :deep(.category) {
   background: none;
 }
 
-.myVEmojiPicker     :deep(.border) {
-  border: 0px solid hsla(210, 8%, 51%, 0.09) !important;
-}
-.myVEmojiPicker     :deep(.myVEmojiPicker[data-v-3bfe90b7]) {
-  border: 0px solid hsla(210, 8%, 51%, 0.09) !important;
-}
-.myVEmojiPicker     :deep(.border) {
+.myVEmojiPicker :deep(.border) {
   border: 0px solid hsla(210, 8%, 51%, 0.09) !important;
 }
 
-.myVEmojiPicker     :deep(.category.active[data-v-6d975e7c] ){
+.myVEmojiPicker :deep(.myVEmojiPicker[data-v-3bfe90b7]) {
+  border: 0px solid hsla(210, 8%, 51%, 0.09) !important;
+}
+
+.myVEmojiPicker :deep(.border) {
+  border: 0px solid hsla(210, 8%, 51%, 0.09) !important;
+}
+
+.myVEmojiPicker :deep(.category.active[data-v-6d975e7c]) {
   border-bottom: 3px solid #50a1ff;
 }
 
@@ -1676,7 +1704,7 @@ body>.el-container {
   bottom: 20px;
   z-index: 10;
 } */
-.myVEmojiPicker     :deep(.emoji-picker[data-v-f1d527bc]) {
+.myVEmojiPicker :deep(.emoji-picker[data-v-f1d527bc]) {
   background-color: #FFFFFF;
   border-radius: 0px;
 }

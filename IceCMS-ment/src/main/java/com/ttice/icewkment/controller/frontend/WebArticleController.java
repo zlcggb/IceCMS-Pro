@@ -43,16 +43,16 @@ public class WebArticleController {
   @ApiOperation(value = "根据id获取文章内容")
   @ApiImplicitParam(name = "id", value = "文章id", required = true)
   @GetMapping("/getArticleById/{id}")
-  public Article getArticleById(@PathVariable("id") Integer id) {
+  public ArticleVO getArticleById(@PathVariable("id") Integer id) {
     Article article = articleService.getById(id);
     String sortClass = String.valueOf(article.getSortClass());
     QueryWrapper<ArticleClass> wrapper = new QueryWrapper<>();
     wrapper.eq("id", sortClass);
     ArticleClass articleClass = articleClassMapper.selectOne(wrapper);
     String name = articleClass.getName();
-    Article articleBuffer = new Article();
+    ArticleVO articleBuffer = new ArticleVO();
     BeanUtils.copyProperties(article, articleBuffer);
-    articleBuffer.setSortClass(Integer.valueOf(name));
+    articleBuffer.setSortClass(name);
     return articleBuffer;
   }
 

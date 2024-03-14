@@ -123,7 +123,7 @@
             aria-current="page"
           >
             <img src="../../static/image/logo.svg" />
-            <span     >{{ setting.sitTitle }}</span></a
+            <span class="ml-4">{{ setting.sitTitle }}</span></a
           >
     
         <div class="app-header-nav nav"     >
@@ -285,7 +285,7 @@
                                   -webkit-line-clamp: 1;
                                 "
                               >
-                                <span     >{{ item.title }}</span>
+                                <span >{{ item.title }}</span>
                                 <!-- <span
                                 
                             class="

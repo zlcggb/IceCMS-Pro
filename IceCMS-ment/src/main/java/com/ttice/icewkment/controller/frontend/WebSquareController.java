@@ -94,12 +94,12 @@ public class WebSquareController {
 
   @ApiOperation(value = "根据别名获取全部圈子(分页)")
   @ApiImplicitParam(name = "otherName", value = "otherName", required = true)
-  @GetMapping("/getAllSquare/{otherName}/{page}/{limit}")
+  @GetMapping("/getAllSquare/{id}/{page}/{limit}")
   public SquarePageVO getAllArticle(
-      @PathVariable("otherName") String otherName,
+      @PathVariable("id") Integer id,
       @PathVariable("page") Integer page,
       @PathVariable("limit") Integer limit) {
 
-    return squareService.VoList(otherName, page, limit);
+    return squareService.VoList(id, page, limit);
   }
 }

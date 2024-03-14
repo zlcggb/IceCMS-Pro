@@ -1,151 +1,72 @@
 <template>
   <div class="Resource">
     <!-- 选择支付方式（登陆） -->
-    <el-dialog
-      :visible.sync="PaymentDialogVisibleLogin"
-      :show-close="false"
-      @close="closeDialog"
-      width="320px"
-      center
-    >
+    <el-dialog :visible.sync="PaymentDialogVisibleLogin" :show-close="false" @close="closeDialog" width="320px" center>
       <h6 class="outh5">请选择支付方式</h6>
       <div class="swal2-content">
         <div id="swal2-content" style="display: block">
           <div class="pay-button-box">
-            <div
-              @click="selectPayTypeLogin('alipay')"
-              class="pay-item"
-              id="alipay"
-              data-type="1"
-            >
-              <img
-                style="margin-right: 14px"
-                height="40"
-                width="40"
-                src="../../static/image/pay/zhifubaorenzheng.svg"
-              /><span>支付宝</span>
+            <div @click="selectPayTypeLogin('alipay')" class="pay-item" id="alipay" data-type="1">
+              <img style="margin-right: 14px" height="40" width="40"
+                src="../../static/image/pay/zhifubaorenzheng.svg" /><span>支付宝</span>
             </div>
-            <div
-              @click="selectPayTypeLogin('wxpay')"
-              class="pay-item"
-              id="weixinpay"
-              data-type="2"
-            >
-              <img
-                style="margin: 12px"
-                height="40"
-                width="40"
-                src="../../static/image/pay/weixinzhifu.svg"
-              /><span>微信支付</span>
+            <div @click="selectPayTypeLogin('wxpay')" class="pay-item" id="weixinpay" data-type="2">
+              <img style="margin: 12px" height="40" width="40"
+                src="../../static/image/pay/weixinzhifu.svg" /><span>微信支付</span>
             </div>
-             <div
-              @click="selectPayTypeLogin('wxpay')"
-              class="pay-item"
-              id="weixinpay"
-              data-type="2"
-            >
-              <img
-                style="margin: 12px"
-                height="40"
-                width="40"
-                src="../../static/image/pay/jifen.svg"
-              /><span>积分支付</span>
+            <div @click="selectPayTypeLogin('wxpay')" class="pay-item" id="weixinpay" data-type="2">
+              <img style="margin: 12px" height="40" width="40"
+                src="../../static/image/pay/jifen.svg" /><span>积分支付</span>
             </div>
           </div>
           <p style="font-size: 13px; padding: 0; margin: 0"></p>
         </div>
-        <input class="swal2-input" style="display: none" /><input
-          type="file"
-          class="swal2-file"
-          style="display: none"
-        />
+        <input class="swal2-input" style="display: none" /><input type="file" class="swal2-file"
+          style="display: none" />
         <div class="swal2-range" style="display: none">
           <input type="range" /><output></output>
         </div>
         <select class="swal2-select" style="display: none"></select>
         <div class="swal2-radio" style="display: none"></div>
-        <label for="swal2-checkbox" class="swal2-checkbox" style="display: none"
-          ><input type="checkbox" /><span class="swal2-label"></span></label
-        ><textarea class="swal2-textarea" style="display: none"></textarea>
-        <div
-          class="swal2-validation-message"
-          id="swal2-validation-message"
-          style="display: none"
-        ></div>
+        <label for="swal2-checkbox" class="swal2-checkbox" style="display: none"><input type="checkbox" /><span
+            class="swal2-label"></span></label><textarea class="swal2-textarea" style="display: none"></textarea>
+        <div class="swal2-validation-message" id="swal2-validation-message" style="display: none"></div>
       </div>
     </el-dialog>
     <!-- 选择支付方式（临时） -->
-    <el-dialog
-      :visible.sync="PaymentDialogVisibleTemp"
-      :show-close="false"
-      @close="closeDialog"
-      width="320px"
-      center
-    >
+    <el-dialog :visible.sync="PaymentDialogVisibleTemp" :show-close="false" @close="closeDialog" width="320px" center>
       <h6 class="outh5">请选择支付方式</h6>
       <div class="swal2-content">
         <div id="swal2-content" style="display: block">
           <div class="pay-button-box">
-            <div
-              @click="selectPayType('alipay')"
-              class="pay-item"
-              id="alipay"
-              data-type="1"
-            >
-              <img
-                style="margin-right: 14px"
-                height="40"
-                width="40"
-                src="../../static/image/pay/zhifubaorenzheng.svg"
-              /><span>支付宝</span>
+            <div @click="selectPayType('alipay')" class="pay-item" id="alipay" data-type="1">
+              <img style="margin-right: 14px" height="40" width="40"
+                src="../../static/image/pay/zhifubaorenzheng.svg" /><span>支付宝</span>
             </div>
-            <div
-              @click="selectPayType('wxpay')"
-              class="pay-item"
-              id="weixinpay"
-              data-type="2"
-            >
-              <img
-                style="margin: 12px"
-                height="40"
-                width="40"
-                src="../../static/image/pay/weixinzhifu.svg"
-              /><span>微信支付</span>
+            <div @click="selectPayType('wxpay')" class="pay-item" id="weixinpay" data-type="2">
+              <img style="margin: 12px" height="40" width="40"
+                src="../../static/image/pay/weixinzhifu.svg" /><span>微信支付</span>
             </div>
           </div>
           <p style="font-size: 13px; padding: 0; margin: 0">
             当前为游客购买模式
           </p>
         </div>
-        <input class="swal2-input" style="display: none" /><input
-          type="file"
-          class="swal2-file"
-          style="display: none"
-        />
+        <input class="swal2-input" style="display: none" /><input type="file" class="swal2-file"
+          style="display: none" />
         <div class="swal2-range" style="display: none">
           <input type="range" /><output></output>
         </div>
         <select class="swal2-select" style="display: none"></select>
         <div class="swal2-radio" style="display: none"></div>
-        <label for="swal2-checkbox" class="swal2-checkbox" style="display: none"
-          ><input type="checkbox" /><span class="swal2-label"></span></label
-        ><textarea class="swal2-textarea" style="display: none"></textarea>
-        <div
-          class="swal2-validation-message"
-          id="swal2-validation-message"
-          style="display: none"
-        ></div>
+        <label for="swal2-checkbox" class="swal2-checkbox" style="display: none"><input type="checkbox" /><span
+            class="swal2-label"></span></label><textarea class="swal2-textarea" style="display: none"></textarea>
+        <div class="swal2-validation-message" id="swal2-validation-message" style="display: none"></div>
       </div>
     </el-dialog>
     <!-- 微信支付二维码 -->
     <div>
-      <el-dialog
-        :visible.sync="wxDialogVisible"
-        :show-close="false"
-        @close="closeDialog"
-        width="320px"
-        center
-      >
+      <el-dialog :visible.sync="wxDialogVisible" :show-close="false" @close="closeDialog" width="320px" center>
         <h5 class="outh5">
           <img src="../../static/image/pay/weixinbig.png" class="alipaybig_icon" />
         </h5>
@@ -165,13 +86,7 @@
     </div>
     <!-- 支付宝支付二维码 -->
     <div>
-      <el-dialog
-        :visible.sync="aliDialogVisible"
-        :show-close="false"
-        @close="closeDialog"
-        width="320px"
-        center
-      >
+      <el-dialog :visible.sync="aliDialogVisible" :show-close="false" @close="closeDialog" width="320px" center>
         <h5 class="outh5">
           <img src="../../static/image/pay/alipaybig.png" class="alipaybig_icon" />
         </h5>
@@ -195,40 +110,22 @@
         <div data-fetch-key="0" class="app light macwk-animation">
           <top :message2="acticve" />
           <div class="overflow-hidden pt-5">
-            <div class="layout-header pt-5 pb-5 position-relative pc-model">
+            <div class="player-container-out" v-if="videoAddress != null" id="app">
+              <div class="player-container">
+                <vue-core-video-player :src="videoSource" :title="this.title"></vue-core-video-player>
+              </div>
+            </div>
+            <div v-else class="layout-header pt-5 pb-5 position-relative pc-model">
               <!-- ../static/image/loding.gif -->
               <div>
-                <img
-                  src="../../static/image/shape-1.svg"
-                  class="shape-three"
-                /><img
-                  src="../../static/image/shape-55.svg"
-                  class="shape-four"
-                /><img
-                  src="../../static/image/shape-56.svg"
-                  class="shape-five"
-                /><img
-                  src="../../static/image/shape-57.svg"
-                  class="shape-six"
-                /><img
-                  src="../../static/image/shape-58.svg"
-                  class="shape-seven"
-                /><img
-                  src="../../static/image/shape-59.svg"
-                  class="shape-eight"
-                /><img
-                  src="../../static/image/shape-60.svg"
-                  class="shape-nine"
-                /><img
-                  src="../../static/image/shape-61.svg"
-                  class="shape-ten"
-                /><img
-                  src="../../static/image/shape-62.svg"
-                  class="shape-eleven"
-                /><img
-                  src="../../static/image/shape-10.svg"
-                  class="shape-10"
-                /><img src="../../static/image/shape-11.svg" class="shape-11" />
+                <img src="../../static/image/shape-1.svg" class="shape-three" /><img
+                  src="../../static/image/shape-55.svg" class="shape-four" /><img src="../../static/image/shape-56.svg"
+                  class="shape-five" /><img src="../../static/image/shape-57.svg" class="shape-six" /><img
+                  src="../../static/image/shape-58.svg" class="shape-seven" /><img src="../../static/image/shape-59.svg"
+                  class="shape-eight" /><img src="../../static/image/shape-60.svg" class="shape-nine" /><img
+                  src="../../static/image/shape-61.svg" class="shape-ten" /><img src="../../static/image/shape-62.svg"
+                  class="shape-eleven" /><img src="../../static/image/shape-10.svg" class="shape-10" /><img
+                  src="../../static/image/shape-11.svg" class="shape-11" />
               </div>
               <div class="container">
                 <div class="row align-items-center">
@@ -245,57 +142,29 @@
                           <!---->
                         </h2>
                         <div class="mb-15">
-                          <el-button
-                          size="mini"
-                            v-if="payJudej"
-                            :disabled="payBtnDisabled"
-                            @click="Download()"
-                            class="btn btn-theme btn-round w-200 cursor mr-4"
-                            round
-                            ><i class="el-icon-download"></i>
-                            支付下载</el-button
-                          >
-                          <el-button
-                          size="mini"
-                            v-else
-                            :disabled="payBtnDisabled"
-                            @click="NowDownload()"
-                            class="btn btn-theme btn-round w-200 cursor mr-4"
-                            round
-                            ><i class="el-icon-download"></i>
-                            立即下载(已支付)</el-button
-                          >
-                          <button
-                            v-if="!lovecheck"
-                            @click="loveClick()"
-                            class="
+                          <el-button size="mini" v-if="payJudej" :disabled="payBtnDisabled" @click="Download()"
+                            class="btn btn-theme btn-round w-200 cursor mr-4" round><i class="el-icon-download"></i>
+                            支付下载</el-button>
+                          <el-button size="mini" v-else :disabled="payBtnDisabled" @click="NowDownload()"
+                            class="btn btn-theme btn-round w-200 cursor mr-4" round><i class="el-icon-download"></i>
+                            立即下载(已支付)</el-button>
+                          <button v-if="!lovecheck" @click="loveClick()" class="
                               btn btn-outline-theme btn-round
                               px-5
                               zanUp
                               position-relative
-                            "
-                          >
-                            <img
-                              class="dianzan"
-                              src="../../static/image/dianzan.svg"
-                            />
+                            ">
+                            <img class="dianzan" src="../../static/image/dianzan.svg" />
                             赞 ({{ loveNum }})
                             <span class="likeanimation">+1</span>
                           </button>
-                          <button
-                            v-else
-                            @click="loveClick()"
-                            class="
+                          <button v-else @click="loveClick()" class="
                               btn btn-outline-theme btn-round
                               px-5
                               zanUp
                               position-relative
-                            "
-                          >
-                            <img
-                              class="dianzan"
-                              src="../../static/image/dianzanred.svg"
-                            />
+                            ">
+                            <img class="dianzan" src="../../static/image/dianzanred.svg" />
                             赞 ({{ loveNum }})
                             <span class="likeanimation">+1</span>
                           </button>
@@ -309,31 +178,20 @@
                     </div>
                   </div>
                   <div class="col-xs-12 col-lg-6 col-xl-6 text-center">
-                    <div
-                      class="
+                    <div class="
                         device device-macbook-pro device-silver device-silver
-                      "
-                    >
+                      ">
                       <div v-if="carouselNum === 0" class="device-frame">
                         <el-carousel height="350px">
                           <el-carousel-item v-for="item in 1" :key="item">
-                            <img
-                              style="height: 349px; width: 576px"
-                              :src="thumb"
-                            /><img />
+                            <img style="height: 349px; width: 576px" :src="thumb" /><img />
                           </el-carousel-item>
                         </el-carousel>
                       </div>
                       <div v-else class="device-frame">
                         <el-carousel height="350px">
-                          <el-carousel-item
-                            v-for="item in carousel"
-                            :key="item"
-                          >
-                            <img
-                              style="height: 349px; width: 576px"
-                              :src="item.url"
-                            /><img />
+                          <el-carousel-item v-for="item in carousel" :key="item">
+                            <img style="height: 349px; width: 576px" :src="item.url" /><img />
                           </el-carousel-item>
                         </el-carousel>
                       </div>
@@ -357,15 +215,13 @@
                         <p class="text-muted text-uppercase fs-10 ls-2 mb-0">
                           大小
                         </p>
-                        <p
-                          class="
+                        <p class="
                             mb-0
                             fs-20
                             font-weight-bolder
                             line-height-3
                             opacity-70
-                          "
-                        >
+                          ">
                           31.9
                         </p>
                         <p class="text-uppercase fs-10 ls-2 mb-0 opacity-70">
@@ -378,30 +234,24 @@
                         <p class="text-muted text-uppercase fs-10 ls-2 mb-0">
                           下载
                         </p>
-                        <p
-                        v-if="hits == null" 
-                          class="
+                        <p v-if="hits == null" class="
                             mb-0
                             fs-20
                             font-weight-bolder
                             line-height-3
                             opacity-70
-                          "
-                        >
-                        
+                          ">
+
                           0
                         </p>
-                         <p
-                          v-else
-                          class="
+                        <p v-else class="
                             mb-0
                             fs-20
                             font-weight-bolder
                             line-height-3
                             opacity-70
-                          "
-                        >
-                        
+                          ">
+
                           {{ hits }}
                         </p>
                         <p class="text-uppercase fs-10 ls-2 mb-0 opacity-70">
@@ -414,15 +264,13 @@
                         <p class="text-muted text-uppercase fs-10 ls-2 mb-0">
                           语言
                         </p>
-                        <p
-                          class="
+                        <p class="
                             mb-0
                             fs-20
                             font-weight-bolder
                             line-height-3
                             opacity-70
-                          "
-                        >
+                          ">
                           <span class="text-inherit"> 中文 </span>
                         </p>
                         <p class="text-uppercase fs-10 ls-2 mb-0 opacity-70">
@@ -435,15 +283,13 @@
                         <p class="text-muted text-uppercase fs-10 ls-2 mb-0">
                           价格
                         </p>
-                        <p
-                          class="
+                        <p class="
                             mb-0
                             fs-20
                             font-weight-bolder
                             line-height-3
                             opacity-70
-                          "
-                        >
+                          ">
                           {{ price }}积分
                         </p>
                         <p class="fs-10 ls-2 mb-0 opacity-70">money</p>
@@ -454,21 +300,18 @@
                         <p class="text-muted text-uppercase fs-10 ls-2 mb-0">
                           类别
                         </p>
-                        <p
-                          class="
+                        <p class="
                             mb-0
                             fs-20
                             font-weight-bolder
                             line-height-3
                             opacity-70
                             hover-opacity-normal
-                          "
-                        >
-                       
+                          ">
+
                           <a :href="'/classdetal/' + sortClasss">
                             {{ className }}
-                            <i class="icon-arrow-r text-muted"></i
-                          ></a>
+                            <i class="icon-arrow-r text-muted"></i></a>
                         </p>
                         <p class="fs-10 ls-2 mb-0 opacity-70">enhancement</p>
                       </div>
@@ -479,28 +322,20 @@
                           更新日期
                         </p>
 
-                        <p
-                          class="
+                        <p class="
                             mb-0
                             fs-20
                             font-weight-bolder
                             line-height-3
                             opacity-70
-                          "
-                          v-if="this.createTime != null"
-                          v-text="formatDate(this.createTime)"
-                        ></p>
-                        <p
-                          class="
+                          " v-if="this.createTime != null" v-text="formatDate(this.createTime)"></p>
+                        <p class="
                             mb-0
                             fs-20
                             font-weight-bolder
                             line-height-3
                             opacity-70
-                          "
-                          v-else
-                          v-text="formatDate(this.addTime)"
-                        ></p>
+                          " v-else v-text="formatDate(this.addTime)"></p>
                         <p class="text-uppercase fs-10 ls-2 mb-0 opacity-70">
                           {{ Theweeks }}
                         </p>
@@ -510,10 +345,7 @@
                 </div>
               </section>
               <section class="layout-content">
-                <div
-                  id="step-read"
-                  class="layout-content-install pt-7 mb-5"
-                ></div>
+                <div id="step-read" class="layout-content-install pt-7 mb-5"></div>
                 <!---->
                 <!---->
                 <div id="step-content" class="layout-content-infos">
@@ -521,27 +353,15 @@
                     <div class="content-header">
                       <div class="h-150 w-r is-align-middle w-r--flex">
                         <div class="w-c w-c-2">
-                          <svg
-                            width="80"
-                            height="70"
-                            viewBox="0 0 125 107"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
+                          <svg width="80" height="70" viewBox="0 0 125 107" xmlns="http://www.w3.org/2000/svg">
                             <g fill="none" fill-rule="evenodd">
-                              <circle
-                                cx="48"
-                                cy="59"
-                                r="48"
-                                class="circle-fill"
-                              ></circle>
+                              <circle cx="48" cy="59" r="48" class="circle-fill"></circle>
                               <path
                                 d="M58.536 39.713c0-6.884 1.72-14.007 5.163-21.368 3.443-7.36 8.167-13.458 14.173-18.292l11.645 7.91c-3.589 4.98-6.262 10.016-8.02 15.106S78.86 33.598 78.86 39.384v13.623H58.536V39.713z"
-                                class="path-fill"
-                              ></path>
+                                class="path-fill"></path>
                               <path
                                 d="M93.252 39.713c0-6.884 1.722-14.007 5.164-21.368 3.442-7.36 8.166-13.458 14.172-18.292l11.646 7.91c-3.589 4.98-6.262 10.016-8.02 15.106s-2.637 10.529-2.637 16.315v13.623H93.252V39.713z"
-                                class="path-fill-1"
-                              ></path>
+                                class="path-fill-1"></path>
                             </g>
                           </svg>
                         </div>
@@ -563,7 +383,6 @@
                       <!---->
                     </div>
                     <!-- 内容区域 -->
-
                     <div id="sidelist" v-html="this.content"></div>
                   </div>
                 </div>
@@ -572,14 +391,12 @@
               </section>
             </div>
             <div class="mobile-model">
-              <div
-                class="
+              <div class="
                   d-flex
                   layout-min-full-height
                   justify-content-center
                   align-items-center
-                "
-              >
+                ">
                 <div class="text-center" style="width: 80%; margin: 0 auto">
                   <h1 class="mb-4">哇，窗口太小啦</h1>
                   <p class="mb-6">请调整浏览器窗口大小或者请使用手机查看！</p>
@@ -587,20 +404,11 @@
               </div>
             </div>
             <div class="el-dialog__wrapper text-center" style="display: none">
-              <div
-                role="dialog"
-                aria-modal="true"
-                aria-label="dialog"
-                class="el-dialog no-bg no-shadow"
-                style="margin-top: 15vh; width: 1300px"
-              >
+              <div role="dialog" aria-modal="true" aria-label="dialog" class="el-dialog no-bg no-shadow"
+                style="margin-top: 15vh; width: 1300px">
                 <div class="el-dialog__header">
-                  <span class="el-dialog__title"></span
-                  ><button
-                    type="button"
-                    aria-label="Close"
-                    class="el-dialog__headerbtn"
-                  >
+                  <span class="el-dialog__title"></span><button type="button" aria-label="Close"
+                    class="el-dialog__headerbtn">
                     <i class="el-dialog__close el-icon el-icon-close"></i>
                   </button>
                 </div>
@@ -609,33 +417,21 @@
               </div>
             </div>
             <!---->
-            <div
-              id="sidetools"
-              class="macwk-animation tinUpIn"
-              style="display: none"
-            >
+            <div id="sidetools" class="macwk-animation tinUpIn" style="display: none">
               <div class="sidetools-item">
                 <div class="sidetools-wrapper">
-                  <a href="https://t.me/macwk" target="_blank" class="cursor"
-                    ><span class="sidetools-icon kfqq"></span
-                  ></a>
+                  <a href="https://t.me/macwk" target="_blank" class="cursor"><span
+                      class="sidetools-icon kfqq"></span></a>
                 </div>
               </div>
               <div class="sidetools-item">
                 <div class="sidetools-wrapper">
-                  <a class="el-tooltip cursor"
-                    ><span class="sidetools-icon back-top"></span
-                  ></a>
+                  <a class="el-tooltip cursor"><span class="sidetools-icon back-top"></span></a>
                 </div>
               </div>
               <span>
-                <div
-                  role="tooltip"
-                  id="el-popover-6929"
-                  aria-hidden="true"
-                  class="el-popover el-popper"
-                  style="width: 200px; display: none"
-                >
+                <div role="tooltip" id="el-popover-6929" aria-hidden="true" class="el-popover el-popper"
+                  style="width: 200px; display: none">
                   <!---->
                   <div class="text-center">
                     <a href="/feedback" class="mt-15 mb-0">在线留言</a>
@@ -644,13 +440,8 @@
                 <span class="el-popover__reference-wrapper"></span>
               </span>
               <span>
-                <div
-                  role="tooltip"
-                  id="el-popover-3926"
-                  aria-hidden="true"
-                  class="el-popover el-popper"
-                  style="width: 200px; display: none"
-                >
+                <div role="tooltip" id="el-popover-3926" aria-hidden="true" class="el-popover el-popper"
+                  style="width: 200px; display: none">
                   <!---->
                   <div class="text-center">
                     <a href="/feedback" class="mt-15 mb-0">在线留言</a>
@@ -664,24 +455,16 @@
           </div>
           <!-- v-on:click="show = !show"
                 v-if="!show" -->
-                <client-only>
-          <div class="myVEmojiPicker">
-            <VEmojiPicker
-              v-show="showDialog"
-              :style="{ width: '340px', height: '200' }"
-              labelSearch="Search"
-              lang="pt-BR"
-              @select="onSelectEmoji"
-            />
-          </div>
-        </client-only>
+          <client-only>
+            <div class="myVEmojiPicker">
+              <VEmojiPicker v-show="showDialog" :style="{ width: '340px', height: '200' }" labelSearch="Search"
+                lang="pt-BR" @select="onSelectEmoji" />
+            </div>
+          </client-only>
           <!-- 后台控制是否显示评论 -->
           <!-- <div v-if="!this.glabledata.glableCommentShow">
             <div v-show="!judjeComment"> -->
-          <section
-            v-if="mycomment"
-            @click="sendMsg"
-            class="
+          <section v-if="mycomment" @click="sendMsg" class="
               fiexd-comments-bar
               d-flex
               align-items-center
@@ -690,10 +473,8 @@
               slow
               pc-model
               tinRightIn
-            "
-          >
-            <div
-              class="
+            ">
+            <div class="
                 d-flex
                 align-items-center
                 fs-20
@@ -701,57 +482,42 @@
                 cursor-pointer
                 w-full
                 pl-3
-              "
-            >
+              ">
               <div class="flex">
                 共
                 <span class="fs-36 mx-1"> {{ this.commentnum }}</span>
                 条评论
               </div>
-              <svg
-                color="inherit"
-                viewbox="0 0 32 32"
-                class="w-32"
-                style="
+              <svg color="inherit" viewbox="0 0 32 32" class="w-32" style="
                   width: 1.5em;
                   height: 1.5em;
                   font-size: 2rem;
                   vertical-align: -6px;
-                "
-              >
-                <path
-                  fill="#FFFFFF"
-                  d="M12.63,26.46H8.83a6.61,6.61,0,0,1-6.65-6.07,89.05,89.05,0,0,1,0-11.2A6.5,6.5,0,0,1,8.23,3.25a121.62,121.62,0,0,1,15.51,0A6.51,6.51,0,0,1,29.8,9.19a77.53,77.53,0,0,1,0,11.2,6.61,6.61,0,0,1-6.66,6.07H19.48L12.63,31V26.46"
-                ></path>
+                ">
+                <path fill="#FFFFFF"
+                  d="M12.63,26.46H8.83a6.61,6.61,0,0,1-6.65-6.07,89.05,89.05,0,0,1,0-11.2A6.5,6.5,0,0,1,8.23,3.25a121.62,121.62,0,0,1,15.51,0A6.51,6.51,0,0,1,29.8,9.19a77.53,77.53,0,0,1,0,11.2,6.61,6.61,0,0,1-6.66,6.07H19.48L12.63,31V26.46">
+                </path>
                 <path
                   d="M19.57,21.68h3.67a2.08,2.08,0,0,0,2.11-1.81,89.86,89.86,0,0,0,0-10.38,1.9,1.9,0,0,0-1.84-1.74,113.15,113.15,0,0,0-15,0A1.9,1.9,0,0,0,6.71,9.49a74.92,74.92,0,0,0-.06,10.38,2,2,0,0,0,2.1,1.81h3.81V26.5Z"
-                  class="comment-icon-path"
-                ></path>
+                  class="comment-icon-path"></path>
               </svg>
             </div>
           </section>
           <!-- </div>
           </div> -->
-          <comment
-            :articleId="this.$route.params.id"
-            :theEmoge="this.MyEmoge"
-            ref="child"
-            @closethecpmmentName="updateDate()"
-            @openthecpmmentName="showemoge()"
-          />
+          <comment :articleId="this.$route.params.id" :theEmoge="this.MyEmoge" ref="child"
+            @closethecpmmentName="updateDate()" @openthecpmmentName="showemoge()" />
           <!---->
           <!---->
           <foot />
           <div infos="0">
-            <div
-              class="
+            <div class="
                 adBanner
                 pub_300x250 pub_300x250m pub_728x90
                 text-ad
                 textAd
                 text_ad text_ads text-ads text-ad-links
-              "
-            ></div>
+              "></div>
           </div>
         </div>
       </div>
@@ -782,10 +548,10 @@ export default {
   components: {
     top: () => import("../components/Top.vue"),
     foot: () => import("../components/Foots.vue"),
-     comment, VEmojiPicker
+    comment, VEmojiPicker
 
   },
-    // 当你想要动态页面内容有利于SEO或者是提升首屏渲染速度的时候，就在asyncData中请求数据
+  // 当你想要动态页面内容有利于SEO或者是提升首屏渲染速度的时候，就在asyncData中请求数据
   // 所有接口通过服务端调用渲染
   // 只有列表通过服务端调用渲染，分类跟推荐接口在浏览器调用
   async asyncData({ route }) {
@@ -793,7 +559,6 @@ export default {
       getResourceById({ page: route.params.id || 1 }),
     ]);
     return {
-     
       Resource: Resource,
       createTime: Resource.createTime,
       addTime: Resource.addTime,
@@ -984,89 +749,98 @@ export default {
 
     },
     Download() {
-       if (process.client) {
+      if (process.client) {
+        const user = JSON.parse(window.localStorage.getItem('access-admin'))
+        this.userJudje = (user == null)
+        if (!this.userJudje) { this.userid = user.data.userid }
+        if (this.userJudje) {
+          //游客购买
+          console.log("游客购买")
+          //禁用按钮，防止重复提交
+          this.payBtnDisabled = true
+          //打开支付方式选择
+          this.PaymentDialogVisibleTemp = true
+        }
+        else {
+          //登陆用户购买
+          console.log("登陆用户购买")
+          //禁用按钮，防止重复提交
+          this.payBtnDisabled = true
+
+          //打开支付方式选择
+          this.PaymentDialogVisibleLogin = true
+        }
+      }
+    },
+    async judgeResource() {
       const user = JSON.parse(window.localStorage.getItem('access-admin'))
       this.userJudje = (user == null)
-      if (!this.userJudje) { this.userid = user.data.userid }
-      if (this.userJudje) {
-        //游客购买
-        console.log("游客购买")
-        //禁用按钮，防止重复提交
-        this.payBtnDisabled = true
-        //打开支付方式选择
-        this.PaymentDialogVisibleTemp = true
-      }
-      else {
-        //登陆用户购买
-        console.log("登陆用户购买")
-        //禁用按钮，防止重复提交
-        this.payBtnDisabled = true
-
-        //打开支付方式选择
-        this.PaymentDialogVisibleLogin = true
-      }
-    }
-    },
-    async judgeResource(){
-    const user = JSON.parse(window.localStorage.getItem('access-admin'))
-    this.userJudje = (user == null)
-    if (!this.userJudje) {
-      this.userid = user.data.userid
-      let [res] = await orderInfoApi.queryOrderStatusBytrue(this.$route.params.id, this.userid);
-      if (res) {
-           //检查已登陆用户是否购买过此资源，根据userid和resourceid判断
-        if (res.data.code == 0) {
-          this.payJudej = false
-        }
-        if (res.data.code == 101) {
-          this.payJudej = true
+      if (!this.userJudje) {
+        this.userid = user.data.userid
+        let [res] = await orderInfoApi.queryOrderStatusBytrue(this.$route.params.id, this.userid);
+        if (res) {
+          //检查已登陆用户是否购买过此资源，根据userid和resourceid判断
+          if (res.data.code == 0) {
+            this.payJudej = false
+          }
+          if (res.data.code == 101) {
+            this.payJudej = true
+          }
         }
       }
-    }
     },
     async fetchData() {
-        this.hits = this.Resource.hits
-        this.loveNum = this.Resource.loveNum
-        if (this.loveNum == null) {
-          this.loveNum = 0
-        }
-        this.thumb = this.Resource.thumb
-        this.title = this.Resource.title
-        this.price = this.Resource.price
-        this.author = this.Resource.author
-        this.content = this.Resource.content
-        this.intro = this.Resource.intro
+      this.hits = this.Resource.hits
+      this.loveNum = this.Resource.loveNum
+      if (this.loveNum == null) {
+        this.loveNum = 0
+      }
+      this.videoAddress = this.Resource.videoAddress
+      // 将this.videoAddress封装为videoSource形式
+      this.videoSource = [{
+        src: this.videoAddress,
+        resolution: '1080p' // 你也可以根据需求添加其他分辨率
+      }];
+      console.log(this.videoAddress)
+      this.thumb = this.Resource.thumb
+      this.title = this.Resource.title
+      this.price = this.Resource.price
+      this.author = this.Resource.author
+      this.content = this.Resource.content
+      this.intro = this.Resource.intro
 
-        var str = JSON.parse(this.Resource.carousel)
-        this.carouselNum = str.length
-        this.carousel = str
-        var sortClasss = this.Resource.sortClass
-         this.sortClasss = sortClasss
-        //根据classid获取分类名称
-        let [res] = await  getResourceClassNameByid(sortClasss);
-        if (res) {
-         this.className = res.data;
-         }
-        //获取资源评论数量
-       getResourceCommentnum(this.$route.params.id).then(resp => {
-         this.commentnum = resp.data
-        })
-        if (this.createTime != null) {
-          let data = new Date(this.createTime)
-          var intime = formatDate(data, 'yyyy-MM-dd')
-          var tiems = GetWeekdate(intime)
-          this.Theweeks = this.weeks[tiems]
-        } else {
-          let data = new Date(this.addTime)
-          var intime = formatDate(data, 'yyyy-MM-dd')
-          var tiems = GetWeekdate(intime)
-          this.Theweeks = this.weeks[tiems]
-        }
-        this.intro = this.Resource.intro
+      var str = JSON.parse(this.Resource.carousel)
+      this.carouselNum = str.length
+      this.carousel = str
+      var sortClasss = this.Resource.sortClass
+      this.sortClasss = sortClasss
+      //根据classid获取分类名称
+      let [res] = await getResourceClassNameByid(sortClasss);
+      if (res) {
+        this.className = res.data;
+      }
+      //获取资源评论数量
+      getResourceCommentnum(this.$route.params.id).then(resp => {
+        this.commentnum = resp.data
+      })
+      if (this.createTime != null) {
+        let data = new Date(this.createTime)
+        var intime = formatDate(data, 'yyyy-MM-dd')
+        var tiems = GetWeekdate(intime)
+        this.Theweeks = this.weeks[tiems]
+      } else {
+        let data = new Date(this.addTime)
+        var intime = formatDate(data, 'yyyy-MM-dd')
+        var tiems = GetWeekdate(intime)
+        this.Theweeks = this.weeks[tiems]
+      }
+      this.intro = this.Resource.intro
     },
   },
   data() {
     return {
+      videoSource: [],
+      videoAddress: "",
       lovecheck: false,
       firstLoveFlag: true,
       loveNum: "",
@@ -1110,16 +884,16 @@ export default {
       acticve: 'nav-link active',
     }
   },
-      mounted() {
+  mounted() {
     // 判断是否在服务端
     if (process.client) {
       // this.lazyLoad();
       // 在浏览器端调接口，需要服务端做反向代理
-    // //数据回填
-    this.fetchData()
-    }else{ 
-    //根据Id查询用户是否购买过此资源
-    this.judgeResource()
+      // //数据回填
+      this.fetchData()
+    } else {
+      //根据Id查询用户是否购买过此资源
+      this.judgeResource()
     }
 
     // 顶部广告
@@ -1146,28 +920,33 @@ export default {
   bottom: 20px !important;
 }
 </style>
-  
+
 <style scoped>
-.myVEmojiPicker     :deep(.category) {
+.myVEmojiPicker :deep(.category) {
   background: none;
 }
-.myVEmojiPicker     :deep(.border)  {
-  border: 0px solid hsla(210, 8%, 51%, 0.09) !important;
-}
-.myVEmojiPicker     :deep(.myVEmojiPicker[data-v-3bfe90b7])  .border {
+
+.myVEmojiPicker :deep(.border) {
   border: 0px solid hsla(210, 8%, 51%, 0.09) !important;
 }
 
-.myVEmojiPicker     :deep(.category.active[data-v-6d975e7c])  {
+.myVEmojiPicker :deep(.myVEmojiPicker[data-v-3bfe90b7]) .border {
+  border: 0px solid hsla(210, 8%, 51%, 0.09) !important;
+}
+
+.myVEmojiPicker :deep(.category.active[data-v-6d975e7c]) {
   border-bottom: 3px solid #50a1ff;
 }
-.myVEmojiPicker     :deep(.grid-emojis[data-v-5c988bee])  {
+
+.myVEmojiPicker :deep(.grid-emojis[data-v-5c988bee]) {
   background: #ffffff;
 }
-.myVEmojiPicker     :deep(.emoji-picker[data-v-f1d527bc])  {
+
+.myVEmojiPicker :deep(.emoji-picker[data-v-f1d527bc]) {
   --ep-color-bg: #ffffff;
   --ep-color-sbg: none;
 }
+
 .myVEmojiPicker {
   position: fixed;
   display: flex;
@@ -1176,6 +955,7 @@ export default {
   bottom: 20px;
   z-index: 10;
 }
+
 .alipaybig_icon {
   display: inline-block;
   width: 120px;
@@ -1183,6 +963,7 @@ export default {
   padding: 0;
   text-align: center;
 }
+
 .outh5 {
   padding: 0px;
   display: flex;
@@ -1190,6 +971,7 @@ export default {
   justify-content: center;
   flex-wrap: wrap;
 }
+
 .outh6 {
   height: 66px;
   text-align: center;
@@ -1205,6 +987,7 @@ export default {
   flex-wrap: wrap;
   border-radius: 0 0 10px 10px;
 }
+
 .outh7 {
   height: 66px;
   text-align: center;
@@ -1225,11 +1008,13 @@ export default {
 .el-dialog--center {
   border-radius: 10px;
 }
+
 .el-dialog--center .el-dialog__body {
   border-radius: 10px;
   text-align: initial;
   background-color: #fff;
 }
+
 .el-dialog__header {
   display: none;
   background-color: #e0e0e0;
@@ -1241,6 +1026,7 @@ export default {
   z-index: 1;
   text-align: center;
 }
+
 .swal2-content {
   z-index: 1;
   justify-content: center;
@@ -1253,6 +1039,7 @@ export default {
   text-align: center;
   word-wrap: break-word;
 }
+
 .pay-item {
   width: 100%;
   height: 60px;
@@ -1263,6 +1050,7 @@ export default {
   line-height: 60px;
   text-align: center;
 }
+
 .device-macbook-pro .device-frame:before {
   bottom: 10px;
   color: #c8cacb;
@@ -1277,6 +1065,7 @@ export default {
   width: 200px;
   z-index: 1;
 }
+
 .el-carousel__item h3 {
   color: #475669;
   font-size: 14px;
@@ -1292,8 +1081,13 @@ export default {
 .el-carousel__item:nth-child(2n + 1) {
   background-color: #d3dce6;
 }
+
 .dianzan {
   weight: 25px;
   height: 25px;
+}
+.player-container-out{
+  width: 70%;
+  display: flex;
 }
 </style>
