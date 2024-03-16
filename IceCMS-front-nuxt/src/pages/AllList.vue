@@ -323,11 +323,11 @@
                                           style=" bottom: 20px; width: 100%;">
                                           <div     >
                                             <i      class="el-icon-view"></i>
-                                            <span     >34.5k</span>
+                                            <span     >{{ item.hits }}</span>
                                           </div>
                                           <div      style="margin-left: 6px;" class="margin-left">
-                                            <i      class="el-icon-download"></i>
-                                            <span     >1500</span>
+                                            <i      class="el-icon-user"></i>
+                                            <span     >{{ item.author }}</span>
                                           </div>
                                           <div      style="position: absolute; right: 35px;">
                                             <span v-if="item.createTime != null"> {{ formatDate(item.createTime)
@@ -501,8 +501,19 @@ export default ({
       this.isAcitive = false
     },
     formatDate(time) {
-      let data = new Date(time)
-      return formatDate(data, 'yyyy-MM-dd ')
+      const date = new Date(time);
+      const currentYear = new Date().getFullYear();
+      const year = date.getFullYear();
+
+      if (currentYear - year === 1) {
+        return '去年 ' + date.toLocaleDateString('zh-CN', { month: '2-digit', day: '2-digit' });
+      } else if (currentYear - year === 2) {
+        return '前年 ' + date.toLocaleDateString('zh-CN', { month: '2-digit', day: '2-digit' });
+      } else if (currentYear - year > 2) {
+        return '多年前';
+      } else {
+        return date.toLocaleDateString('zh-CN', { month: '2-digit', day: '2-digit' });
+      }
     },
     async getSetting() {
 
@@ -610,6 +621,7 @@ export default ({
       this.clickIndex = false
       let res1 = await getAllResource(this.listQuery);
        if (res1) {
+        console.log(res1)
         //获取文章
         this.list = res1.data.data
         this.template = res1.data.data
@@ -653,7 +665,6 @@ export default ({
         this.getList()
         this.getNumber()
     }
-
     // 顶部广告
     // (window.slotbydup = window.slotbydup || []).push({
     //   id: "u6324930",

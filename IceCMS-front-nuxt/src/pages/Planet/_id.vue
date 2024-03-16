@@ -72,7 +72,7 @@
                           <div class="about-widget">
                             <div class="PlanetListCare">
                               <div v-for="item in classlist" :key="item.id" class="PlanetListItem">
-                                <a :href="'/planet/' + item.otherName">
+                                <a :href="'/planet/' + item.id">
                                   <div style="margin-left: 10px" class="PlanetListItems">
                                     <div class="PlanetListItem-img">
                                       <el-avatar shape="square" :size="38" :src="item.imgclass"></el-avatar>
@@ -257,6 +257,12 @@
                       <ul class="planetul">
                         <li class="planetli">
                           <el-button type="primary" round>全部</el-button>
+                        </li>
+                        <li class="planetli">
+                          <el-button round>最近</el-button>
+                        </li>
+                        <li class="planetli">
+                          <el-button round>热门</el-button>
                         </li>
                         <!-- <li class="planetli">
                             <el-button round>我说</el-button>
@@ -747,8 +753,8 @@ import { updateImage } from '@/api/updateImage'
 
 // import Tinymce from "@/components/Tinymce";
 // import { VEmojiPicker, emojisDefault, categoriesDefault } from "v-emoji-picker";
-import top from "./components/Top.vue";
-import foot from "./components/Foots.vue";
+import top from "../components/Top.vue";
+import foot from "../components/Foots.vue";
 import FormData from 'form-data';
 
 export default {
@@ -759,8 +765,8 @@ export default {
   watch: {
     $route(to, from) {
       //清空
-      this.squaredata = [];
-      //获取全部评论
+      // this.squaredata = [];
+      // 获取全部评论
       // getAllSquare(1, this.page, 6).then((response) => {
       //   // console.log(response);
       //   // this.squaredata = this.squaredata.concat(response.data.data)
@@ -770,7 +776,7 @@ export default {
 
       //   this.squaredata = response.data.data
       // });
-      //更新菜单数据
+      // // 更新菜单数据
       // getArticleClassByotherName(this.$route.params.square).then(
       //   (response) => {
       //     this.planetInfo = response.data;
@@ -784,7 +790,6 @@ export default {
     this.fetchData();
     //检测token是否有效
     this.getUserInfo();
-
     console.log(this.$cookies.get("token"))
     const elements = [
       "念念不忘，必有回响",
@@ -800,7 +805,6 @@ export default {
     ]
     const random = (arr) => arr[Math.floor(Math.random() * arr.length)]
     this.sentence = random(elements)
-
   },
   watch: {
     // 如果路由有变化，会再次执行该方法
@@ -883,50 +887,32 @@ export default {
       if (this.squaredata.length != this.pagetotal) {
         this.isLoading = true; // 开始加载数据时显示进度
       }
-
-      //判断this.$route.params.square是否存在
-      // if (this.$route.params.square) {
-      getArticleClassByotherName("circle").then(
+      getArticleClassByotherName(this.$route.params.id).then(
         (response) => {
           this.planetInfo = response.data;
         }
       );
       //获取全部评论
-      getAllSquare(1, this.page, 6).then((response) => {
-        console.log(3123, response);
+      getAllSquare(this.$route.params.id, this.page, 6).then((response) => {
         this.pagetotal = response.data.total
         for (let i = 0; i < response.data.data.length; i++) {
           response.data.data[i].image = JSON.parse(response.data.data[i].image)
         }
         // var str = JSON.parse(response.data.data[0].image)
-        // console.log(str)
         this.squaredata = this.squaredata.concat(response.data.data)
-        console.group(this.squaredata)
       });
-
-      // } else {
-      //   getArticleClassByotherName("circle").then((response) => {
-      //     this.planetInfo = response.data;
-      //   });
-      //   //获取全部评论
-      //   getAllSquare("circle", this.page, 6).then((response) => {
-      //     for (let i = 0; i < response.data.data.length; i++) {
-      //       response.data.data[i].image = JSON.parse(response.data.data[i].image)
-      //     }
-      //     this.squaredata = this.squaredata.concat(response.data.data)
-      //   });
-      // }
     },
     fetchData() {
       //数据置空
       this.squaredata = [];
       this.getSquare();
-      //获取当前this.$route.params.square的数据
-
       //获取圈子列表
       getSquareClasslist().then((res) => {
         this.classlist = res.data;
-        console.log(classlist)
+        if (this.$route.params.id == undefined) {
+      // 前往classlist第一个圈子
+      this.$router.push({ path: '/planet/' + this.classlist[0].id })
+    }
       });
     },
     refreshPage() {
@@ -939,28 +925,20 @@ export default {
       this.dialogVisible = true;
     },
     handleRemove(file, fileList) {
-      // console.log(file, fileList);
-      //  this.imageList.remove(file)
-      //  console.log(this.imageList)
     },
     handlePreview(file) {
       this.dialogImageUrl = file.url;
       this.dialogVisible = true;
-      // console.log(file);
     },
     BeforeUpload(file) {
       if (file) {
         this.newFile.append('file', file); //  2. 上传之前，拿到file对象，并将它添加到刚刚定义的FormData对象中。 
-        // console.log(this.newFile.get('file'))
-        // console.log(this.newFile.get('file'), "123")
       } else {
         return false;
       }
     },
     Upload() {
       const newData = this.newFile.get('file'); //  3. 拿到刚刚的数据，并将其传给后台
-      // console.log(this.newFile)
-      // console.log(newData, "564")
       var form = new FormData();
       form.append('editormd-image-file', newData, newData.name)
       updateImage(form).then(resp => {
@@ -997,10 +975,6 @@ export default {
         var scrollHeight =
           document.documentElement.scrollHeight || document.body.scrollHeight;
         let bottomOfWindow = (scrollTop + windowHeight) - scrollHeight;
-
-        // console.log("bottomOfWindow", this.squaredata.length)
-        // console.log("this.pagetotal",this.pagetotal)
-
         if (bottomOfWindow == 0.5 || bottomOfWindow == 0) {
           this.page++;
           this.getSquare().then(() => { });
@@ -1018,7 +992,6 @@ export default {
       this.MyEmoge = emoji.data;
     },
     showemoge() {
-      // console.log("show")
       this.showDialog = !this.showDialog;
     },
     LoseClickMains(item) {
@@ -1050,7 +1023,6 @@ export default {
       }
     },
     likeClicks(item) {
-
       if (!item.isLike) {
         this.$set(item, "isLike", false);
         item.isLike = !item.isLike;
@@ -1281,8 +1253,8 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-@import "../static/mycss/planet.css";
-@import "../static/mycss/user_info.css";
+@import "../../static/mycss/planet.css";
+@import "../../static/mycss/user_info.css";
 </style>
 
 <style scoped>

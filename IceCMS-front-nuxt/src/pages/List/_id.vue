@@ -110,12 +110,8 @@
         <div data-fetch-key="0" class="app light macwk-animation">
           <top :message2="acticve" />
           <div class="overflow-hidden pt-5">
-            <div class="player-container-out" v-if="videoAddress != null" id="app">
-              <div class="player-container">
-                <vue-core-video-player :src="videoSource" :title="this.title"></vue-core-video-player>
-              </div>
-            </div>
-            <div v-else class="layout-header pt-5 pb-5 position-relative pc-model">
+
+            <div class="layout-header pt-5 pb-5 position-relative pc-model">
               <!-- ../static/image/loding.gif -->
               <div>
                 <img src="../../static/image/shape-1.svg" class="shape-three" /><img
@@ -127,7 +123,77 @@
                   class="shape-eleven" /><img src="../../static/image/shape-10.svg" class="shape-10" /><img
                   src="../../static/image/shape-11.svg" class="shape-11" />
               </div>
-              <div class="container">
+              <div v-if="videoAddress != null" class="container">
+                <div class="row align-items-center">
+                  <div class="col-xs-12 col-lg-6 col-xl-6">
+                    <div class="header-app">
+                      <img class="app-icon mr-3" />
+                      <div class="list-body">
+                        <h2 class="mb-4">
+                          {{ title }}
+                          <!---->
+                          <!---->
+                          <!---->
+                          <!---->
+                          <!---->
+                        </h2>
+                        <div class="mb-15">
+                          <el-button size="mini" v-if="payJudej" :disabled="payBtnDisabled" @click="Download()"
+                            class="btn btn-theme btn-round w-200 cursor mr-4" round><i class="el-icon-download"></i>
+                            支付下载</el-button>
+                          <el-button size="mini" v-else :disabled="payBtnDisabled" @click="NowDownload()"
+                            class="btn btn-theme btn-round w-200 cursor mr-4" round><i class="el-icon-download"></i>
+                            立即下载(已支付)</el-button>
+                          <button v-if="!lovecheck" @click="loveClick()" class="
+                              btn btn-outline-theme btn-round
+                              px-5
+                              zanUp
+                              position-relative
+                            ">
+                            <img class="dianzan" src="../../static/image/dianzan.svg" />
+                            赞 ({{ loveNum }})
+                            <span class="likeanimation">+1</span>
+                          </button>
+                          <button v-else @click="loveClick()" class="
+                              btn btn-outline-theme btn-round
+                              px-5
+                              zanUp
+                              position-relative
+                            ">
+                            <img class="dianzan" src="../../static/image/dianzanred.svg" />
+                            赞 ({{ loveNum }})
+                            <span class="likeanimation">+1</span>
+                          </button>
+                        </div>
+                        <div class="mt-4 mb-6"></div>
+
+                        <div class="mt-6 fs-13">
+                          <!---->
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-xs-12 col-lg-6 col-xl-6 text-center">
+                    <vue-core-video-player :src="videoSource" :title="this.title"></vue-core-video-player>
+
+                    <!-- <div class="
+                        device device-macbook-pro device-silver device-silver
+                      ">     
+                      <div class="device-frame">
+
+          
+                      </div>
+                      <div class="device-stripe"></div>
+                      <div class="device-header"></div>
+                      <div class="device-sensors"></div>
+                      <div class="device-btns"></div>
+                      <div class="device-power"></div>
+                    </div> -->
+                  </div>
+            
+              </div>
+              </div>
+              <div v-else class="container">
                 <div class="row align-items-center">
                   <div class="col-xs-12 col-lg-6 col-xl-6">
                     <div class="header-app">
@@ -184,14 +250,14 @@
                       <div v-if="carouselNum === 0" class="device-frame">
                         <el-carousel height="350px">
                           <el-carousel-item v-for="item in 1" :key="item">
-                            <img style="height: 349px; width: 576px" :src="thumb" /><img />
+                            <img style="height: 360px; width: 620px" :src="thumb" /><img />
                           </el-carousel-item>
                         </el-carousel>
                       </div>
                       <div v-else class="device-frame">
                         <el-carousel height="350px">
                           <el-carousel-item v-for="item in carousel" :key="item">
-                            <img style="height: 349px; width: 576px" :src="item.url" /><img />
+                            <img style="height: 360px; width: 620px" :src="item.url" /><img />
                           </el-carousel-item>
                         </el-carousel>
                       </div>
@@ -485,7 +551,7 @@
               ">
               <div class="flex">
                 共
-                <span class="fs-36 mx-1"> {{ this.commentnum }}</span>
+                <span class="fs-36 mx-1">{{ commentnum || 0 }}</span>
                 条评论
               </div>
               <svg color="inherit" viewbox="0 0 32 32" class="w-32" style="
@@ -1054,7 +1120,7 @@ export default {
 .device-macbook-pro .device-frame:before {
   bottom: 10px;
   color: #c8cacb;
-  content: "IceCMS.com";
+  content: "IceCMS.cn";
   font-size: 12px;
   height: 16px;
   left: 50%;
@@ -1086,7 +1152,8 @@ export default {
   weight: 25px;
   height: 25px;
 }
-.player-container-out{
+
+.player-container-out {
   width: 70%;
   display: flex;
 }

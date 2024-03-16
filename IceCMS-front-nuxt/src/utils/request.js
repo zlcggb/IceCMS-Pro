@@ -2,7 +2,7 @@ import axios from 'axios'
 import baseUrl from '../plugins/baseUrl'
 // create an axios instance
 const service = axios.create({
-  baseURL: 'http://localhost:8181/', // url = base url + request url
+  baseURL: baseUrl, // url = base url + request url
   // withCredentials: true, // send cookies when cross-domain requests
   timeout: 5000 // request timeout
 })

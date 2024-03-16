@@ -34,7 +34,7 @@
                           <div class="info-meta">
                             <h6 class="name">
                               {{item.name}}
-                              <span class="ml-2 text-muted fs-16"> (4款) </span>
+                              <span class="ml-2 text-muted fs-16"> ({{ item.num }}) </span>
                             </h6>
                           </div>
                         </div>

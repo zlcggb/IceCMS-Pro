@@ -96,10 +96,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
       String profile = users.getProfile();
       articleVO = new ArticleVO();
       articleVO.setProfile(profile);
-
-      //根据作者id获取对应的用户名
-      String author = users.getName();
-      articleVO.setAuthor(author);
+      articleVO.setAuthorId(authorId);
 
 
       // 根据文章id获取对应的评论数

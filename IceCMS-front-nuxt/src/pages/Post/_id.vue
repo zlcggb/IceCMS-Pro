@@ -20,13 +20,13 @@
                     </h1>
                     <div class="d-flex mb-6 align-items-center">
                       <img
-                        :src="profile"
+                        :src="this.profile"
                         class="w-50 mw-50 h-50 b-0 circle m-0 mr-4"
                       />
                       <div class="flex">
-                        <h4 class="mb-0 mt-0">{{ this.author }}</h4>
+                        <h4 class="mb-0 mt-0">{{ this.authorName }}</h4>
                         <p class="mb-0 py-0 fs-14">
-                          {{ this.addTime }} 阅读 {{ this.hits }}
+                          {{ formatDate(addTime) }} 阅读 {{ this.hits }}
                         </p>
                       </div>
                     </div>
@@ -48,7 +48,6 @@
                     </div>
                     <div class="content-markdown">
                       <!-- 内容区域 -->
-
                       <div id="sidelist" v-html="this.content"></div>
                       <side-catalog class="catalog" v-bind="catalogProps">
                         <template #default="{ isActive }">
@@ -325,7 +324,7 @@
                     >
                       <div class="flex">
                         共
-                        <span class="fs-36 mx-1">{{ this.commentnum }}</span>
+                        <span class="fs-36 mx-1">{{ commentnum || 0 }}</span>
                         条评论
                       </div>
                       <svg
@@ -430,6 +429,10 @@ export default {
   },
 
   methods: {
+    formatDate(dateString) {
+      const date = new Date(dateString);
+      return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
+    },
     viewarticle() {
       viewarticle(this.$route.params.id).then(resp => {
     })
@@ -486,16 +489,15 @@ export default {
       // console.log('toCity:'+this.show1)
     },
     async fetchData() {
+      console.log(this.Article);
+        this.profile = this.Article.profile
         this.thumb = this.Article.thumb
         this.title = this.Article.title
         this.loveNum = this.Article.loveNum
-        this.author = this.Article.author
+        this.authorName = this.Article.authorName
         if (this.Article.commentDisabled == "true") {
           this.judjeComment = true
         }
-        FindProfileByName(this.author).then(resp => {
-          this.profile = resp.data
-        })
         //目录加载需要延时
         setTimeout(() => {
           this.content = this.Article.content
@@ -536,7 +538,7 @@ export default {
       intro: "",
       addTime: "",
       hits: "",
-      author: "",
+      authorName: "",
       content: "",
       title: "",
       show: false,
@@ -1062,7 +1064,7 @@ p {
   --info: #926dde;
   --warning: #ffba00;
   --danger: #ff4954;
-  --light: #f8fafc;
+  --light: #F3F5F7;
   --dark: #16202f;
   --breakpoint-xs: 0;
   --breakpoint-sm: 576px;
@@ -1111,7 +1113,7 @@ p {
   --info: #926dde;
   --warning: #ffba00;
   --danger: #ff4954;
-  --light: #f8fafc;
+  --light: #F3F5F7;
   --dark: #16202f;
   --breakpoint-xs: 0;
   --breakpoint-sm: 576px;

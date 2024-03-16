@@ -39,12 +39,12 @@ public class WebSquareClassController {
     return squareMapper.selectCount(wrapper);
   }
 
-  @ApiOperation(value = "根据分类别名获取分类信息")
+  @ApiOperation(value = "根据分类id获取分类信息")
   @ApiImplicitParam(name = "otherName", value = "otherName", required = true)
-  @GetMapping("/getArticleClassByotherName/{otherName}")
-  public SquareClass getArticleClassByotherName(@PathVariable("otherName") String otherName) {
+  @GetMapping("/getArticleClassByotherName/{id}")
+  public SquareClass getArticleClassByotherName(@PathVariable("id") Integer id) {
     QueryWrapper<SquareClass> wrapper = new QueryWrapper<>();
-    wrapper.eq("other_name", otherName);
+    wrapper.eq("id", id);
     return squareClassMapper.selectOne(wrapper);
   }
 

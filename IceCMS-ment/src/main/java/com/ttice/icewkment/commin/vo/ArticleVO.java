@@ -10,15 +10,17 @@ public class ArticleVO {
   private Integer id;
   private Date addTime;
   private Date createTime;
-  private String author;
+  private Integer authorId;
+  private String authorName;
+  private String profile;
   private String title;
   private Integer ownerTag;
   private String status;
   private String thumb;
   private String sortClass;
-  private String profile;
   private Integer hits;
   private Integer CommentNum;
   private String className;
   private Integer postNum;
+  private String content;
 }

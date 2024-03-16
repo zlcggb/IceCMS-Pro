@@ -1,8 +1,10 @@
 package com.ttice.icewkment.controller.frontend;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.ttice.icewkment.entity.Resource;
 import com.ttice.icewkment.entity.ResourceClass;
 import com.ttice.icewkment.mapper.ResourceClassMapper;
+import com.ttice.icewkment.mapper.ResourceMapper;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,10 +28,19 @@ public class WebResourceClassController {
 
   @Autowired private ResourceClassMapper resourceClassMapper;
 
+  @Autowired private ResourceMapper resourceMapper;
+
   @ApiOperation(value = "获取全部资源分类列表")
   @GetMapping("/getResourceClasslist")
   public List<ResourceClass> getResourceClasslist() {
-    return resourceClassMapper.selectList(null);
+    // 获取每个分类对应的资源数量
+    List<ResourceClass> resourceClassList = resourceClassMapper.selectList(null);
+    for (ResourceClass resourceClass : resourceClassList) {
+      QueryWrapper<Resource> wrapper = new QueryWrapper<>();
+      wrapper.eq("sort_class", resourceClass.getId());
+      resourceClass.setNum(resourceMapper.selectCount(wrapper));
+    }
+    return resourceClassList;
   }
 
   @ApiOperation(value = "根据classid查询对应的资源分类名称")

@@ -50,9 +50,19 @@ public class WebArticleController {
     wrapper.eq("id", sortClass);
     ArticleClass articleClass = articleClassMapper.selectOne(wrapper);
     String name = articleClass.getName();
+
+    // 根据用户id获取用户
+    Integer authorId = article.getAuthorId();
+    User user = userMapper.searchId(authorId);
+    String profile = user.getProfile();
+    String username = user.getUsername();
+
     ArticleVO articleBuffer = new ArticleVO();
     BeanUtils.copyProperties(article, articleBuffer);
     articleBuffer.setSortClass(name);
+    articleBuffer.setProfile(profile);
+    articleBuffer.setAuthorName(username);
+
     return articleBuffer;
   }
 
