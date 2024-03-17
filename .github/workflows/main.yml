@@ -32,6 +32,9 @@ jobs:
       # 安装nuxt
       - name: Installing nuxt
         run: yarn add nuxt
+      # NODE_OPTIONS
+      - name: NODE_OPTIONS export
+        run: export NODE_OPTIONS=--openssl-legacy-provider
       # 安装依赖
       - name: Installing Dependencies
         # 如果命中缓存，就不需要安装依赖，使用缓存即可
