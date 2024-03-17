@@ -36,7 +36,7 @@ jobs:
       - name: Installing Dependencies
         # 如果命中缓存，就不需要安装依赖，使用缓存即可
         if: steps.cache-dependencies.outputs.cache-hit != 'true'
-        run: pnpm install
+        run: npm install
         working-directory: ./IceCMS-front-nuxt
       # 打包
       - name: Build
