@@ -41,11 +41,6 @@ jobs:
         if: steps.cache-dependencies.outputs.cache-hit != 'true'
         run: npm install
         working-directory: ./IceCMS-front-nuxt
-      # 打包
-      - name: Build
-        run: |
-            npm run build
-        working-directory: ./IceCMS-front-nuxt
       # 产物上传服务器
       - name: Upload to Deploy Server
         uses: easingthemes/ssh-deploy@v2.0.7
