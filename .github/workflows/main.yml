@@ -29,6 +29,9 @@ jobs:
           path: |
             **/node_modules
           key: ${{runner.OS}}
+      # 安装nuxt
+      - name: Installing nuxt
+        run: yarn add nuxt
       # 安装依赖
       - name: Installing Dependencies
         # 如果命中缓存，就不需要安装依赖，使用缓存即可
