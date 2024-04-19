@@ -56,7 +56,7 @@ public class Resource implements Serializable {
   private String content;
 
   /** 作者 */
-  private String author;
+  private String author_id;
 
   /** 来源 */
   private String copyfrom;
