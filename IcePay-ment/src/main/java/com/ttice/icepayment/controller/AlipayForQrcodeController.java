@@ -41,7 +41,7 @@ public class AlipayForQrcodeController {
     return R.ok().setData(map);
   }
 
-  @ApiOperation("调用统一下单API，生成支付二维码（登陆）")
+  @ApiOperation("调用统一下单API，生成支付二维码（登录）")
   @ApiImplicitParams({
           @ApiImplicitParam(name = "resourceId",value = "商品id",required = true),
           @ApiImplicitParam(name = "userid",value = "用户id",required = true)

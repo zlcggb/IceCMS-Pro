@@ -1,6 +1,6 @@
 <template>
   <header class="app-header">
-    <!-- 登陆 -->
+    <!-- 登录 -->
     <el-dialog
       class="dialogdeep"
       width="30%"
@@ -71,10 +71,10 @@
             type="primary"
             style="width: 100%; margin-bottom: 30px"
             @click.native.prevent="handleLogin"
-            >登陆</el-button
+            >登录</el-button
           >
           <div      class="ss-login_statement">
-            <span     >登陆注册即代表同意</span>
+            <span     >登录注册即代表同意</span>
             <a href="/Protocol">
               <a      target="_blank">用户协议</a></a
             ><span     >及</span>
@@ -115,23 +115,23 @@
       class="app-header-navbar white shadow-4 border-bottom pc-model"
     >
       <div class="app-header-main"     >
-  
+
           <a
             href="/"
             class="app-header-logo active"
-                
+
             aria-current="page"
           >
             <img src="../../static/image/logo.svg" />
             <span class="ml-4">{{ setting.sitTitle }}</span></a
           >
-    
+
         <div class="app-header-nav nav"     >
           <nuxt-link
             target="_self"
             class="nav-link"
             :class="message1"
-                
+
             aria-current="page"
             to="/"
             >首页</nuxt-link
@@ -140,7 +140,7 @@
             target="_self"
             class="nav-link"
             :class="message2"
-                
+
             to="/Alllist"
             >资源</nuxt-link
           >
@@ -148,7 +148,7 @@
             target="_self"
             class="nav-link"
             :class="message3"
-                
+
             to="/allpost"
             >文章</nuxt-link
           >
@@ -156,7 +156,7 @@
             target="_self"
             class="nav-link"
             :class="message4"
-                
+
             to="/class"
             >分类</nuxt-link
           >
@@ -164,14 +164,14 @@
             target="_self"
             class="nav-link"
             :class="message5"
-                
+
             to="/planet"
             >星球</nuxt-link
           >
         </div>
         <div
           class="app-header-search grid-list lazy-transition"
-              
+
         >
           <div id="autosuggest"     >
             <div
@@ -205,12 +205,12 @@
               <div aria-labelledby="autosuggest" class="autosuggest__results">
                 <div      class="overflow-hidden">
                   <div
-                        
+
                     class="d-flex align-items-center px-5"
                   >
                     <a
                       @click="codeshows()"
-                          
+
                       :class="{ 'active search-active': codeshow }"
                       class="flex flex-grow-1 text-center py-3 fs-16"
                       ><span      class="fw-400">资源</span>
@@ -220,7 +220,7 @@
                     >
                     <a
                       @click="articleshows()"
-                          
+
                       :class="{ 'active search-active': articleshow }"
                       class="flex flex-grow-1 text-center py-3 fs-16"
                       ><span      class="">文章</span>
@@ -242,7 +242,7 @@
                           class="autosuggest__results-item"
                         >
                           <a
-                                
+
                             class="macwk-app white border-top"
                             ><span      class="snow-dot"></span>
                             <span      class="snow-dot"></span>
@@ -252,29 +252,29 @@
                             <span      class="snow-dot"></span>
                             <span      class="snow-dot"></span>
                             <div
-                                  
+
                               class="macwk-app__hover--content"
                             ></div>
                             <div
-                                  
+
                               class="macwk-app__header--icon"
                             >
                               <div
-                                    
+
                                 class="macwk-app__header--icon--content"
                               ></div>
                               <img
-                                    
+
                                 :src="item.thumb"
                                 lazy="loaded"
                               />
                             </div>
                             <div
-                                  
+
                               class="macwk-app__body py-1"
                             >
                               <h5
-                                    
+
                                 class="macwk-app__body--title fs-14"
                                 style="
                                   display: -webkit-box;
@@ -287,7 +287,7 @@
                               >
                                 <span >{{ item.title }}</span>
                                 <!-- <span
-                                
+
                             class="
                               macwk-app__body--title--version
                               text-muted
@@ -298,7 +298,7 @@
                           > -->
                               </h5>
                               <p
-                                    
+
                                 class="macwk-app__body--info"
                                 style="
                                   display: -webkit-box;
@@ -314,11 +314,11 @@
                             </div>
                             <!---->
                             <div
-                                  
+
                               class="macwk-box__more fs-24"
                             >
                               <i
-                                    
+
                                 class="light-icon-more icon-next-arrow"
                               ></i></div
                           ></a>
@@ -329,7 +329,7 @@
                 </ul>
                 <div     >
                   <button
-                        
+
                     class="
                       btn btn-block
                       border-top
@@ -352,7 +352,7 @@
             <button
               class="btn search-to"
               @click="queryarticle()"
-                  
+
             >
               <i class="icon-search"     ></i>
             </button>
@@ -533,7 +533,7 @@
         </a>
       </div>
     </div>
-    
+
   </header>
 </template>
 
@@ -566,7 +566,7 @@ export default ({
       }
     },
     async loginout() {
-      //退出登陆
+      //退出登录
       //清除本地数据
       this.$cookies.remove('access-user')
       //关闭用户头像
@@ -576,7 +576,7 @@ export default ({
       //显示退出成功
       this.$notify({
         title: '成功',
-        message: '您已退出登陆',
+        message: '您已退出登录',
         type: 'success',
         offset: 50
       });
@@ -593,7 +593,7 @@ export default ({
       //获取会员有效性
        let res = await CheckVip();
          if (res) {
-        if(resp.data){ 
+        if(resp.data){
           this.vipTrue = true
         }
       }
@@ -608,7 +608,7 @@ export default ({
             console.log(resp)
             if (resp.data.code == 402 || resp.data.code == 400) {
               that.$message({
-                message: '登陆失败',
+                message: '登录失败',
                 type: 'warning'
               })
             } else if (resp.data.code == 200) {
@@ -617,13 +617,13 @@ export default ({
 
               // 关闭登录框
               that.dialogFormVisible = false
-              // 关闭登陆按钮
+              // 关闭登录按钮
               that.userJudje = false
               //立即获取用户数据
               that.getUserInfo()
               this.$notify({
                 title: '成功',
-                message: '您已成功登陆',
+                message: '您已成功登录',
                 type: 'success',
                 offset: 50
               });

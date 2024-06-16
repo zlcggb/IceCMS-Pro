@@ -30,7 +30,7 @@ public class WxPayController {
 
   @Resource private Verifier verifier;
 
-  @ApiOperation("调用统一下单API，生成支付二维码（登陆）")
+  @ApiOperation("调用统一下单API，生成支付二维码（登录）")
   @ApiImplicitParams({
     @ApiImplicitParam(name = "productId", value = "资源id", required = true),
     @ApiImplicitParam(name = "userid", value = "用户id", required = true)

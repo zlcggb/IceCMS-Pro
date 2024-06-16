@@ -4,9 +4,9 @@ import cn.hutool.core.lang.Assert;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ttice.icewkment.Util.JwtUtil;
+import com.ttice.icewkment.Util.WeChatUtils;
 import com.ttice.icewkment.commin.lang.Result;
 import com.ttice.icewkment.entity.*;
 import com.ttice.icewkment.mapper.*;
@@ -15,11 +15,8 @@ import com.ttice.icewkment.service.UserService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.models.auth.In;
 import org.apache.commons.lang.StringUtils;
-import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,7 +24,10 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
 
-@io.swagger.annotations.Api(tags = "用户登陆验证接口")
+import static com.ttice.icewkment.Util.Argon2Util.hashPassword;
+import static com.ttice.icewkment.Util.Argon2Util.verifyPassword;
+
+@io.swagger.annotations.Api(tags = "用户登录验证接口")
 @RestController
 @RequestMapping("/User")
 public class UserController {
@@ -46,11 +46,19 @@ public class UserController {
 
   @Autowired private EmailDetectionMapper emailDetectionMapper;
 
-  @ApiOperation(value = "后台登陆")
+  @Autowired private WeChatUtils weChatUtils;
+
+  @Autowired private  WxLoginMapper wxLoginMapper;
+
+  @ApiOperation(value = "后台登录")
   @ApiImplicitParam(name = "user", value = "用户对象", required = true)
-  @GetMapping("/loginAdmin") // 登陆
+  @ApiImplicitParams({
+          @ApiImplicitParam(name = "username", value = "用户名", required = true, dataType = "String", paramType = "query"),
+          @ApiImplicitParam(name = "password", value = "密码", required = true, dataType = "String", paramType = "query")
+  })
+  @GetMapping("/loginAdmin") // 登录
   public Result loginAdmin(User user) {
-    // 进行登陆核验操作
+    // 进行登录核验操作
     QueryWrapper<User> wrapper = new QueryWrapper<>();
     // 用户名判断
     wrapper.eq("USERNAME", user.getUsername());
@@ -59,7 +67,7 @@ public class UserController {
       return Result.fail(("用户名不存在"));
     }
     Assert.notNull(user, "用户名不存在");
-    if (!userjudje.getPassword().equals(user.getPassword())) {
+    if (verifyPassword(user.getPassword(),userjudje.getPassword())) {
       return Result.fail(("密码不正确"));
     }
     // 添加token
@@ -69,7 +77,7 @@ public class UserController {
     wrappertoken.eq("user_id", userjudje.getUserId());
     // 实体类
     User doc = new User();
-    // new Date()更新登陆时间
+    // new Date()更新登录时间
     doc.setLastLogin(new Date());
     // 这一步进行成功之后在数据库保存生成的token操作
     userService.update(doc, wrappertoken);
@@ -99,7 +107,7 @@ public class UserController {
     String name = role.getName();
     if (Objects.equals(name, "管理员")) {
 
-      return Result.succ(200, "成功登陆", myMap);
+      return Result.succ(200, "成功登录", myMap);
     } else {
       return Result.fail(("无权限"));
     }
@@ -120,51 +128,106 @@ public class UserController {
     }
   }
 
-  @ApiOperation(value = "登陆")
-  @ApiImplicitParam(name = "username", value = "用户对象", required = true)
-  @PostMapping("/login") // 登陆
-  public Result login(User user) {
+  @ApiOperation(value = "微信登录")
+  @PostMapping("/WeChatLogin") // 登录
+  public Result WeChatLogin() {
+    return Result.succ(200, "成功登录", weChatUtils.generateWechatRrCode());
+  }
 
-    // 进行登陆核验操作
+  @ApiOperation(value = "微信登录验证")
+  @PostMapping("/WeChatLoginCheck/{scene}") // 登录
+  public Result WeChatLoginCheck(@PathVariable String scene) {
+    // 查询WxLogin中scene的一条记录
+    QueryWrapper<WxLogin> wxLoginQueryWrapper = new QueryWrapper<>();
+    wxLoginQueryWrapper.eq("scene", scene);
+    WxLogin wxLogin = wxLoginMapper.selectOne(wxLoginQueryWrapper);
+    if (wxLogin.getStatus().equals("1")) {
+      return Result.succ(200, "成功登录", wxLogin.getUserId());
+    } else {
+      return Result.fail(("未登录"));
+    }
+  }
+
+  @ApiOperation(value = "微信登录注册")
+  @PostMapping("/CreateWeChatLogin")
+  public Result CreateWeChatLogin(@RequestParam(name = "scene") String scene, @RequestParam(name = "code") String code) throws Exception {
+    // 获取openid
+    String openid = weChatUtils.getOpenid(code);
+    // 检查openid是否重复
     QueryWrapper<User> wrapper = new QueryWrapper<>();
-    // 用户名判断
-    wrapper.eq("USERNAME", user.getUsername());
-    User userjudje = userService.getOne(wrapper);
-    if (userjudje == null) {
-      return Result.fail(("用户名不存在"));
+    wrapper.eq("openid", openid);
+    Integer Count = userMapper.selectCount(wrapper);
+    if (Count >= 1) {
+      //只需修改登录表
+      //查询WxLogin中scene的一条记录
+      QueryWrapper<WxLogin> wxLoginQueryWrapper = new QueryWrapper<>();
+      wxLoginQueryWrapper.eq("scene", scene);
+      WxLogin wxLogin = wxLoginMapper.selectOne(wxLoginQueryWrapper);
+      //修改status为1
+      wxLogin.setStatus("1");
+      User user1 = userMapper.selectOne(wrapper);
+      wxLogin.setUserId(user1.getUserId());
+      wxLoginMapper.updateById(wxLogin);
+
+      return Result.succ(200, "openid重复", null);
+    }else {
+      //修改登录表和注册一个新用户
+        // 查询WxLogin中scene的一条记录
+        QueryWrapper<WxLogin> wxLoginQueryWrapper = new QueryWrapper<>();
+        wxLoginQueryWrapper.eq("scene", scene);
+        WxLogin wxLogin = wxLoginMapper.selectOne(wxLoginQueryWrapper);
+        // 修改status为1
+        wxLogin.setStatus("1");
+        // 新增一个用户
+        User user1 = new User();
+        user1.setOpenid(openid);
+//        user1.setProfile(user.getProfile());
+//        user1.setName(user.getName());
+//        user1.setGender(user.getGender());
+        user1.setCreateTime(new Date());
+        user1.setLastLogin(new Date());
+        user1.setVipDisableTip(true);
+        user1.setVipValidDate(new Date());
+        user1.setVipExpireDate(new Date());
+        user1.setIntegral(0);
+        user1.setMonthly("0");
+        user1.setPermanent("0");
+        user1.setIntro("这个人很懒，什么都没有留下！");
+        user1.setAcademic("0");
+        user1.setBirthday("0");
+        user1.setHeight("0");
+        user1.setUserage(0);
+        user1.setEmail("0");
+        // 随机用户名
+        UUID uuid = UUID.randomUUID();
+        // Convert UUID to string and replace all "-" characters with "".
+        String randomUsername = uuid.toString().replace("-", "");
+        user1.setUsername(randomUsername);
+        user1.setPassword(null);
+        user1.setStatus(0);
+        user1.setRole("0");
+        userMapper.insert(user1);
+        wxLogin.setUserId(user1.getUserId());
+        wxLoginMapper.update(wxLogin,wxLoginQueryWrapper);
+      return Result.succ(200, "成功登录", weChatUtils.generateWechatRrCode());
     }
-    Assert.notNull(user, "用户名不存在");
-    if (!userjudje.getPassword().equals(user.getPassword())) {
-      return Result.fail(("密码不正确"));
-    }
-    // 添加token
-    String token = JwtUtil.createToken(userjudje.getUserId());
-    // 根据userid获取QueryWrapper对象
-    QueryWrapper<User> wrappertoken = new QueryWrapper<>();
-    wrappertoken.eq("user_id", userjudje.getUserId());
-    // 实体类
-    User doc = new User();
-    // new Date()更新登陆时间
-    doc.setLastLogin(new Date());
-    // 这一步进行成功之后在数据库保存生成的token操作
-    userService.update(doc, wrappertoken);
-    // 返回状态
-    HashMap<String, String> myMap = new HashMap<>();
-    myMap.put("token", token);
-    myMap.put("name", userjudje.getName());
-    myMap.put("profile", userjudje.getProfile());
-    //        myMap.put("profile", userjudje.getProfile());
-    myMap.put("email", userjudje.getEmail());
-    myMap.put("intro", userjudje.getIntro());
-    //        myMap.put("age", userjudje.getUserAge().toString());
-    myMap.put("gender", userjudje.getGender());
-    myMap.put("userid", userjudje.getUserId().toString());
-    myMap.put("username", userjudje.getUsername());
-    return Result.succ(200, "成功登陆", myMap);
   }
 
   @ApiOperation(value = "注册账号")
-  @ApiImplicitParam(name = "Newuser", value = "用户对象", required = true)
+  @ApiImplicitParams({
+          @ApiImplicitParam(name = "username", value = "用户名", required = true, dataType = "String", paramType = "query"),
+          @ApiImplicitParam(name = "password", value = "密码", required = true, dataType = "String", paramType = "query"),
+          @ApiImplicitParam(name = "gender", value = "性别", required = false, dataType = "String", paramType = "query"),
+          @ApiImplicitParam(name = "name", value = "姓名", required = false, dataType = "String", paramType = "query"),
+          @ApiImplicitParam(name = "height", value = "身高", required = false, dataType = "Integer", paramType = "query"),
+          @ApiImplicitParam(name = "userage", value = "年龄", required = false, dataType = "Integer", paramType = "query"),
+          @ApiImplicitParam(name = "birthday", value = "生日", required = false, dataType = "Date", paramType = "query"),
+          @ApiImplicitParam(name = "academic", value = "学历", required = false, dataType = "String", paramType = "query"),
+          @ApiImplicitParam(name = "monthly", value = "月收入", required = false, dataType = "String", paramType = "query"),
+          @ApiImplicitParam(name = "permanent", value = "永久地址", required = false, dataType = "String", paramType = "query"),
+          @ApiImplicitParam(name = "email", value = "邮箱", required = false, dataType = "String", paramType = "query"),
+          @ApiImplicitParam(name = "status", value = "验证码状态", required = false, dataType = "Integer", paramType = "query")
+  })
   @GetMapping("/Create")
   public Result Create(User Newuser) {
 
@@ -179,7 +242,7 @@ public class UserController {
     User user = new User();
 
     user.setUsername(Newuser.getUsername());
-    user.setPassword(Newuser.getPassword());
+    user.setPassword(hashPassword(Newuser.getPassword()));
     // 默认信息
     user.setIntro("这个人很懒，什么都没有留下！");
     user.setCreateTime(new Date());
@@ -235,7 +298,7 @@ public class UserController {
     wrappertoken.eq("user_id", user.getUserId());
     // 实体类
     User doc = new User();
-    // new Date()更新登陆时间
+    // new Date()更新登录时间
     doc.setLastLogin(new Date());
     // 这一步进行成功之后在数据库保存生成的token操作
     userService.update(doc, wrappertoken);
@@ -266,7 +329,7 @@ public class UserController {
   })
   @PostMapping("/ChangeUser/{jwt}")
   public Result ChangeUser(@RequestBody User user, @PathVariable("jwt") String jwt) {
-    // 登陆状态检验jwt
+    // 登录状态检验jwt
     if (org.apache.commons.lang.StringUtils.isEmpty(jwt)) {
       // 前端接收后进行处理
       Result.fail(403, "jwt为空", null);
@@ -298,7 +361,7 @@ public class UserController {
       @PathVariable("yuanPassWord") String yuanPassWord,
       @PathVariable("NewPassWord") String NewPassWord,
       @PathVariable("userid") Integer userid) {
-    // 登陆状态检验jwt
+    // 登录状态检验jwt
     if (org.apache.commons.lang.StringUtils.isEmpty(jwt)) {
       // 前端接收后进行处理
       Result.fail(403, "jwt为空", null);
@@ -316,10 +379,10 @@ public class UserController {
       wrapper.eq("user_id", userid);
       User usercheak = userMapper.selectOne(wrapper);
       String password = usercheak.getPassword();
-      if (Objects.equals(password, yuanPassWord)) {
+        if (verifyPassword(yuanPassWord,password)) {
         User user = new User();
         user.setUserId(userid);
-        user.setPassword(NewPassWord);
+        user.setPassword(hashPassword(NewPassWord));
         userMapper.updateById(user);
         return Result.succ(200, "修改成功", null);
       }
@@ -339,7 +402,7 @@ public class UserController {
       @PathVariable("jwt") String jwt,
       @PathVariable("email") String email,
       @PathVariable("userid") Integer userid) {
-    // 登陆状态检验jwt
+    // 登录状态检验jwt
     if (org.apache.commons.lang.StringUtils.isEmpty(jwt)) {
       // 前端接收后进行处理
       Result.fail(403, "jwt为空", null);
@@ -374,7 +437,7 @@ public class UserController {
       @PathVariable("jwt") String jwt,
       @PathVariable("name") String name,
       @PathVariable("userid") Integer userid) {
-    // 登陆状态检验jwt
+    // 登录状态检验jwt
     if (org.apache.commons.lang.StringUtils.isEmpty(jwt)) {
       // 前端接收后进行处理
       Result.fail(403, "jwt为空", null);

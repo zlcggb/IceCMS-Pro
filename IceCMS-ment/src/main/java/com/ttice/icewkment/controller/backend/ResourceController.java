@@ -49,7 +49,7 @@ public class ResourceController {
 
   @Autowired private ResourceCommentMapper resourceCommentMapper;
 
-  @RequiresAuthentication // 需要登陆认证的接口
+  @RequiresAuthentication // 需要登录认证的接口
   @ApiOperation(value = "新增资源")
   @ApiImplicitParam(name = "resource", value = "资源", required = true)
   @PostMapping("/create")
@@ -69,7 +69,7 @@ public class ResourceController {
     return Result.succ(resource.getId());
   }
 
-  @RequiresAuthentication // 需要登陆认证的接口
+  @RequiresAuthentication // 需要登录认证的接口
   @ApiOperation(value = "获取全部资源(分页)")
   @ApiImplicitParams({
     @ApiImplicitParam(name = "page", value = "页数", required = true),
@@ -81,7 +81,7 @@ public class ResourceController {
     return Result.succ(resourceService.VoList(page, limit));
   }
 
-  @RequiresAuthentication // 需要登陆认证的接口
+  @RequiresAuthentication // 需要登录认证的接口
   @ApiOperation(value = "根据id修改资源")
   @ApiImplicitParam(name = "id", value = "资源id", required = true)
   @PostMapping("/ReviseResourceById/{id}")
@@ -89,7 +89,7 @@ public class ResourceController {
     return Result.succ(resourceService.updateById(resource));
   }
 
-  @RequiresAuthentication // 需要登陆认证的接口
+  @RequiresAuthentication // 需要登录认证的接口
   @ApiOperation(value = "根据id删除资源")
   @ApiImplicitParam(name = "id", value = "资源id", required = true)
   @GetMapping("/DelectResourceById/{id}")
@@ -101,7 +101,7 @@ public class ResourceController {
     return Result.succ(resourceService.removeById(id));
   }
 
-  @RequiresAuthentication // 需要登陆认证的接口
+  @RequiresAuthentication // 需要登录认证的接口
   @ApiOperation(value = "根据id获取资源")
   @ApiImplicitParam(name = "id", value = "资源id", required = true)
   @GetMapping("/getResourceById/{id}")
@@ -110,7 +110,7 @@ public class ResourceController {
     return Result.succ(resourceService.getById(id));
   }
 
-  @RequiresAuthentication // 需要登陆认证的接口
+  @RequiresAuthentication // 需要登录认证的接口
   @ApiOperation(value = "获取资源名称")
   @ApiImplicitParams({
     @ApiImplicitParam(name = "resourceName", value = "资源名称", required = true),
@@ -124,7 +124,7 @@ public class ResourceController {
     return Result.succ(list);
   }
   
-  @RequiresAuthentication // 需要登陆认证的接口
+  @RequiresAuthentication // 需要登录认证的接口
   @ApiOperation(value = "获取全部文章名称")
   @GetMapping("/getAllResourceName")
   public Result getAllResourceName() {
@@ -134,7 +134,7 @@ public class ResourceController {
     return Result.succ(result);
   }
   
-  @RequiresAuthentication // 需要登陆认证的接口
+  @RequiresAuthentication // 需要登录认证的接口
   @ApiOperation(value = "根据id批量删除资源")
   @ApiImplicitParam(name = "arr", value = "资源id", required = true)
   @PostMapping("/DeletetResourceBatch")
