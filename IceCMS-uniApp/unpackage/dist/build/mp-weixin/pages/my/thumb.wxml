@@ -1,0 +1,1 @@
+<view><post-list vue-id="917ef24c-1" list="{{postList}}" loadStatus="{{loadStatus}}" bind:__l="__l"></post-list></view>

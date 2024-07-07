@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "点赞记录",
+  "usingComponents": {
+    "post-list": "/components/post-list/post-list"
+  }
+}

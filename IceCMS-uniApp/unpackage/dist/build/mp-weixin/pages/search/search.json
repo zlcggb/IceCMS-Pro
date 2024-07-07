@@ -1,0 +1,11 @@
+{
+  "navigationBarTitleText": "",
+  "enablePullDownRefresh": false,
+  "usingComponents": {
+    "u-search": "/uni_modules/uview-ui/components/u-search/u-search",
+    "u-tabs": "/uni_modules/uview-ui/components/u-tabs/u-tabs",
+    "post-list": "/components/post-list/post-list",
+    "user-list": "/components/user-list/user-list",
+    "topic-list": "/components/topic-list/topic-list"
+  }
+}

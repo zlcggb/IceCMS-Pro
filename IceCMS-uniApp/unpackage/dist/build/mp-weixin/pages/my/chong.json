@@ -1,0 +1,12 @@
+{
+  "navigationBarTitleText": "充值提现",
+  "enablePullDownRefresh": false,
+  "usingComponents": {
+    "u-tabs": "/uni_modules/uview-ui/components/u-tabs/u-tabs",
+    "u-button": "/uni_modules/uview-ui/components/u-button/u-button",
+    "u-table": "/uni_modules/uview-ui/components/u-table/u-table",
+    "u-tr": "/uni_modules/uview-ui/components/u-tr/u-tr",
+    "u-th": "/uni_modules/uview-ui/components/u-th/u-th",
+    "u-td": "/uni_modules/uview-ui/components/u-td/u-td"
+  }
+}

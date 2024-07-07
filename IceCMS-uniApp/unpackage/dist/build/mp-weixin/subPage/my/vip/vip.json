@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "会员兑换",
+  "usingComponents": {
+    "u-button": "/uni_modules/uview-ui/components/u-button/u-button"
+  }
+}

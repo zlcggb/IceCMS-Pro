@@ -1,0 +1,120 @@
+{
+  "pages": [
+    "pages/home/home",
+    "pages/more/more",
+    "pages/my/my",
+    "pages/my/vip",
+    "pages/my/setting",
+    "pages/my/agr",
+    "pages/chat/chat",
+    "pages/my/discuss",
+    "pages/my/topic",
+    "pages/my/thumb",
+    "pages/shop/index",
+    "pages/shop/address/list",
+    "pages/shop/order/create",
+    "pages/shop/order/detail",
+    "pages/shop/order/list",
+    "pages/shop/car",
+    "pages/shop/car-total",
+    "pages/shop/product/list",
+    "pages/shop/product/detail",
+    "pages/my/fans",
+    "pages/my/follow",
+    "pages/my/chong",
+    "pages/my/tx",
+    "pages/my/numdown",
+    "pages/message/list",
+    "pages/search/search",
+    "pages/my/post",
+    "pages/my/about",
+    "pages/my/mess",
+    "pages/more/morelist",
+    "pages/circle/circle",
+    "pages/message/message",
+    "pages/post/detail",
+    "pages/post/circle-detail",
+    "pages/post/add",
+    "pages/post/video-detail",
+    "pages/post/vote",
+    "pages/post/comment",
+    "pages/post/edit",
+    "pages/user/home",
+    "pages/user/edit-info/edit",
+    "pages/user/edit-info/submit",
+    "pages/user/login",
+    "pages/user/forget",
+    "pages/user/reg",
+    "pages/post/choose-topiclass/choose-topiclass",
+    "pages/post/choose-topic/choose-topic",
+    "pages/post/choose-discuss/choose-discuss"
+  ],
+  "subPackages": [
+    {
+      "root": "subPage",
+      "pages": [
+        "my/account/login",
+        "my/account/forget",
+        "my/account/name",
+        "my/account/email",
+        "my/account/changeword",
+        "my/vip/vip",
+        "my/vip/shoplist",
+        "commen/appsearchlist",
+        "commen/apprank",
+        "commen/apptaglist",
+        "commen/commenlist",
+        "commen/appdetails",
+        "commen/post"
+      ]
+    }
+  ],
+  "window": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "",
+    "navigationBarBackgroundColor": "#FFFFFF",
+    "backgroundColor": "#FFFFFF"
+  },
+  "tabBar": {
+    "color": "#7A7E83",
+    "selectedColor": "#000000",
+    "iconWidth": "30px",
+    "borderStyle": "white",
+    "spacing": "3px",
+    "height": "55px",
+    "fontSize": "10px",
+    "list": [
+      {
+        "pagePath": "pages/home/home",
+        "text": "首页",
+        "iconPath": "static/tabicon/app.png",
+        "selectedIconPath": "static/tabicon/apped.png"
+      },
+      {
+        "pagePath": "pages/more/more",
+        "text": "发现",
+        "iconPath": "static/tabicon/forum.png",
+        "selectedIconPath": "static/tabicon/forumed.png"
+      },
+      {
+        "pagePath": "pages/circle/circle",
+        "text": "圈子",
+        "iconPath": "static/tabicon/query.png",
+        "selectedIconPath": "static/tabicon/queryed.png"
+      },
+      {
+        "pagePath": "pages/message/message",
+        "text": "消息",
+        "iconPath": "static/tabicon/find.png",
+        "selectedIconPath": "static/tabicon/finded.png"
+      },
+      {
+        "pagePath": "pages/my/my",
+        "text": "我的",
+        "iconPath": "static/tabicon/my.png",
+        "selectedIconPath": "static/tabicon/myed.png"
+      }
+    ]
+  },
+  "usingComponents": {}
+}

@@ -1,0 +1,1 @@
+<view><view class="content"><view class="text-area"><text class="title">{{agr.title}}</text><mp-html class="title" vue-id="72cb49e4-1" content="{{agr.content}}" bind:__l="__l"></mp-html></view></view></view>

@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "我的话题",
+  "usingComponents": {
+    "discuss-list": "/components/discuss-list/discuss-list"
+  }
+}
