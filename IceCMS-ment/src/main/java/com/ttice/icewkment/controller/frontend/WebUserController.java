@@ -45,7 +45,7 @@ public class WebUserController {
 
   @Autowired private UserRoleMapper userRoleMapper;
 
-  @Autowired private RoleMapper roleMapper;
+  @Autowired private SettingMapper settingMapper;
 
   @Autowired private WeChatUtils weChatUtils;
 
@@ -80,7 +80,21 @@ public class WebUserController {
     wxLoginQueryWrapper.eq("scene", scene);
     WxLogin wxLogin = wxLoginMapper.selectOne(wxLoginQueryWrapper);
     if (wxLogin.getStatus().equals("1")) {
-      return Result.succ(200, "成功登录", wxLogin.getUserId());
+      User user = userService.GetUserInfoById(wxLogin.getUserId());
+      String token = JwtUtil.createToken(wxLogin.getUserId());
+      // 返回状态
+      HashMap<String, String> myMap = new HashMap<>();
+      myMap.put("token", token);
+      myMap.put("name", user.getName());
+      myMap.put("profile", user.getProfile());
+      //        myMap.put("profile", userjudje.getProfile());
+      myMap.put("email", user.getEmail());
+      myMap.put("intro", user.getIntro());
+      //        myMap.put("age", userjudje.getUserAge().toString());
+      myMap.put("gender", user.getGender());
+      myMap.put("userid", user.getUserId().toString());
+      myMap.put("username", user.getUsername());
+      return Result.succ(200, "成功登录", myMap);
     } else {
       return Result.fail(("未登录"));
     }
@@ -196,60 +210,65 @@ public class WebUserController {
 
     user.setEmail(Newuser.getEmail());
 
-    Integer is_valid_code = Newuser.getStatus();
+    String is_valid_code = String.valueOf(Newuser.getStatus());
 
     // 检查邮箱是否存在验证码 验证码是否过期
-    QueryWrapper wrapper1 = new QueryWrapper<>();
-    wrapper1.eq("email", Newuser.getEmail());
-    Integer isEmails = emailDetectionMapper.selectCount(wrapper1);
-    if (isEmails == null) {
-      return Result.fail("邮箱不存在");
-    } else {
+    try {
+      QueryWrapper<EmailDetection> wrapper1 = new QueryWrapper<>();
+      wrapper1.eq("email", Newuser.getEmail());
+      Integer isEmails = emailDetectionMapper.selectCount(wrapper1);
+      if (isEmails == null || isEmails == 0) {
+        return Result.fail("邮箱不存在");
+      } else {
+        EmailDetection isEmail = emailDetectionMapper.getOneEmail(Newuser.getEmail());
+        // 邮箱存在验证码，继续验证是否过期
+        Date expirationTime = new Date(isEmail.getTime().getTime() + 1800000); // 验证码过期时间为发送时间 + 30 分钟
+        if (new Date().after(expirationTime)) { // 当前时间晚于过期时间，则说明验证码已过期
+          return Result.fail("验证码无效或已过期");
+        }
+        if (is_valid_code.equals(isEmail.getCode())) {
+          // czp改
+          user.setProfile("https://img2.woyaogexing.com/2022/07/17/5bbaa5352282a8f7!400x400.jpg");
+          // 会员禁用
+          user.setVipDisableTip(true);
 
-      EmailDetection isEmail = emailDetectionMapper.getOneEmail(Newuser.getEmail());
-      // 邮箱存在验证码，继续验证是否过期
-      Date expirationTime = new Date(isEmail.getTime().getTime() + 600000); // 验证码过期时间为发送时间 + 50 分钟
-      //            if (new Date().after(expirationTime)) { // 当前时间晚于过期时间，则说明验证码已过期
-      //                return Result.fail("验证码无效或已过期");
-      //            }
-      if (!is_valid_code.equals(isEmail.getCode())) {
-        return Result.fail("验证码无效");
-      }
+          userMapper.insert(user);
+
+          // 赋予订阅者权限
+          UserRole userRole = new UserRole();
+          userRole.setRoleId(1);
+          userRole.setUserId(user.getUserId());
+          userRoleMapper.insert(userRole);
+
+          // 添加token
+          String token = JwtUtil.createToken(user.getUserId());
+          // 根据userid获取QueryWrapper对象
+          QueryWrapper<User> wrappertoken = new QueryWrapper<>();
+          wrappertoken.eq("user_id", user.getUserId());
+          // 实体类
+          User doc = new User();
+          // new Date()更新登录时间
+          doc.setLastLogin(new Date());
+          // 这一步进行成功之后在数据库保存生成的token操作
+          userService.update(doc, wrappertoken);
+          // 返回状态
+          HashMap<String, String> myMap = new HashMap<>();
+          myMap.put("token", token);
+          myMap.put("name", user.getName());
+          myMap.put("profile", user.getProfile());
+          myMap.put("username", user.getUsername());
+          myMap.put("email", user.getEmail());
+          myMap.put("userid", user.getUserId().toString());
+          return Result.succ(200, "成功注册", myMap);
+
+        } else {
+          return Result.fail("验证码错误");
+      }}
+    } catch (Exception e) {
+      return Result.fail("邮箱验证时出错");
     }
-    // czp改
-    user.setProfile("https://img2.woyaogexing.com/2022/07/17/5bbaa5352282a8f7!400x400.jpg");
-    // 会员禁用
-    user.setVipDisableTip(true);
-
-    userMapper.insert(user);
-
-    // 赋予订阅者权限
-    UserRole userRole = new UserRole();
-    userRole.setRoleId(1);
-    userRole.setUserId(user.getUserId());
-    userRoleMapper.insert(userRole);
-
-    // 添加token
-    String token = JwtUtil.createToken(user.getUserId());
-    // 根据userid获取QueryWrapper对象
-    QueryWrapper<User> wrappertoken = new QueryWrapper<>();
-    wrappertoken.eq("user_id", user.getUserId());
-    // 实体类
-    User doc = new User();
-    // new Date()更新登录时间
-    doc.setLastLogin(new Date());
-    // 这一步进行成功之后在数据库保存生成的token操作
-    userService.update(doc, wrappertoken);
-    // 返回状态
-    HashMap<String, String> myMap = new HashMap<>();
-    myMap.put("token", token);
-    myMap.put("name", user.getName());
-    myMap.put("profile", user.getProfile());
-    myMap.put("username", user.getUsername());
-    myMap.put("email", user.getEmail());
-    myMap.put("userid", user.getUserId().toString());
-    return Result.succ(200, "成功注册", myMap);
   }
+
   @ApiOperation(value = "根据id获取用户信息")
   @ApiImplicitParam(name = "id", value = "id", required = true)
   @GetMapping("/getUserInfobyid/{id}")
@@ -314,20 +333,6 @@ public class WebUserController {
     return Result.succ(200, "成功登录", myMap);
   }
 
-  // 生成随机验证码的方法
-  private String generateCode() {
-    int length = 6; // 验证码长度
-    String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"; // 可用字符集合
-    Random random = new Random();
-
-    StringBuilder result = new StringBuilder();
-    for (int i = 0; i < length; i++) {
-      result.append(characters.charAt(random.nextInt(characters.length())));
-    }
-
-    return result.toString();
-  }
-
   @ApiOperation(value = "修改密码")
   @ApiImplicitParams({
           @ApiImplicitParam(name = "jwt", value = "jwt", required = true),
@@ -378,34 +383,53 @@ public class WebUserController {
     return Result.succ(200, "修改成功", null);
   }
 
-  @ApiOperation(value = "testemail")
+  @ApiOperation(value = "邮箱验证")
   @GetMapping("/testemail/{email}")
-  public Integer testemail(@PathVariable("email") String email) {
+  public Result testemail(@PathVariable("email") String email) {
     String regex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
     Pattern pattern = Pattern.compile(regex);
     Matcher matcher = pattern.matcher(email);
 
+    // 邮箱格式正确
     if (matcher.matches()) {
-      // 邮箱格式正确
+      try {
+        // 将电子邮件地址保存到数据库中
+        EmailDetection validation = new EmailDetection();
+        validation.setEmail(email);
+        UUID uuid = UUID.randomUUID();
+        int hashCode = uuid.hashCode(); // 取UUID的哈希码
+        String code = String.format("%06d", Math.abs(hashCode % 1000000)); // 格式化为6位数字字符串
+        validation.setCode(code); // 生成验证码
+        validation.setTime(new Time(System.currentTimeMillis())); // 记录当前时间
+        emailDetectionMapper.insert(validation); // 将验证信息插入到数据库中
 
-      // 将电子邮件地址保存到数据库中
+        Setting setting = settingMapper.selectOne(null);
+        // 构建邮件内容
+        String emailContent = "尊敬的用户，\n\n"
+                + "感谢您注册"+ setting.getSitTitle() +"。请使用以下验证码完成您的邮箱验证过程。\n\n"
+                + "验证码: " + code + "\n\n"
+                + "该验证码有效期为30分钟。请勿向任何人泄露此验证码。\n\n"
+                + "如果您未请求此验证码，请忽略此邮件。\n\n";
 
-      EmailDetection validation = new EmailDetection();
-      validation.setEmail(email);
-      String code = generateCode();
-      validation.setCode(code); // 生成验证码
-      validation.setTime(new Time(System.currentTimeMillis())); // 记录当前时间
-      emailDetectionMapper.insert(validation); // 将验证信息插入到数据库中
+        // 发送邮件
+        Email email1 = new Email();
+        email1.setTos(new String[] {email}).setSubject("验证码").setContent(emailContent);
 
-      Email email1 = new Email(); // 发送邮件
-      email1.setTos(new String[] {email}).setSubject("验证码").setContent(code);
 
-      int r = mailUtils.sendCommonEmail(email1);
-      System.out.println(r);
-      return 1;
+        int r = mailUtils.sendCommonEmail(email1, setting.getSitTitle());
+        System.out.println(r);
+
+        if (r == 1) {
+          return Result.succ( "验证码已发送");
+        } else {
+          return Result.fail("发送邮件失败");
+        }
+      } catch (Exception e) {
+        return Result.fail("处理请求时出错: " + e.getMessage());
+      }
     } else {
       // 邮箱格式不正确
-      return 0;
+      return Result.fail("邮箱格式不正确");
     }
   }
 }

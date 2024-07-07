@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.ttice.icewkment.Util.Argon2Util;
 import com.ttice.icewkment.Util.JwtUtil;
 import com.ttice.icewkment.Util.WeChatUtils;
 import com.ttice.icewkment.commin.lang.Result;
@@ -213,7 +214,7 @@ public class UserController {
     }
   }
 
-  @ApiOperation(value = "注册账号")
+  @ApiOperation(value = "注册管理员账号")
   @ApiImplicitParams({
           @ApiImplicitParam(name = "username", value = "用户名", required = true, dataType = "String", paramType = "query"),
           @ApiImplicitParam(name = "password", value = "密码", required = true, dataType = "String", paramType = "query"),
@@ -242,11 +243,12 @@ public class UserController {
     User user = new User();
 
     user.setUsername(Newuser.getUsername());
-    user.setPassword(hashPassword(Newuser.getPassword()));
+    user.setPassword(Argon2Util.hashPassword(Newuser.getPassword()));
     // 默认信息
     user.setIntro("这个人很懒，什么都没有留下！");
     user.setCreateTime(new Date());
     user.setName("新用户");
+    user.setRole(Newuser.getName());
     user.setGender(Newuser.getGender());
     user.setName(Newuser.getName());
     user.setHeight(Newuser.getHeight());
@@ -258,59 +260,63 @@ public class UserController {
 
     user.setEmail(Newuser.getEmail());
 
-    Integer is_valid_code = Newuser.getStatus();
+    String is_valid_code = String.valueOf(Newuser.getStatus());
 
     // 检查邮箱是否存在验证码 验证码是否过期
-    QueryWrapper wrapper1 = new QueryWrapper<>();
-    wrapper1.eq("email", Newuser.getEmail());
-    Integer isEmails = emailDetectionMapper.selectCount(wrapper1);
-    if (isEmails == null) {
-      return Result.fail("邮箱不存在");
-    } else {
+    try {
+      QueryWrapper<EmailDetection> wrapper1 = new QueryWrapper<>();
+      wrapper1.eq("email", Newuser.getEmail());
+      Integer isEmails = emailDetectionMapper.selectCount(wrapper1);
+      if (isEmails == null || isEmails == 0) {
+        return Result.fail("邮箱不存在");
+      } else {
+        EmailDetection isEmail = emailDetectionMapper.getOneEmail(Newuser.getEmail());
+        // 邮箱存在验证码，继续验证是否过期
+        Date expirationTime = new Date(isEmail.getTime().getTime() + 1800000); // 验证码过期时间为发送时间 + 30 分钟
+        if (new Date().after(expirationTime)) { // 当前时间晚于过期时间，则说明验证码已过期
+          return Result.fail("验证码无效或已过期");
+        }
+        if (is_valid_code.equals(isEmail.getCode())) {
+          // czp改
+          user.setProfile("https://img2.woyaogexing.com/2022/07/17/5bbaa5352282a8f7!400x400.jpg");
+          // 会员禁用
+          user.setVipDisableTip(true);
 
-      EmailDetection isEmail = emailDetectionMapper.getOneEmail(Newuser.getEmail());
-      // 邮箱存在验证码，继续验证是否过期
-      Date expirationTime = new Date(isEmail.getTime().getTime() + 600000); // 验证码过期时间为发送时间 + 50 分钟
-      //            if (new Date().after(expirationTime)) { // 当前时间晚于过期时间，则说明验证码已过期
-      //                return Result.fail("验证码无效或已过期");
-      //            }
-      if (!is_valid_code.equals(isEmail.getCode())) {
-        return Result.fail("验证码无效");
-      }
+          userMapper.insert(user);
+
+          // 赋予管理员权限
+          UserRole userRole = new UserRole();
+          userRole.setRoleId(2);
+          userRole.setUserId(user.getUserId());
+          userRoleMapper.insert(userRole);
+
+          // 添加token
+          String token = JwtUtil.createToken(user.getUserId());
+          // 根据userid获取QueryWrapper对象
+          QueryWrapper<User> wrappertoken = new QueryWrapper<>();
+          wrappertoken.eq("user_id", user.getUserId());
+          // 实体类
+          User doc = new User();
+          // new Date()更新登录时间
+          doc.setLastLogin(new Date());
+          // 这一步进行成功之后在数据库保存生成的token操作
+          userService.update(doc, wrappertoken);
+          // 返回状态
+          HashMap<String, String> myMap = new HashMap<>();
+          myMap.put("token", token);
+          myMap.put("name", user.getName());
+          myMap.put("profile", user.getProfile());
+          myMap.put("username", user.getUsername());
+          myMap.put("email", user.getEmail());
+          myMap.put("userid", user.getUserId().toString());
+          return Result.succ(200, "成功注册", myMap);
+
+        } else {
+          return Result.fail("验证码错误");
+        }}
+    } catch (Exception e) {
+      return Result.fail("邮箱验证时出错");
     }
-    // czp改
-    user.setProfile("https://img2.woyaogexing.com/2022/07/17/5bbaa5352282a8f7!400x400.jpg");
-    // 会员禁用
-    user.setVipDisableTip(true);
-
-    userMapper.insert(user);
-
-    // 赋予订阅者权限
-    UserRole userRole = new UserRole();
-    userRole.setRoleId(1);
-    userRole.setUserId(user.getUserId());
-    userRoleMapper.insert(userRole);
-
-    // 添加token
-    String token = JwtUtil.createToken(user.getUserId());
-    // 根据userid获取QueryWrapper对象
-    QueryWrapper<User> wrappertoken = new QueryWrapper<>();
-    wrappertoken.eq("user_id", user.getUserId());
-    // 实体类
-    User doc = new User();
-    // new Date()更新登录时间
-    doc.setLastLogin(new Date());
-    // 这一步进行成功之后在数据库保存生成的token操作
-    userService.update(doc, wrappertoken);
-    // 返回状态
-    HashMap<String, String> myMap = new HashMap<>();
-    myMap.put("token", token);
-    myMap.put("name", user.getName());
-    myMap.put("profile", user.getProfile());
-    myMap.put("username", user.getUsername());
-    myMap.put("email", user.getEmail());
-    myMap.put("userid", user.getUserId().toString());
-    return Result.succ(200, "成功注册", myMap);
   }
 
   @ApiOperation(value = "根据用户id获取用户信息")

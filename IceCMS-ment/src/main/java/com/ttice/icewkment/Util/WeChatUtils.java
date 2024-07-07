@@ -2,6 +2,7 @@ package com.ttice.icewkment.Util;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.ttice.icewkment.commin.lang.Result;
 import com.ttice.icewkment.entity.WxLogin;
 import com.ttice.icewkment.entity.WxLoginInfo;
 import com.ttice.icewkment.mapper.WxLoginMapper;
@@ -82,7 +83,7 @@ public class WeChatUtils {
         return jo.getString("openid");
     }
 
-    public String generateWechatRrCode() {
+    public Result generateWechatRrCode() {
         // 当前登录账号
         // Generate a random UUID
         UUID uuid = UUID.randomUUID();
@@ -98,25 +99,28 @@ public class WeChatUtils {
         Map<String, Object> body = new HashMap<>();
         // 场景码，根据业务场景与【前端】约定
         body.put("scene", accountId);
+        // 页面路径
+//        body.put("page", "homePages/about");
         WxLoginInfo wxLoginInfo = wxloginInfoMapper.selectOne(null);
         body.put("env_version", wxLoginInfo.getEnvVersion());
         // 透明
         body.put("is_hyaline", true);
 
+
         byte[] bytes = null;
         bytes = getWechatQrcodeByRestTemplate(url, body);
 
         if (bytes == null) {
-            return "null";
+            return Result.fail("null");
         }
 
         String error = new String(bytes);
         if (error.contains("errcode")) {
-            return error;
+            return Result.fail(error);
         }
 
         // 保存到本地
-        saveQrCodeToLocal(bytes);
+        // saveQrCodeToLocal(bytes);
 
         // 保存数据到本地
         WxLogin login = new WxLogin();
@@ -124,7 +128,12 @@ public class WeChatUtils {
         login.setScene(accountId);
         login.setStatus("0");
         wxLoginMapper.insert(login);
-        return accountId;
+        // 返回给前端 accountId和bytes
+        Map<String, Object> data = new HashMap<>();
+        data.put("accountId", accountId);
+        data.put("bytes", bytes);
+
+        return Result.succ( 200, "生成成功", data);
     }
 
     // 获取access_token
