@@ -9,3 +9,8 @@ export const getSettingInfo = () => {
 export const setSettingInfo = (data: object) => {
   return http.request<ResponseData<[]>>("post", "/Sitting/setSetting", { data });
 };
+
+// 获取轮播图
+export const getAllDispositionCarousel = (data: object) => {
+  return http.request<ResponseData<[]>>("get", "/Sitting/getAllDispositionCarousel", { data });
+};

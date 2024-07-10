@@ -82,6 +82,8 @@ const onLogin = async (formEl: FormInstance | undefined) => {
           initRouter().then(() => {
             router.push(getTopMenu(true).path);
             message("登录成功", { type: "success" });
+            // 登录成功后刷新页面
+            window.location.reload();
           });
           // 登录成功后 将token存储到sessionStorage中
           setTokenFromBackend(data);

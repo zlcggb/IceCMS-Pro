@@ -71,13 +71,28 @@ public class SettingController {
     return Result.succ(dispositionCarouselMapper.selectList(null));
   }
 
-  @ApiOperation(value = "获取全部轮播图")
+  @ApiOperation(value = "根据id修改轮播图")
   @RequiresAuthentication // 需要登录认证的接口
   @ApiImplicitParam(name = "轮播", value = "设置", required = true)
-  @GetMapping("/setAllDispositionCarousel")
-  public Result setAllDispositionCarousel(DispositionCarousel dispositionCarousel) {
-    return Result.succ(dispositionCarouselMapper.update(dispositionCarousel, null));
+  @GetMapping("/setAllDispositionCarousel/{id}")
+  public Result setAllDispositionCarousel(@PathVariable("id") Integer id) {
+    DispositionCarousel dispositionCarousel = dispositionCarouselMapper.selectById(id);
+    return Result.succ(dispositionCarouselMapper.updateById(dispositionCarousel));
   }
 
+    @ApiOperation(value = "根据id删除轮播图")
+    @RequiresAuthentication // 需要登录认证的接口
+    @ApiImplicitParam(name = "轮播", value = "设置", required = true)
+    @GetMapping("/deleteAllDispositionCarousel/{id}")
+    public Result deleteAllDispositionCarousel(@PathVariable("id") Integer id) {
+        return Result.succ(dispositionCarouselMapper.deleteById(id));
+    }
 
+    @ApiOperation(value = "新增轮播图")
+    @RequiresAuthentication // 需要登录认证的接口
+    @ApiImplicitParam(name = "轮播", value = "设置", required = true)
+    @PostMapping("/addDispositionCarousel")
+    public Result addDispositionCarousel(@RequestBody DispositionCarousel dispositionCarousel) {
+        return Result.succ(dispositionCarouselMapper.insert(dispositionCarousel));
+    }
 }

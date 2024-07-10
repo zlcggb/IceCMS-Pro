@@ -214,6 +214,52 @@ public class UserController {
     }
   }
 
+  @ApiOperation(value = "管理员登录")
+  @ApiImplicitParams({
+          @ApiImplicitParam(name = "username", value = "用户名", required = true, dataType = "String", paramType = "query"),
+          @ApiImplicitParam(name = "password", value = "密码", required = true, dataType = "String", paramType = "query")
+  })
+  @PostMapping("/login") // 登录
+  public Result login(User user) {
+
+    // 进行登录核验操作
+    QueryWrapper<User> wrapper = new QueryWrapper<>();
+    // 用户名判断
+    wrapper.eq("USERNAME", user.getUsername());
+    User userjudje = userService.getOne(wrapper);
+    if (userjudje == null) {
+      return Result.fail(("用户名不存在"));
+    }
+    Assert.notNull(user, "用户名不存在");
+    if (verifyPassword(user.getPassword(),userjudje.getPassword())) {
+      return Result.fail(("密码不正确"));
+    }
+    // 添加token
+    String token = JwtUtil.createToken(userjudje.getUserId());
+    // 根据userid获取QueryWrapper对象
+    QueryWrapper<User> wrappertoken = new QueryWrapper<>();
+    wrappertoken.eq("user_id", userjudje.getUserId());
+    // 实体类
+    User doc = new User();
+    // new Date()更新登录时间
+    doc.setLastLogin(new Date());
+    // 这一步进行成功之后在数据库保存生成的token操作
+    userService.update(doc, wrappertoken);
+    // 返回状态
+    HashMap<String, String> myMap = new HashMap<>();
+    myMap.put("token", token);
+    myMap.put("name", userjudje.getName());
+    myMap.put("profile", userjudje.getProfile());
+    //        myMap.put("profile", userjudje.getProfile());
+    myMap.put("email", userjudje.getEmail());
+    myMap.put("intro", userjudje.getIntro());
+    //        myMap.put("age", userjudje.getUserAge().toString());
+    myMap.put("gender", userjudje.getGender());
+    myMap.put("userid", userjudje.getUserId().toString());
+    myMap.put("username", userjudje.getUsername());
+    return Result.succ(200, "成功登录", myMap);
+  }
+
   @ApiOperation(value = "注册管理员账号")
   @ApiImplicitParams({
           @ApiImplicitParam(name = "username", value = "用户名", required = true, dataType = "String", paramType = "query"),
