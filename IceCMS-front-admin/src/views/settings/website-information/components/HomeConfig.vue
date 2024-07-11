@@ -77,7 +77,7 @@
 </template>
 
 <script setup lang="ts">
-import { ElMessageBox, ElNotification } from 'element-plus';
+import { ElMessageBox } from 'element-plus';
 import { getAllDispositionCarousel } from '@/api/setting/webinfo';
 import { ref, onMounted } from 'vue';
 

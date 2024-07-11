@@ -133,7 +133,7 @@ public class WebUserController {
       User user1 = new User();
       user1.setOpenid(openid);
 //        user1.setProfile(user.getProfile());
-//        user1.setName(user.getName());
+        user1.setName("微信用户");
 //        user1.setGender(user.getGender());
       user1.setCreateTime(new Date());
       user1.setLastLogin(new Date());
@@ -288,50 +288,97 @@ public class WebUserController {
 
   @ApiOperation(value = "短信登录")
   @ApiImplicitParams({
-          @ApiImplicitParam(name = "username", value = "用户名", required = true, dataType = "String", paramType = "query"),
-          @ApiImplicitParam(name = "password", value = "密码", required = true, dataType = "String", paramType = "query")
+          @ApiImplicitParam(name = "phone", value = "手机号", required = true, dataType = "String", paramType = "query"),
   })
-  @PostMapping("/login") // 登录
+  @PostMapping("/Messagelogin") // 短信登录
   public Result Messagelogin(@RequestParam("phone") String phone) {
 
-    boolean b = sendMessageUtil.sendSmsCode(phone);
-//    // 进行登录核验操作
-//    QueryWrapper<User> wrapper = new QueryWrapper<>();
-//    // 用户名判断
-//    wrapper.eq("USERNAME", user.getUsername());
-//    User userjudje = userService.getOne(wrapper);
-//    if (userjudje == null) {
-//      return Result.fail(("用户名不存在"));
-//    }
-//    Assert.notNull(user, "用户名不存在");
-//    if (verifyPassword(user.getPassword(),userjudje.getPassword())) {
-//      return Result.fail(("密码不正确"));
-//    }
-    // 添加token
-    String token = JwtUtil.createToken(userjudje.getUserId());
-    // 根据userid获取QueryWrapper对象
-    QueryWrapper<User> wrappertoken = new QueryWrapper<>();
-    wrappertoken.eq("user_id", userjudje.getUserId());
-    // 实体类
-    User doc = new User();
-    // new Date()更新登录时间
-    doc.setLastLogin(new Date());
-    // 这一步进行成功之后在数据库保存生成的token操作
-    userService.update(doc, wrappertoken);
-    // 返回状态
-    HashMap<String, String> myMap = new HashMap<>();
-    myMap.put("token", token);
-    myMap.put("name", userjudje.getName());
-    myMap.put("profile", userjudje.getProfile());
-    //        myMap.put("profile", userjudje.getProfile());
-    myMap.put("email", userjudje.getEmail());
-    myMap.put("intro", userjudje.getIntro());
-    //        myMap.put("age", userjudje.getUserAge().toString());
-    myMap.put("gender", userjudje.getGender());
-    myMap.put("userid", userjudje.getUserId().toString());
-    myMap.put("username", userjudje.getUsername());
-    return Result.succ(200, "成功登录", myMap);
+    boolean IsSend = sendMessageUtil.sendSmsCode(phone);
+    if(IsSend) {
+        return Result.succ(200, "成功发送", null);
+        } else {
+        return Result.fail("发送失败");
+    }
   }
+
+    @ApiOperation(value = "短信登录验证")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "phone", value = "手机号", required = true, dataType = "String", paramType = "query"),
+            @ApiImplicitParam(name = "code", value = "验证码", required = true, dataType = "String", paramType = "query")
+    })
+    @PostMapping("/MessageloginCheck") // 短信登录验证
+    public Result MessageloginCheck(@RequestParam("phone") String phone, @RequestParam("code") String code) {
+      boolean IsCheck = sendMessageUtil.checkSmsCode(phone, code);
+      if (IsCheck) {
+        QueryWrapper<User> wrapper = new QueryWrapper<>();
+        wrapper.eq("phone", phone);
+        User user = userMapper.selectOne(wrapper);
+        // 判断如果user存在就返回这个user的信息登录，如果没有就新建一个用户并且设置手机号
+        if (user == null) {
+          // 新增一个用户
+          User user1 = new User();
+//        user1.setProfile(user.getProfile());
+          user1.setName("手机用户");
+//        user1.setGender(user.getGender());
+          user1.setPhone(phone);
+          user1.setCreateTime(new Date());
+          user1.setLastLogin(new Date());
+          user1.setVipDisableTip(true);
+          user1.setVipValidDate(new Date());
+          user1.setVipExpireDate(new Date());
+          user1.setIntegral(0);
+          user1.setMonthly("0");
+          user1.setPermanent("0");
+          user1.setIntro("这个人很懒，什么都没有留下！");
+          user1.setAcademic("0");
+          user1.setBirthday("0");
+          user1.setHeight("0");
+          user1.setUserage(0);
+          user1.setEmail("0");
+          // 随机用户名
+          UUID uuid = UUID.randomUUID();
+          // Convert UUID to string and replace all "-" characters with "".
+          String randomUsername = uuid.toString().replace("-", "");
+          user1.setUsername(randomUsername);
+          user1.setPassword(null);
+          user1.setStatus(0);
+          user1.setRole("0");
+          userMapper.insert(user1);
+          // 返回状态
+          // 添加token
+          String token = JwtUtil.createToken(user1.getUserId());
+
+          HashMap<String, String> myMap = new HashMap<>();
+          myMap.put("token", token);
+          myMap.put("name", user1.getName());
+          myMap.put("profile", user1.getProfile());
+          myMap.put("email", user1.getEmail());
+          myMap.put("intro", user1.getIntro());
+          return Result.succ(200, "成功登录", myMap);
+        }else {
+          // 添加token
+          String token = JwtUtil.createToken(user.getUserId());
+          // 根据userid获取QueryWrapper对象
+          QueryWrapper<User> wrappertoken = new QueryWrapper<>();
+          wrappertoken.eq("user_id", user.getUserId());
+          // 实体类
+          User doc = new User();
+          // new Date()更新登录时间
+          doc.setLastLogin(new Date());
+          // 这一步进行成功之后在数据库保存生成的token操作
+          userService.update(doc, wrappertoken);
+          // 返回状态
+          HashMap<String, String> myMap = new HashMap<>();
+          myMap.put("token", token);
+          myMap.put("name", user.getName());
+          myMap.put("profile", user.getProfile());
+          myMap.put("email", user.getEmail());
+          myMap.put("intro", user.getIntro());
+          return Result.succ(200, "成功登录", myMap);
+        }
+      }
+        return Result.fail("验证码错误");
+    }
 
   @ApiOperation(value = "登录")
   @ApiImplicitParams({

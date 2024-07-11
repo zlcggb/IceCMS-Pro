@@ -5,6 +5,7 @@ import com.qiniu.http.Response;
 import com.qiniu.sms.SmsManager;
 import com.qiniu.util.Auth;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -17,6 +18,10 @@ import java.util.UUID;
 @Slf4j
 @Component
 public class SendMessageUtil {
+
+    @Autowired private RedisUtil redisUtil;
+
+    private static final String MESSAGE_CODE_PHONE_PREFIX = "MESSAGE_CODE_PHONE_";
 
     /**
      * 发送手机验证码
@@ -41,19 +46,27 @@ public class SendMessageUtil {
         return false;
     }
 
-    public boolean sendSmsCode(String phone) throws Exception {
-        //存入redis
-//        redisService.set(WhlConstants.Redis.MESSAGECODE_PHONE + phone, code , 60*3L);
-        String templateId = "*********";
+    public boolean sendSmsCode(String phone) {
+        String templateId = "1810648952882606080";
         Map<String , String> map = new HashMap<String , String>();
         //生成短信验证码(随机6位)
         UUID uuid = UUID.randomUUID();
+        int hashCode = uuid.hashCode(); // 取UUID的哈希码
+        String code = String.format("%06d", Math.abs(hashCode % 1000000)); // 格式化为6位数字字符串
 
-        // Convert the UUID to a string and take the first 6 characters
-        String accountId = uuid.toString().substring(0, 6);
-        map.put("code",accountId);
-        boolean b = SendMessageUtil.sendMessageCheck(templateId, new String[]{phone}, map);
-        System.out.println("============="+b);
-        return b;
+        //存入redis
+        String key = MESSAGE_CODE_PHONE_PREFIX + phone;
+        redisUtil.set(key, code, 300);
+
+        map.put("code",code);
+        return SendMessageUtil.sendMessageCheck(templateId, new String[]{phone}, map);
+    }
+
+    public boolean checkSmsCode (String phone , String code){
+        //从redis中取出并且和code对比
+        String key = MESSAGE_CODE_PHONE_PREFIX + phone;
+        Object o = redisUtil.get(key);
+        String redisCode = o == null ? null : o.toString();
+        return redisCode != null && redisCode.equals(code);
     }
 }
