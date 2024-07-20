@@ -210,7 +210,7 @@ public class WebUserController {
     user.setIntro("这个人很懒，什么都没有留下！");
     user.setCreateTime(new Date());
     user.setName("新用户");
-    user.setName(randomUsername);
+    user.setUsername(randomUsername);
 //    user.setGender(Newuser.getGender());
 //    user.setName(Newuser.getName());
 //    user.setHeight(Newuser.getHeight());
