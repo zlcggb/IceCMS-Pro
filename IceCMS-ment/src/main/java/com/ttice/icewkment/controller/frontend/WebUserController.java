@@ -189,11 +189,17 @@ public class WebUserController {
 //    if (Count >= 1) {
 //      return Result.fail(("用户名重复"));
 //    }
+    // 检查邮箱是否重复
+    QueryWrapper<User> wrapper = new QueryWrapper<>();
+    wrapper.eq("email", Newuser.getEmail());
+    Integer Count = userMapper.selectCount(wrapper);
+    if (Count >= 1) {
+      return Result.fail(("邮箱重复"));
+    }
     //随机生成数字用户名
     UUID uuid = UUID.randomUUID();
-    // Convert UUID to string and replace all "-" characters with "".
-    String randomUsername = uuid.toString().replace("-", "");
-    Newuser.setUsername(randomUsername);
+    int hashCode = uuid.hashCode(); // 取UUID的哈希码
+    String randomUsername = String.format("%06d", Math.abs(hashCode % 1000000)); // 格式化为6位数字字符串
 
     // 用户名判断
     User user = new User();
@@ -204,6 +210,7 @@ public class WebUserController {
     user.setIntro("这个人很懒，什么都没有留下！");
     user.setCreateTime(new Date());
     user.setName("新用户");
+    user.setName(randomUsername);
 //    user.setGender(Newuser.getGender());
 //    user.setName(Newuser.getName());
 //    user.setHeight(Newuser.getHeight());
@@ -398,6 +405,7 @@ public class WebUserController {
     QueryWrapper<User> wrapper = new QueryWrapper<>();
     // 用户名判断
     wrapper.eq("USERNAME", user.getUsername());
+    wrapper.eq("email", user.getEmail());
     User userjudje = userService.getOne(wrapper);
     if (userjudje == null) {
       return Result.fail(("用户名不存在"));

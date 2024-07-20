@@ -642,7 +642,7 @@ export default ({
             if (resp.data.code == 402 || resp.data.code == 400) {
               this.$notify({
                 title: '失败',
-                message: '登录失败',
+                message: resp.data.msg,
                 type: 'warning',
                 offset: 50
               });
