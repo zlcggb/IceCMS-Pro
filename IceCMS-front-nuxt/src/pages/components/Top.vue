@@ -3,7 +3,7 @@
     <!-- 登录 -->
     <el-dialog class="dialogdeep" width="30%" top="30px" center title="" @close="closeDialog"
       :visible.sync="dialogFormVisible">
-      <div class="box">
+      <div v-if="IsRegister" class="box">
         <a> <img class="close-icon"
             src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAHhlWElmTU0AKgAAAAgABAEaAAUAAAABAAAAPgEbAAUAAAABAAAARgEoAAMAAAABAAIAAIdpAAQAAAABAAAATgAAAAAAAACQAAAAAQAAAJAAAAABAAOgAQADAAAAAQABAACgAgAEAAAAAQAAACCgAwAEAAAAAQAAACAAAAAAfgvaUgAAAAlwSFlzAAAWJQAAFiUBSVIk8AAAAalJREFUWAntlr9OwzAQxm2XAV4DIfEQTFHE2p2B5+hSiQ5d+jh0BKlZUJ6i8BxUUBt/up5kOU7iM38W4sWxc3ffz2dfYqWm9t8zoOME7HYv1859Lo3Re6Xspqqq99hGMm6a5lwps7DWXSl1XNV1/Rr6n4UDerYPWus755TS2tz4APNSiLZtLw6Hj0cf69bHVM7NIHEfappwgGfn3BvPwdHTb2kVPJvXw4fF2YOyyiPqOwDG2LWHfWazEohT2rfkS5Eopt1wXO47ZwAvBgKMbofUNwlQCiEVh04vgBSiRHwUIBeiVDwLYAwC71EpiQM3el7gObgFMODWv0qULsqV2um0Z4nDIxsAxikIzHOTisNPBACHPogSccTrfIgw+ZdNlIG+1TNwSRayM9Aj/kSihFDy2c7KQEqcV0vSv1iGQ+L8m86x4W2K+8EMSAJLbEOIXoCSgCU+SYCSQLwqqW8HQBqAhcNeEiNRhmbxnW87QOhw2nlcotaaZQiK5w4A3V7JjEuNT3vsPDROQfiL6WXsk7gVH1e4vf7EtRwQfjt8JuharvVsHQNM4ykDX94FYhBKOJraAAAAAElFTkSuQmCC"
             @click="closeDialog"></a>
@@ -77,7 +77,7 @@
               <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on"
                 label-position="left">
                 <el-form-item prop="username">
-                  <el-input ref="username" v-model="loginForm.username" placeholder="用户名" name="username" type="text"
+                  <el-input ref="username" v-model="loginForm.username" placeholder="用户名或邮箱" name="username" type="text"
                     tabindex="1" auto-complete="on" />
                 </el-form-item>
 
@@ -123,8 +123,76 @@
           <p class="text-align-center">
             其他登录方式
             <a style="text-decoration: none">或</a>
-            <a href="/register">
+            <a @click="handleRegister">
               <a class="text-align-center">立即注册</a></a>
+          </p>
+          <div class="other-login">
+            <button class="btn-login circle weixin">
+              <img class="qqloginsvg" src="../../static/image/qq.png" />
+            </button>
+            <button class="btn-login circle weibo">
+              <img class="qqloginsvg" src="../../static/image/weibo.png" />
+            </button>
+            <button class="btn-login circle weibo">
+              <img class="qqloginsvg" src="../../static/image/github.png" />
+            </button>
+          </div>
+        </div>
+
+        <div class="tips">
+          <span style="margin-right: 20px"></span>
+          <span> </span>
+        </div>
+      </div>
+      <div v-else class="box">
+        <a> <img class="close-icon"
+            src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAHhlWElmTU0AKgAAAAgABAEaAAUAAAABAAAAPgEbAAUAAAABAAAARgEoAAMAAAABAAIAAIdpAAQAAAABAAAATgAAAAAAAACQAAAAAQAAAJAAAAABAAOgAQADAAAAAQABAACgAgAEAAAAAQAAACCgAwAEAAAAAQAAACAAAAAAfgvaUgAAAAlwSFlzAAAWJQAAFiUBSVIk8AAAAalJREFUWAntlr9OwzAQxm2XAV4DIfEQTFHE2p2B5+hSiQ5d+jh0BKlZUJ6i8BxUUBt/up5kOU7iM38W4sWxc3ffz2dfYqWm9t8zoOME7HYv1859Lo3Re6Xspqqq99hGMm6a5lwps7DWXSl1XNV1/Rr6n4UDerYPWus755TS2tz4APNSiLZtLw6Hj0cf69bHVM7NIHEfappwgGfn3BvPwdHTb2kVPJvXw4fF2YOyyiPqOwDG2LWHfWazEohT2rfkS5Eopt1wXO47ZwAvBgKMbofUNwlQCiEVh04vgBSiRHwUIBeiVDwLYAwC71EpiQM3el7gObgFMODWv0qULsqV2um0Z4nDIxsAxikIzHOTisNPBACHPogSccTrfIgw+ZdNlIG+1TNwSRayM9Aj/kSihFDy2c7KQEqcV0vSv1iGQ+L8m86x4W2K+8EMSAJLbEOIXoCSgCU+SYCSQLwqqW8HQBqAhcNeEiNRhmbxnW87QOhw2nlcotaaZQiK5w4A3V7JjEuNT3vsPDROQfiL6WXsk7gVH1e4vf7EtRwQfjt8JuharvVsHQNM4ykDX94FYhBKOJraAAAAAElFTkSuQmCC"
+            @click="closeDialog"></a>
+
+        <div class="login-logo">
+          <img height="40" width="40" src="../../static/image/logo.svg" />
+        </div>
+        <div class="register-text">
+    <span><b>注册</b></span>
+</div>
+        <el-form ref="emailRegisterForm" :model="emailRegisterForm" :rules="emailRegisterRules" class="login-form"
+          auto-complete="on" label-position="left">
+          <el-form-item prop="email">
+            <el-input ref="email" v-model="emailRegisterForm.email" placeholder="邮箱" name="phone" type="text"
+              tabindex="1" auto-complete="on" />
+          </el-form-item>
+          <el-form-item prop="password">
+            <el-input ref="password" v-model="emailRegisterForm.password" placeholder="密码" name="phone" type="password"
+              tabindex="1" auto-complete="on" />
+          </el-form-item>
+
+          <el-form-item prop="code">
+            <el-input class="check-code-box" v-model="emailRegisterForm.code" placeholder="请输入验证码" name="code"
+              type="text" tabindex="2" auto-complete="on">
+              <el-button :disabled="codeButtonDisabled" size="small" slot="append" @click="RegistersendCode">获取验证码
+                <span v-if="RegistercodeCd">({{ long }})</span>
+              </el-button>
+            </el-input>
+          </el-form-item>
+
+
+          <el-button :loading="loading" type="primary" style="width: 100%; margin-bottom: 30px"
+            @click.native.prevent="handleEmailLogin">注册</el-button>
+          <div class="ss-login_statement">
+            <span>登录注册即代表同意</span>
+            <a href="/Protocol">
+              <a target="_blank">用户协议</a></a><span>及</span>
+            <a href="/Privacy">
+              <a target="_blank">隐私条款</a></a>
+          </div>
+          <div class="line"></div>
+        </el-form>
+        <div class="footer">
+          <p class="text-align-center">
+            已有账号？
+            <a style="text-decoration: none"></a>
+            <a @click="tohandleLogin">
+              <a class="text-align-center">立即登录</a></a>
           </p>
           <div class="other-login">
             <button class="btn-login circle weixin">
@@ -434,9 +502,11 @@
 <script>
 import { FindarticlesByNum } from '@/api/webarticle'
 import { FindresourceByNum } from '@/api/webresource'
-import { login, WeChatLogin, WeChatLoginCheck } from '@/api/login'
+import { login, WeChatLogin, WeChatLoginCheck, Messagelogin, MessageloginCheck } from '@/api/login'
 import { getAllResource, getAllResourceNumber } from '@/api/webresource'
 import { getAllArticle, getAllArticleNumber } from '@/api/webarticle'
+import { testemail } from '@/api/webuser'
+import { register } from '@/api/register'
 
 import { CheckVip } from '@/api/user'
 
@@ -499,9 +569,155 @@ export default ({
         }
       }
     },
+    RegistersendCode() {
+      //发送验证码
+      console.log(this.emailRegisterForm.email)
+      // 如果手机号为空
+      if (this.emailRegisterForm.email.trim() === '') {
+        this.$notify({
+          title: '失败',
+          message: '请输入邮箱',
+          type: 'warning',
+          offset: 50
+        });
+        return
+      }
+      // 检测邮箱类型
+      if (!(/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/).test(this.emailRegisterForm.email)) {
+        this.$notify({
+          title: '失败',
+          message: '请输入正确的邮箱',
+          type: 'warning',
+          offset: 50
+        });
+        return
+      }
+      // 检测不是计时器状态
+      if (this.RegistercodeCd) {
+        this.$notify({
+          title: '失败',
+          message: '请等待60秒后再次发送',
+          type: 'warning',
+          offset: 50
+        });
+        return
+      } else {
+        testemail(this.emailRegisterForm.email).then(resp => {
+          console.log(resp.data);
+          if (resp.data.code === 200) {
+            this.$notify({
+              title: '成功',
+              message: '验证码已发送',
+              type: 'success',
+              offset: 50
+            });
+          }
+        }).catch(error => {
+          console.error('Error during WeChatLoginCheck:', error);
+        });
+      }
+      // 获取验证码
+      // captcha(this.form.phoneNum)
+      // 开启计时
+      this.RegistercodeCd = true
+      const timer = setInterval(() => {
+        this.long--
+        if (this.long <= 0) {
+          this.long = 60
+          this.RegistercodeCd = false
+          clearInterval(timer)
+        }
+      }, 1000)
+
+    },
+    handleEmailLogin(){
+      var that = this
+      this.$refs.emailRegisterForm.validate(valid => {
+        if (valid) {
+          this.loading = true
+          console.log(that.emailRegisterForm)
+          that.emailRegisterForm.status = that.emailRegisterForm.code
+          register(that.emailRegisterForm).then(resp => {
+            console.log(resp)
+            if (resp.data.code == 402 || resp.data.code == 400) {
+              this.$notify({
+                title: '失败',
+                message: '登录失败',
+                type: 'warning',
+                offset: 50
+              });
+            } else if (resp.data.code == 200) {
+              console.log(resp.data)
+              that.$cookies.set('access-user', resp.data.data)
+  
+              // 关闭登录框
+              that.dialogFormVisible = false
+              // 关闭登录按钮
+              that.userJudje = false
+              //立即获取用户数据
+              that.getUserInfo()
+              this.$notify({
+                title: '成功',
+                message: '您已成功登录',
+                type: 'success',
+                offset: 50
+              });
+            }
+          }).catch((e) => { })
+          this.loading = false
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    },
     sendCode() {
       //发送验证码
-
+      console.log(this.phoneLoginForm.phone)
+      // 如果手机号为空
+      if (this.phoneLoginForm.phone.trim() === '') {
+        this.$notify({
+          title: '失败',
+          message: '请输入手机号码',
+          type: 'warning',
+          offset: 50
+        });
+        return
+      }
+      // 检测手机号码类型
+      if (!(/^1[3456789]\d{9}$/.test(this.phoneLoginForm.phone))) {
+        this.$notify({
+          title: '失败',
+          message: '请输入正确的手机号码',
+          type: 'warning',
+          offset: 50
+        });
+        return
+      }
+      // 检测不是计时器状态
+      if (this.codeCd) {
+        this.$notify({
+          title: '失败',
+          message: '请等待60秒后再次发送',
+          type: 'warning',
+          offset: 50
+        });
+        return
+      } else {
+        Messagelogin(this.phoneLoginForm.phone).then(resp => {
+          console.log(resp.data);
+          if (resp.data.code === 200) {
+            this.$notify({
+              title: '成功',
+              message: '验证码已发送',
+              type: 'success',
+              offset: 50
+            });
+          }
+        }).catch(error => {
+          console.error('Error during WeChatLoginCheck:', error);
+        });
+      }
       // 获取验证码
       // captcha(this.form.phoneNum)
       // 开启计时
@@ -521,6 +737,10 @@ export default ({
       this.dialogFormVisible = false;  // 点击图片关闭对话框
       this.beforeDestroy();
     },
+    tohandleLogin() {
+      console.log('打开登录框');
+      this.IsRegister = true;
+    },
     handleLogin() {
       var that = this
       this.$refs.loginForm.validate(valid => {
@@ -529,10 +749,12 @@ export default ({
           login(that.loginForm).then(resp => {
             console.log(resp)
             if (resp.data.code == 402 || resp.data.code == 400) {
-              that.$message({
+              this.$notify({
+                title: '失败',
                 message: '登录失败',
-                type: 'warning'
-              })
+                type: 'warning',
+                offset: 50
+              });
             } else if (resp.data.code == 200) {
               console.log(resp.data)
               that.$cookies.set('access-user', resp.data.data)
@@ -614,7 +836,46 @@ export default ({
       var re = new RegExp(regu);
       return re.test(str);
     },
+    handlePhoneLogin() {
+      var that = this
+      this.$refs.phoneLoginForm.validate(valid => {
+        if (valid) {
+          this.loading = true
+          console.log(that.phoneLoginForm)
+          MessageloginCheck(that.phoneLoginForm.phone, that.phoneLoginForm.code).then(resp => {
+            console.log(resp)
+            if (resp.data.code == 402 || resp.data.code == 400) {
+              this.$notify({
+                title: '失败',
+                message: '登录失败',
+                type: 'warning',
+                offset: 50
+              });
+            } else if (resp.data.code == 200) {
+              console.log(resp.data)
+              that.$cookies.set('access-user', resp.data.data)
 
+              // 关闭登录框
+              that.dialogFormVisible = false
+              // 关闭登录按钮
+              that.userJudje = false
+              //立即获取用户数据
+              that.getUserInfo()
+              this.$notify({
+                title: '成功',
+                message: '您已成功登录',
+                type: 'success',
+                offset: 50
+              });
+            }
+          }).catch((e) => { })
+          this.loading = false
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    },
     queryarticle() {
       //提交
       if (this.judgeNull(this.seachcontent)) {
@@ -658,6 +919,12 @@ export default ({
       // setTimeout(() => { this.searchshow = false }, 300)
       //设置300ms后让下拉框消失
     },
+    handleRegister() {
+      console.log('注册');
+      this.IsRegister = false;
+      this.beforeDestroy(); // 停止轮询
+    },
+
     startPolling() {
       const checkStatus = () => {
         WeChatLoginCheck(this.accountId).then(resp => {
@@ -724,12 +991,12 @@ export default ({
       if (tab === 'phone') {
         // 手机号登录
         this.beforeDestroy(); // 停止轮询
-   
+
       }
       if (tab === 'password') {
         // 密码登录
         this.beforeDestroy(); // 停止轮询
-     
+
 
       }
       this.activeTab = tab;
@@ -738,6 +1005,7 @@ export default ({
 
   data() {
     return {
+      IsRegister: true,
       intervalId: null,
       activeTab: 'wechat', // 默认选中的标签
       accountId: '', // 账号ID
@@ -746,9 +1014,30 @@ export default ({
         phone: '',
         code: ''
       },
+      emailRegisterForm: {
+        email: '',
+        password: '',
+        code: '',
+        Status: ''
+      },
+      RegistercodeCd: false,
       codeCd: false,
       // CD长度
       long: 60,
+      emailRegisterRules: {
+        email: [
+          { required: true, message: '请输入邮箱', trigger: 'blur' },
+          { type: 'email', message: '请输入正确的邮箱', trigger: 'blur' }
+        ],
+        password: [
+          { required: true, message: '请输入密码', trigger: 'blur' },
+          { min: 6, max: 20, message: '密码长度在6-20个字符', trigger: 'blur' }
+        ],
+        code: [
+          { required: true, message: '请输入验证码', trigger: 'blur' },
+          { len: 6, message: '验证码为6位数字', trigger: 'blur' }
+        ]
+      },
       phoneLoginRules: {
         phone: [
           { required: true, message: '请输入手机号', trigger: 'blur' },
@@ -774,7 +1063,7 @@ export default ({
         password: ''
       },
       loginRules: {
-        username: [{ required: true, message: '请您输入用户名', trigger: 'blur' }],
+        username: [{ required: true, message: '请您输入用户名或邮箱', trigger: 'blur' }],
         password: [{ required: true, message: '请您输入密码', trigger: 'blur' }]
       },
       loading: false,
@@ -1593,4 +1882,12 @@ span.last-login-way:after {
     transform: rotate(360deg);
   }
 }
+.register-text {
+        font-size: 30px; /* 调整字体大小 */
+        text-align: center; /* 居中对齐 */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 70px; /* 调整高度以确保垂直居中 */
+    }
 </style>

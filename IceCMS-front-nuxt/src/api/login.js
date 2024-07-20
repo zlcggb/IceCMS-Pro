@@ -20,3 +20,17 @@ export function WeChatLoginCheck(accountId) {
     method: 'post'
   })
 }
+
+export function Messagelogin(phone) {
+  return request({
+    url: '/Websuser/Messagelogin/'+ phone ,
+    method: 'post'
+  })
+}
+
+export function MessageloginCheck(phone,code) {
+  return request({
+    url: '/Websuser/MessageloginCheck/'+ phone +'/' + code,
+    method: 'post'
+  })
+}

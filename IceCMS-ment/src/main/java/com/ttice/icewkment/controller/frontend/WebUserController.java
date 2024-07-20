@@ -183,29 +183,35 @@ public class WebUserController {
   public Result Create(User Newuser) {
 
     // 检查用户名是否重复
-    QueryWrapper<User> wrapper = new QueryWrapper<>();
-    wrapper.eq("USERNAME", Newuser.getUsername());
-    Integer Count = userMapper.selectCount(wrapper);
-    if (Count >= 1) {
-      return Result.fail(("用户名重复"));
-    }
+//    QueryWrapper<User> wrapper = new QueryWrapper<>();
+//    wrapper.eq("USERNAME", Newuser.getUsername());
+//    Integer Count = userMapper.selectCount(wrapper);
+//    if (Count >= 1) {
+//      return Result.fail(("用户名重复"));
+//    }
+    //随机生成数字用户名
+    UUID uuid = UUID.randomUUID();
+    // Convert UUID to string and replace all "-" characters with "".
+    String randomUsername = uuid.toString().replace("-", "");
+    Newuser.setUsername(randomUsername);
+
     // 用户名判断
     User user = new User();
 
-    user.setUsername(Newuser.getUsername());
+//    user.setUsername(Newuser.getUsername());
     user.setPassword(Argon2Util.hashPassword(Newuser.getPassword()));
     // 默认信息
     user.setIntro("这个人很懒，什么都没有留下！");
     user.setCreateTime(new Date());
     user.setName("新用户");
-    user.setGender(Newuser.getGender());
-    user.setName(Newuser.getName());
-    user.setHeight(Newuser.getHeight());
-    user.setUserage(Newuser.getUserage());
-    user.setBirthday(Newuser.getBirthday());
-    user.setAcademic(Newuser.getAcademic());
-    user.setMonthly(Newuser.getMonthly());
-    user.setPermanent(Newuser.getPermanent());
+//    user.setGender(Newuser.getGender());
+//    user.setName(Newuser.getName());
+//    user.setHeight(Newuser.getHeight());
+//    user.setUserage(Newuser.getUserage());
+//    user.setBirthday(Newuser.getBirthday());
+//    user.setAcademic(Newuser.getAcademic());
+//    user.setMonthly(Newuser.getMonthly());
+//    user.setPermanent(Newuser.getPermanent());
 
     user.setEmail(Newuser.getEmail());
 
@@ -290,8 +296,8 @@ public class WebUserController {
   @ApiImplicitParams({
           @ApiImplicitParam(name = "phone", value = "手机号", required = true, dataType = "String", paramType = "query"),
   })
-  @PostMapping("/Messagelogin") // 短信登录
-  public Result Messagelogin(@RequestParam("phone") String phone) {
+  @PostMapping("/Messagelogin/{phone}") // 短信登录
+  public Result Messagelogin(@PathVariable("phone") String phone) {
 
     boolean IsSend = sendMessageUtil.sendSmsCode(phone);
     if(IsSend) {
@@ -306,8 +312,8 @@ public class WebUserController {
             @ApiImplicitParam(name = "phone", value = "手机号", required = true, dataType = "String", paramType = "query"),
             @ApiImplicitParam(name = "code", value = "验证码", required = true, dataType = "String", paramType = "query")
     })
-    @PostMapping("/MessageloginCheck") // 短信登录验证
-    public Result MessageloginCheck(@RequestParam("phone") String phone, @RequestParam("code") String code) {
+    @PostMapping("/MessageloginCheck/{phone}/{code}") // 短信登录验证
+    public Result MessageloginCheck(@PathVariable("phone") String phone, @PathVariable("code") String code) {
       boolean IsCheck = sendMessageUtil.checkSmsCode(phone, code);
       if (IsCheck) {
         QueryWrapper<User> wrapper = new QueryWrapper<>();

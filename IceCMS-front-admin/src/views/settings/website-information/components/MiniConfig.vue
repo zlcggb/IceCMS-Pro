@@ -2,7 +2,7 @@
   <el-card shadow="never" class="site-config">
     <template #header>
       <div class="clearfix">
-        <span>商城设置</span>
+        <span>小程序设置</span>
       </div>
     </template>
     <el-form label-position="top" class="form-container">

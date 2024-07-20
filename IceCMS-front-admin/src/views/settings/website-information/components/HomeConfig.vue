@@ -115,19 +115,19 @@ const addCarousel = () => {
   // 表单验证
   errors.value = {};
   if (!newCarousel.value.name) {
-    errors.value.name = '轮播图名称不能为空';
+    // errors.value.name = '轮播图名称不能为空';
   }
   if (!newCarousel.value.imgUrl) {
-    errors.value.imgUrl = '图片链接不能为空';
+    // errors.value.imgUrl = '图片链接不能为空';
   }
   if (Object.keys(errors.value).length) return;
 
   console.log('Adding carousel:', newCarousel.value);
   // 可以在这里调用接口，添加新的轮播图
   // 成功后关闭弹窗，更新界面等操作
-  dispositionCarousel.value.push({ ...newCarousel.value, id: Date.now() }); // Example of adding a new item
-  dialogVisible.value = false;
-  handleDialogClose();
+  // dispositionCarousel.value.push({ ...newCarousel.value, id: Date.now() }); // Example of adding a new item
+  // dialogVisible.value = false;
+  // handleDialogClose();
 };
 
 const handleDialogClose = (done: () => void) => {
