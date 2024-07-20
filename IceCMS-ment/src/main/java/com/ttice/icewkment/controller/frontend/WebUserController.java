@@ -199,13 +199,26 @@ public class WebUserController {
     //随机生成数字用户名
     UUID uuid = UUID.randomUUID();
     int hashCode = uuid.hashCode(); // 取UUID的哈希码
-    String randomUsername = String.format("%06d", Math.abs(hashCode % 1000000)); // 格式化为6位数字字符串
+    String randomUsername = String.format("%08d", Math.abs(hashCode % 1000000)); // 格式化为8位数字字符串
+    // 验证数据库中是否已经存在这个用户名，如果存在就重新生成一个
+    QueryWrapper<User> wrapper1 = new QueryWrapper<>();
+    wrapper1.eq("USERNAME", randomUsername);
+    Integer Count1 = userMapper.selectCount(wrapper1);
+    while (Count1 >= 1) {
+      uuid = UUID.randomUUID();
+      hashCode = uuid.hashCode(); // 取UUID的哈希码
+      randomUsername = String.format("%08d", Math.abs(hashCode % 1000000)); // 格式化为8位数字字符串
+      wrapper1 = new QueryWrapper<>();
+      wrapper1.eq("USERNAME", randomUsername);
+      Count1 = userMapper.selectCount(wrapper1);
+    }
 
     // 用户名判断
     User user = new User();
 
 //    user.setUsername(Newuser.getUsername());
-    user.setPassword(Argon2Util.hashPassword(Newuser.getPassword()));
+    // 密码加密
+    user.setPassword(hashPassword(Newuser.getPassword()));
     // 默认信息
     user.setIntro("这个人很懒，什么都没有留下！");
     user.setCreateTime(new Date());
@@ -226,9 +239,9 @@ public class WebUserController {
 
     // 检查邮箱是否存在验证码 验证码是否过期
     try {
-      QueryWrapper<EmailDetection> wrapper1 = new QueryWrapper<>();
-      wrapper1.eq("email", Newuser.getEmail());
-      Integer isEmails = emailDetectionMapper.selectCount(wrapper1);
+      QueryWrapper<EmailDetection> wrapper2 = new QueryWrapper<>();
+      wrapper2.eq("email", Newuser.getEmail());
+      Integer isEmails = emailDetectionMapper.selectCount(wrapper2);
       if (isEmails == null || isEmails == 0) {
         return Result.fail("邮箱不存在");
       } else {
@@ -405,13 +418,21 @@ public class WebUserController {
     QueryWrapper<User> wrapper = new QueryWrapper<>();
     // 用户名判断
     wrapper.eq("USERNAME", user.getUsername());
-    wrapper.eq("email", user.getUsername());
     User userjudje = userService.getOne(wrapper);
     if (userjudje == null) {
-      return Result.fail(("用户名不存在"));
+      // 邮箱判断
+      // 进行登录核验操作
+      QueryWrapper<User> wrapper1 = new QueryWrapper<>();
+      // 用户名判断
+      wrapper1.eq("email", user.getUsername());
+      User userjudje1 = userService.getOne(wrapper1);
+      if (userjudje1 == null) {
+        return Result.fail(("用户名邮箱不存在"));
+      }else userjudje = userjudje1;
     }
     Assert.notNull(user, "用户名不存在");
-    if (verifyPassword(user.getPassword(),userjudje.getPassword())) {
+    boolean verifyPassword = verifyPassword(userjudje.getPassword(), user.getPassword());
+    if (!verifyPassword) {
       return Result.fail(("密码不正确"));
     }
     // 添加token
