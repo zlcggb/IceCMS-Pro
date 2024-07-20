@@ -405,7 +405,7 @@ public class WebUserController {
     QueryWrapper<User> wrapper = new QueryWrapper<>();
     // 用户名判断
     wrapper.eq("USERNAME", user.getUsername());
-    wrapper.eq("email", user.getEmail());
+    wrapper.eq("email", user.getUsername());
     User userjudje = userService.getOne(wrapper);
     if (userjudje == null) {
       return Result.fail(("用户名不存在"));
