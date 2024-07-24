@@ -1,12 +1,8 @@
 package com.ttice.icewkment.controller.backend;
 
 import com.ttice.icewkment.commin.lang.Result;
-import com.ttice.icewkment.entity.CosInfo;
-import com.ttice.icewkment.entity.DispositionCarousel;
-import com.ttice.icewkment.entity.Setting;
-import com.ttice.icewkment.mapper.CosInfoMapper;
-import com.ttice.icewkment.mapper.DispositionCarouselMapper;
-import com.ttice.icewkment.mapper.SettingMapper;
+import com.ttice.icewkment.entity.*;
+import com.ttice.icewkment.mapper.*;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
@@ -31,6 +27,10 @@ public class SettingController {
   @Autowired private CosInfoMapper cosInfoMapper;
 
   @Autowired private DispositionCarouselMapper dispositionCarouselMapper;
+
+  @Autowired private WxloginInfoMapper wxloginInfoMapper;
+
+  @Autowired private MessageInfoMapper messageInfoMapper;
 
   @ApiOperation(value = "获取设置")
   @RequiresAuthentication // 需要登录认证的接口
@@ -80,19 +80,45 @@ public class SettingController {
     return Result.succ(dispositionCarouselMapper.updateById(dispositionCarousel));
   }
 
-    @ApiOperation(value = "根据id删除轮播图")
-    @RequiresAuthentication // 需要登录认证的接口
-    @ApiImplicitParam(name = "轮播", value = "设置", required = true)
-    @GetMapping("/deleteAllDispositionCarousel/{id}")
-    public Result deleteAllDispositionCarousel(@PathVariable("id") Integer id) {
-        return Result.succ(dispositionCarouselMapper.deleteById(id));
-    }
+  @ApiOperation(value = "根据id删除轮播图")
+  @RequiresAuthentication // 需要登录认证的接口
+  @ApiImplicitParam(name = "轮播", value = "设置", required = true)
+  @GetMapping("/deleteAllDispositionCarousel/{id}")
+  public Result deleteAllDispositionCarousel(@PathVariable("id") Integer id) {
+      return Result.succ(dispositionCarouselMapper.deleteById(id));
+  }
 
-    @ApiOperation(value = "新增轮播图")
-    @RequiresAuthentication // 需要登录认证的接口
-    @ApiImplicitParam(name = "轮播", value = "设置", required = true)
-    @PostMapping("/addDispositionCarousel")
-    public Result addDispositionCarousel(@RequestBody DispositionCarousel dispositionCarousel) {
-        return Result.succ(dispositionCarouselMapper.insert(dispositionCarousel));
-    }
+  @ApiOperation(value = "新增轮播图")
+  @RequiresAuthentication // 需要登录认证的接口
+  @ApiImplicitParam(name = "轮播", value = "设置", required = true)
+  @PostMapping("/addDispositionCarousel")
+  public Result addDispositionCarousel(@RequestBody DispositionCarousel dispositionCarousel) {
+      return Result.succ(dispositionCarouselMapper.insert(dispositionCarousel));
+  }
+
+  @ApiOperation(value = "获取小程序设置")
+  @GetMapping("/getMiniProgramSetting")
+  public Result getMiniProgramSetting() {
+    return Result.succ(wxloginInfoMapper.selectOne(null));
+  }
+
+  @ApiOperation(value = "更改小程序设置")
+  @PostMapping("/updateMiniProgramSetting")
+  public Result updateMiniProgramSetting(@RequestBody WxLoginInfo wxLoginInfo) {
+    wxloginInfoMapper.updateById(wxLoginInfo);
+    return Result.succ(wxLoginInfo);
+  }
+
+  @ApiOperation(value = "获取短信设置")
+  @GetMapping("/getSmsSetting")
+  public Result getSmsSetting() {
+      return Result.succ(messageInfoMapper.selectOne(null));
+  }
+
+  @ApiOperation(value = "更改短信设置")
+  @PostMapping("/updateSmsSetting")
+  public Result updateSmsSetting(@RequestBody MessageInfo messageInfo) {
+    messageInfoMapper.updateById(messageInfo);
+      return Result.succ(messageInfo);
+  }
 }

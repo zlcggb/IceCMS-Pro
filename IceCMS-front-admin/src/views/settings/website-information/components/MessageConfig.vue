@@ -2,15 +2,18 @@
     <el-card shadow="never" class="site-config">
       <template #header>
         <div class="clearfix">
-          <span>短信设置</span>
+          <span>短信设置(七牛云)</span>
         </div>
       </template>
       <el-form label-position="top" class="form-container">
-        <el-form-item label="开启商城">
-          <el-input v-model="siteConfig.sitTitle" class="input-width"></el-input>
+        <el-form-item label="accessKey">
+          <el-input v-model="siteConfig.qiniuAccessKey" class="input-width"></el-input>
         </el-form-item>
-        <el-form-item label="价格倍率">
-          <el-input v-model="siteConfig.sitLogo" class="input-width"></el-input>
+        <el-form-item label="secretKey">
+          <el-input v-model="siteConfig.qiniuSecretKey" class="input-width"></el-input>
+        </el-form-item>
+        <el-form-item label="模版id">
+          <el-input v-model="siteConfig.qiniuTemplateId" class="input-width"></el-input>
         </el-form-item>
         <div class="button-container">
           <el-button type="primary" @click="saveSettings">保存</el-button>
@@ -22,20 +25,19 @@
   
   <script setup>
   import { ref, onMounted } from 'vue';
-  import { getSettingInfo, setSettingInfo } from '@/api/setting/webinfo';
+  import { getSmsSetting, updateSmsSetting } from '@/api/setting/sms';
   
   import { ElMessageBox, ElNotification } from 'element-plus';
   const siteConfig = ref({
-    sitTitle: '',
-    sitLogo: '',
-    banquan: '',
-    beian: ''
+    qiniuAccessKey: '',
+    qiniuSecretKey: '',
+    qiniuTemplateId: ''
   });
   
   // 初始化网站配置
   const initSiteConfig = async () => {
     try {
-      const response = await getSettingInfo();
+      const response = await getSmsSetting();
       if (response && response.data) {
         siteConfig.value = response.data;
       }
@@ -47,7 +49,7 @@
   // 保存设置
   const saveSettings = async () => {
     try {
-      await setSettingInfo(siteConfig.value);
+      await updateSmsSetting(siteConfig.value);
       console.log('Settings saved successfully');
       ElNotification({
         title: '成功',

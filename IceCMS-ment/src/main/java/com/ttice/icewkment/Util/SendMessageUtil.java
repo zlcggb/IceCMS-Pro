@@ -4,6 +4,8 @@ import com.qiniu.common.QiniuException;
 import com.qiniu.http.Response;
 import com.qiniu.sms.SmsManager;
 import com.qiniu.util.Auth;
+import com.ttice.icewkment.entity.MessageInfo;
+import com.ttice.icewkment.mapper.MessageInfoMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -21,15 +23,17 @@ public class SendMessageUtil {
 
     @Autowired private RedisUtil redisUtil;
 
+    @Autowired private MessageInfoMapper messageInfoMapper;
+
     private static final String MESSAGE_CODE_PHONE_PREFIX = "MESSAGE_CODE_PHONE_";
 
     /**
      * 发送手机验证码
      */
-    public static boolean sendMessageCheck(String templateId,String[] phone,Map<String,String> map) {
-
-        String accessKey = "l2yQr9jVkoiWocAdF6rCCjc7qd2p0guGOOl0q6Ab";
-        String secretKey = "fwTqX4lGvZxpewHxOnVCXXlSXE4mED8AARdNq9Fv";
+    public boolean sendMessageCheck(String templateId,String[] phone,Map<String,String> map) {
+        MessageInfo messageInfo = messageInfoMapper.selectOne(null);
+        String accessKey = messageInfo.getQiniuAccessKey();
+        String secretKey = messageInfo.getQiniuSecretKey();
         Auth auth = Auth.create(accessKey, secretKey);
         SmsManager smsManager = new SmsManager(auth);
         try {
@@ -47,7 +51,8 @@ public class SendMessageUtil {
     }
 
     public boolean sendSmsCode(String phone) {
-        String templateId = "1810648952882606080";
+        MessageInfo messageInfo = messageInfoMapper.selectOne(null);
+        String templateId = messageInfo.getQiniuTemplateId();
         Map<String , String> map = new HashMap<String , String>();
         //生成短信验证码(随机6位)
         UUID uuid = UUID.randomUUID();
@@ -59,7 +64,7 @@ public class SendMessageUtil {
         redisUtil.set(key, code, 300);
 
         map.put("code",code);
-        return SendMessageUtil.sendMessageCheck(templateId, new String[]{phone}, map);
+        return this.sendMessageCheck(templateId, new String[]{phone}, map);
     }
 
     public boolean checkSmsCode (String phone , String code){
