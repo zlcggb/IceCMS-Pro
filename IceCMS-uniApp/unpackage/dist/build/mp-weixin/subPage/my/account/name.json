@@ -1,6 +1,0 @@
-{
-  "navigationBarTitleText": "修改昵称",
-  "usingComponents": {
-    "u-button": "/uni_modules/uview-ui/components/u-button/u-button"
-  }
-}

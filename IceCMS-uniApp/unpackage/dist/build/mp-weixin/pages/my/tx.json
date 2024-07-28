@@ -1,7 +1,0 @@
-{
-  "navigationBarTitleText": "提现",
-  "enablePullDownRefresh": false,
-  "usingComponents": {
-    "q-button": "/components/q-button/q-button"
-  }
-}

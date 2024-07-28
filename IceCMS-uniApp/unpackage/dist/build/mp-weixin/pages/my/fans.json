@@ -1,6 +1,0 @@
-{
-  "navigationBarTitleText": "我的粉丝",
-  "usingComponents": {
-    "user-list": "/components/user-list/user-list"
-  }
-}

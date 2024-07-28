@@ -1,21 +1,20 @@
 {
-	"id": "jingtu-tag",
-	"name": "社区图片视频圈子app，适合做图片视频素材，社区论坛，聊天交友，",
-	"version": "v1.0.13",
-	"description": "(运营版）社区图片视频圈子app，适合做图片视频素材，社区论坛，摄影社区，聊天交友等，前端uniapp+后端php，整套可直接运营版，兼容多端，需要整套，联系17620115709，微同",
-	"keywords": [
-	    "社区，圈子，摄影，论坛，图片，视频，社交"
-	],
-	"dcloudext": {
-	    "category": [
-	        "uni-app前端模板",
-	        "uni-app前端项目模板"
-	    ]
-	},
-	"scripts": {
-		
-	},
-	"devDependencies": {
-
-	}
+    "id": "tuniao-circle-template",
+    "name": "IceCMS模板-圈子",
+    "displayName": "IceCMS模板-圈子",
+    "version": "1.3.1",
+    "description": "圈子商圈，是基于 IceCMSUI 进行开发的纯前端模板，支持微信小程序、APP和H5。",
+    "keywords": [
+        "IceCMS",
+        "模板",
+        "酷炫",
+        "前端",
+        "页面模板"
+    ],
+    "dcloudext": {
+        "category": [
+            "uni-app前端模板",
+            "前端页面模板"
+        ]
+    }
 }

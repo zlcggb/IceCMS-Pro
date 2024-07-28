@@ -1,9 +1,0 @@
-{
-  "navigationBarTitleText": "商城",
-  "enablePullDownRefresh": false,
-  "usingComponents": {
-    "u-swiper": "/uni_modules/uview-ui/components/u-swiper/u-swiper",
-    "u-tabs": "/uni_modules/uview-ui/components/u-tabs/u-tabs",
-    "goods-waterfall": "/components/goods-waterfall/goods-waterfall"
-  }
-}

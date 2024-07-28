@@ -1,8 +1,0 @@
-{
-  "navigationBarTitleText": "设置",
-  "enablePullDownRefresh": false,
-  "usingComponents": {
-    "u-line": "/uni_modules/uview-ui/components/u-line/u-line",
-    "u-section": "/uni_modules/uview-ui/components/u-section/u-section"
-  }
-}

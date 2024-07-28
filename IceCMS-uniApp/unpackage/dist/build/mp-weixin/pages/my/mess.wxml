@@ -1,1 +1,0 @@
-<view><view class="choose-item"><view>消息提醒</view><u-switch bind:input="__e" style="margin-left:auto;" vue-id="9e9f2698-1" value="{{checked}}" data-event-opts="{{[['^input',[['__set_model',['','checked','$event',[]]]]]]}}" bind:__l="__l"></u-switch></view></view>

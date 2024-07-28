@@ -1,9 +1,0 @@
-{
-  "component": true,
-  "usingComponents": {
-    "u-avatar": "/uni_modules/uview-ui/components/u-avatar/u-avatar",
-    "u-button": "/uni_modules/uview-ui/components/u-button/u-button",
-    "u-empty": "/uni_modules/uview-ui/components/u-empty/u-empty",
-    "u-loadmore": "/uni_modules/uview-ui/components/u-loadmore/u-loadmore"
-  }
-}
