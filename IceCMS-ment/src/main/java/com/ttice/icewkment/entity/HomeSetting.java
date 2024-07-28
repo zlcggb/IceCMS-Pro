@@ -11,23 +11,14 @@ import java.io.Serializable;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class Setting implements Serializable {
+public class HomeSetting implements Serializable {
 
   private static final long serialVersionUID = 1L;
 
   private Integer id;
 
-  private String beian;
+  private String featureTitle;
 
-  private String banquan;
+  private String featureSrc;
 
-  private boolean comment_show;
-
-  private String sitTitle;
-
-  private String sitSrc;
-
-  private String sitLogo;
-
-  private boolean imageFormat;
 }

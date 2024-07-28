@@ -1,5 +1,6 @@
 package com.ttice.icewkment.controller.backend;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ttice.icewkment.commin.lang.Result;
 import com.ttice.icewkment.entity.*;
 import com.ttice.icewkment.mapper.*;
@@ -31,6 +32,8 @@ public class SettingController {
   @Autowired private WxloginInfoMapper wxloginInfoMapper;
 
   @Autowired private MessageInfoMapper messageInfoMapper;
+
+  @Autowired private HomeSettingMapper homeSettingMapper;
 
   @ApiOperation(value = "获取设置")
   @RequiresAuthentication // 需要登录认证的接口
@@ -74,10 +77,27 @@ public class SettingController {
   @ApiOperation(value = "根据id修改轮播图")
   @RequiresAuthentication // 需要登录认证的接口
   @ApiImplicitParam(name = "轮播", value = "设置", required = true)
-  @GetMapping("/setAllDispositionCarousel/{id}")
-  public Result setAllDispositionCarousel(@PathVariable("id") Integer id) {
-    DispositionCarousel dispositionCarousel = dispositionCarouselMapper.selectById(id);
-    return Result.succ(dispositionCarouselMapper.updateById(dispositionCarousel));
+  @PostMapping("/setAllDispositionCarousel/{id}")
+  public Result setAllDispositionCarousel(@RequestBody DispositionCarousel dispositionCarousel, @PathVariable("id") Integer id) {
+    QueryWrapper<DispositionCarousel> wrapper = new QueryWrapper<>();
+    wrapper.eq("id", id);
+    return Result.succ(dispositionCarouselMapper.update(dispositionCarousel, wrapper));
+  }
+
+  @ApiOperation(value = "获取特色区域")
+  @RequiresAuthentication // 需要登录认证的接口
+  @ApiImplicitParam(name = "特色区域", value = "设置", required = true)
+  @GetMapping("/getAllFeature")
+  public Result getAllFeature() {
+    return Result.succ(homeSettingMapper.selectList(null));
+  }
+
+  @ApiOperation(value = "修改特色区域")
+  @RequiresAuthentication // 需要登录认证的接口
+  @ApiImplicitParam(name = "轮播", value = "设置", required = true)
+  @PostMapping("/setAllFeature")
+  public Result setAllFeature (@RequestBody HomeSetting homeSetting) {
+    return Result.succ(homeSettingMapper.updateById(homeSetting));
   }
 
   @ApiOperation(value = "根据id删除轮播图")

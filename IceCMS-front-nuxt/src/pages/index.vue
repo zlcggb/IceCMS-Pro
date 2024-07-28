@@ -251,7 +251,7 @@
                                   </div>
 
                                   <div style="margin-right:12px">
-                                    <span class="value">${{ item.price }}</span>
+                                    <span class="value">￥{{ item.price }}</span>
                                   </div>
                                 </div>
                               </div>
