@@ -13,6 +13,7 @@
 
  Date: 28/07/2024 23:28:23
 */
+USE icecmspro;
 
 SET NAMES utf8;
 SET FOREIGN_KEY_CHECKS = 0;

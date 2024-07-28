@@ -30,3 +30,5 @@ target/
 /IceCMS-main/target/
 /IceWk-ment/target/
 .DS_Store
+.DS_Store
+IceCMS-main/.DS_Store
