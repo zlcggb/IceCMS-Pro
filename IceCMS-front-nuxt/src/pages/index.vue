@@ -208,7 +208,7 @@
                       <nuxt-link :to="'/List/' + item.id">
 
                       <div v-if="!setting.imageFormat">
-                        <div v-if="item.status.includes('published')">
+                        <div>
                             <div class="macwk-app border white cursor-pointer">
                               <el-image v-show="item.thumb != null" class="listtitleimg delay-3" :src="item.thumb" lazy>
                                 <div slot="placeholder" class="image-slot">
@@ -260,7 +260,7 @@
                       </div>
                       <div v-else>
                         <div @mouseover="dowmloadover(index)" @mouseleave="downloadleave(index)"
-                          v-if="item.status.includes('published')">
+                       >
                             <div class="macwk-app border white cursor-pointer padding-xl">
 
                               <div class="soft-card">
@@ -337,7 +337,7 @@
                           delay-0
                           list-animation-leftIn
                         ">
-                        <div v-show="item.status.includes('published')">
+                        <div >
                           <nuxt-link :to="'/post/' + item.id">
                             <div class="d-flex align-items-center">
                               <div class="icon-box icon-one">
@@ -400,7 +400,7 @@
                           delay-5
                           list-animation-leftIn
                         ">
-                        <div v-show="item.status.includes('published')">
+                        <div >
                           <nuxt-link :to="'/post/' + item.id">
                             <div class="d-flex align-items-center">
                               <div class="icon-box icon-one">
