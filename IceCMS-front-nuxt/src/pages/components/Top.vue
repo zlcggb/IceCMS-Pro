@@ -153,8 +153,8 @@
           <img height="40" width="40" src="../../static/image/logo.svg" />
         </div>
         <div class="register-text">
-    <span><b>注册</b></span>
-</div>
+          <span><b>注册</b></span>
+        </div>
         <el-form ref="emailRegisterForm" :model="emailRegisterForm" :rules="emailRegisterRules" class="login-form"
           auto-complete="on" label-position="left">
           <el-form-item prop="email">
@@ -336,9 +336,80 @@
             </div>
           </div>
         </div>
-        <el-popover placement="top-start" width="280" trigger="hover">
+        <el-popover placement="top-start" width="" trigger="hover">
+          <div class="">
+            <div class="flex-col self-start group">
+              <div class="self-start" style="display: flex; align-items: center; justify-content: center;">
+                <div class="topic-avatars" style="margin-right: 8px;">
+                  <el-avatar :src="user.profile"></el-avatar>
+                </div>
+                <span class="font-username text">{{ user.name }}</span>
+              </div>
+              <div class="flex-row self-stretch group_2">
+                <div class="flex-row">
+                  <span class="font_2">硬币：</span>
+                  <span class="font_3">882</span>
+                </div>
+              </div>
+            </div>
+            <div class="flex-row justify-between items-start self-start group_1">
+              <img class="image image_3"
+                src="https://ide.code.fun/api/image?token=6716186338a7c10015881310&name=55167cb7355819bd03753c9bd6f25a6b.png" />
+              <img class="image image_2"
+                src="https://ide.code.fun/api/image?token=6716186338a7c10015881310&name=17866fe53ba884d3f24c5aef69da7a79.png" />
+            </div>
+            <div class="flex-col self-stretch group_3">
+              <div class="flex-col items-start self-stretch group_4">
+                <span class="text_4">当前成长10515，距离升级Lv.5 还需要285</span>
+                <div class="flex-row justify-between equal-division mt-15">
+                  <div class="flex-col items-center equal-division-item">
+                    <span class="font">119</span>
+                    <span class="font_3">关注</span>
+                  </div>
+                  <div class="flex-col items-center equal-division-item">
+                    <span class="font">119</span>
+                    <span class="font_3">粉丝</span>
+                  </div>
+                  <div class="flex-col items-center equal-division-item">
+                    <span class="font">119</span>
+                    <span class="font_3">动态</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="flex-col-bar self-start group_5">
+        <div class="flex-row-bar items-center group_6 view-bar">
+          <img
+            class="image_4"
+            src="https://ide.code.fun/api/image?token=6716186338a7c10015881310&name=775ab799af101d7db890b565a9a5a372.png"
+          />
+          <span class="ml-20 font_3">个人中心</span>
+        </div>
+        <div class="flex-row-bar group_6 view-bar">
+          <img
+            class="image_5"
+            src="https://ide.code.fun/api/image?token=6716186338a7c10015881310&name=ed2744fa182c3ca2bd86f65c2ea25769.png"
+          />
+          <span class="ml-20 font_3">资源管理</span>
+        </div>
+        <div class="flex-row-bar view-bar">
+          <img
+            class="image_6"
+            src="https://ide.code.fun/api/image?token=6716186338a7c10015881310&name=d2ff13cdd5319e666a93eba391bdaa70.png"
+          />
+          <span class="ml-18 font_3">个人收藏</span>
+        </div>
+        <div @click="loginout()" class="flex-row-bar items-center group_6 view-bar-2">
+          <img
+            class="image_7"
+            src="https://ide.code.fun/api/image?token=6716186338a7c10015881310&name=98ae7ba00542b035ccb62ad4754089a4.png"
+          />
+          <span class="ml-18 font_3">退出登录</span>
+        </div>
+      </div>
           <div class="top-user-info-box-names">
-            <div class="topic-header-lefts">
+            <!-- <div class="topic-header-lefts">
               <div class="topic-avatars">
                 <el-avatar :src="user.profile"></el-avatar>
               </div>
@@ -346,8 +417,7 @@
                 <div>
                   <div class="topic-name-datas">
                     <a target="_blank"><b>{{ user.name }}</b></a>
-                    <!---->
-                    <!---->
+              
                   </div>
                   <div class="topic-user-lvs">
                     <p>
@@ -355,16 +425,17 @@
                           style="color: #ff8223">会员</b></span>
                     </p>
                     <p>
-                      <span class="user-lvs"><b>荣誉用户</b><i>lv5</i></span>
+                      <span class="user-lvs"><b>荣誉用户</b><i>lv1</i></span>
                     </p>
+                 
                   </div>
                 </div>
               </div>
-            </div>
+            </div> -->
 
-            <div data-title="退出登录" @click="loginout()" class="login-outs user-tips">
+            <!-- <div data-title="退出登录" @click="loginout()" class="login-outs user-tips">
               <a href="javascript:void(0)"><i class="el-icon-caret-left"></i></a>
-            </div>
+            </div> -->
           </div>
           <!-- <div class="top-user-info-box-count">
                 <p><span>文章</span> <b>0</b></p>
@@ -630,7 +701,7 @@ export default ({
       }, 1000)
 
     },
-    handleEmailLogin(){
+    handleEmailLogin() {
       var that = this
       this.$refs.emailRegisterForm.validate(valid => {
         if (valid) {
@@ -649,7 +720,7 @@ export default ({
             } else if (resp.data.code == 200) {
               console.log(resp.data)
               that.$cookies.set('access-user', resp.data.data)
-  
+
               // 关闭登录框
               that.dialogFormVisible = false
               // 关闭登录按钮
@@ -1882,12 +1953,113 @@ span.last-login-way:after {
     transform: rotate(360deg);
   }
 }
+
 .register-text {
-        font-size: 30px; /* 调整字体大小 */
-        text-align: center; /* 居中对齐 */
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 70px; /* 调整高度以确保垂直居中 */
-    }
+  font-size: 30px;
+  /* 调整字体大小 */
+  text-align: center;
+  /* 居中对齐 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 70px;
+  /* 调整高度以确保垂直居中 */
+}
+
+.flex-row {
+  display: flex;
+  justify-content: space-around;
+  /* 或 space-between */
+  width: 100%;
+}
+
+.equal-division-item {
+  flex: 1;
+  text-align: center;
+}
+
+.mt-15 {
+  margin-top: 15px;
+}
+
+.flex-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.flex-col-bar {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  /* 靠左对齐 */
+}
+
+.flex-row-bar {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+  /* 设置下方间距，保持各项之间的间隔 */
+}
+
+.font_3 {
+  font-size: 16px;
+  /* 调整字体大小 */
+  color: #333;
+  /* 优化字体颜色 */
+}
+
+.ml-18 {
+  margin-left: 18px;
+}
+
+.ml-20 {
+  margin-left: 20px;
+}
+
+.image_4,
+.image_5,
+.image_6,
+.image_7 {
+  width: 24px;
+  /* 优化图片大小 */
+  height: 24px;
+}
+
+.group_5 {
+  padding: 20px;
+  /* 添加一些内边距 */
+}
+
+.view-bar {
+  cursor: pointer;
+  /* 增加鼠标指针样式 */
+}
+.font_3:hover {
+  color: #007bff;
+ 
+  /* 鼠标悬停时改变字体颜色 */
+}
+.view-bar:hover {
+  color: #007bff;
+  background-color: #f0f0f0; /* 鼠标悬停时改变背景颜色 */
+  border-radius: 8px; /* 圆角效果 */
+  padding: 8px; /* 增加内边距，使悬停效果更明显 */
+  /* 鼠标悬停时改变字体颜色 */
+}
+
+.view-bar-2:hover .font_3,
+.view-bar-2:hover .font_3 {
+  color: #ff5722;
+}
+.view-bar-2 {
+  cursor: pointer;
+  
+  /* 增加鼠标指针样式 */
+}
+.font-username{
+  font-size: 18px; /* 调整为更大的字体大小 */
+  font-weight: 500; /* 可选：增加字体的粗细 */
+  color: #333; /* 可选：设置字体颜色 */
+}
 </style>

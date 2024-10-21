@@ -36,13 +36,13 @@
       <div class="nav">
         <a href="/" class="nav-link">首页</a>
         <a href="about" class="nav-link">关于 </a><a href="contact" class="nav-link">联系 </a><a href="privacy"
-          class="nav-link">隐私 </a><a href="version" class="nav-link">版本检测 </a><a href="changelogs"
+          class="nav-link">隐私 </a><a href="changelogs"
           class="nav-link">更新日志
         </a>
       </div>
       <div class="copyright">
         <p class="mb-0">
-          <span class="mr-3"><a href="javascript:;" target="_blank">{{ setting.beian }}</a></span>
+          <span class="mr-3"><a href="https://beian.miit.gov.cn/" target="_blank">{{ setting.beian }}</a></span>
           <span>{{ setting.banquan }}</span>
         </p>
       </div>
