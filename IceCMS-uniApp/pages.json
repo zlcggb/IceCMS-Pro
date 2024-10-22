@@ -391,6 +391,13 @@
           "navigationBarTitleText": "富文本",
           "enablePullDownRefresh": false
         }
+      },
+      {
+      	"path" : "onlogin",
+      	"style" : 
+      	{
+      		"navigationBarTitleText" : ""
+      	}
       }
     ]
   }],

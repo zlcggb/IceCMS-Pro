@@ -101,7 +101,7 @@ var components
 try {
   components = {
     tnNavBar: function () {
-      return Promise.all(/*! import() | tuniao-ui/components/tn-nav-bar/tn-nav-bar */[__webpack_require__.e("common/vendor"), __webpack_require__.e("tuniao-ui/components/tn-nav-bar/tn-nav-bar")]).then(__webpack_require__.bind(null, /*! @/tuniao-ui/components/tn-nav-bar/tn-nav-bar.vue */ 512))
+      return Promise.all(/*! import() | tuniao-ui/components/tn-nav-bar/tn-nav-bar */[__webpack_require__.e("common/vendor"), __webpack_require__.e("tuniao-ui/components/tn-nav-bar/tn-nav-bar")]).then(__webpack_require__.bind(null, /*! @/tuniao-ui/components/tn-nav-bar/tn-nav-bar.vue */ 521))
     },
   }
 } catch (e) {
@@ -246,7 +246,7 @@ var _template_page_mixin = _interopRequireDefault(__webpack_require__(/*! @/libs
 //
 var NavIndexButton = function NavIndexButton() {
   __webpack_require__.e(/*! require.ensure | libs/components/nav-index-button */ "libs/components/nav-index-button").then((function () {
-    return resolve(__webpack_require__(/*! @/libs/components/nav-index-button.vue */ 527));
+    return resolve(__webpack_require__(/*! @/libs/components/nav-index-button.vue */ 536));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 var _default = {

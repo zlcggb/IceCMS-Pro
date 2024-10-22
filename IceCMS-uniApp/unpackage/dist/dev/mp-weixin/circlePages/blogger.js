@@ -101,22 +101,22 @@ var components
 try {
   components = {
     tnNavBar: function () {
-      return Promise.all(/*! import() | tuniao-ui/components/tn-nav-bar/tn-nav-bar */[__webpack_require__.e("common/vendor"), __webpack_require__.e("tuniao-ui/components/tn-nav-bar/tn-nav-bar")]).then(__webpack_require__.bind(null, /*! @/tuniao-ui/components/tn-nav-bar/tn-nav-bar.vue */ 512))
+      return Promise.all(/*! import() | tuniao-ui/components/tn-nav-bar/tn-nav-bar */[__webpack_require__.e("common/vendor"), __webpack_require__.e("tuniao-ui/components/tn-nav-bar/tn-nav-bar")]).then(__webpack_require__.bind(null, /*! @/tuniao-ui/components/tn-nav-bar/tn-nav-bar.vue */ 521))
     },
     tnAvatar: function () {
-      return Promise.all(/*! import() | tuniao-ui/components/tn-avatar/tn-avatar */[__webpack_require__.e("common/vendor"), __webpack_require__.e("tuniao-ui/components/tn-avatar/tn-avatar")]).then(__webpack_require__.bind(null, /*! @/tuniao-ui/components/tn-avatar/tn-avatar.vue */ 534))
+      return Promise.all(/*! import() | tuniao-ui/components/tn-avatar/tn-avatar */[__webpack_require__.e("common/vendor"), __webpack_require__.e("tuniao-ui/components/tn-avatar/tn-avatar")]).then(__webpack_require__.bind(null, /*! @/tuniao-ui/components/tn-avatar/tn-avatar.vue */ 543))
     },
     tnGrid: function () {
-      return __webpack_require__.e(/*! import() | tuniao-ui/components/tn-grid/tn-grid */ "tuniao-ui/components/tn-grid/tn-grid").then(__webpack_require__.bind(null, /*! @/tuniao-ui/components/tn-grid/tn-grid.vue */ 541))
+      return __webpack_require__.e(/*! import() | tuniao-ui/components/tn-grid/tn-grid */ "tuniao-ui/components/tn-grid/tn-grid").then(__webpack_require__.bind(null, /*! @/tuniao-ui/components/tn-grid/tn-grid.vue */ 550))
     },
     tnGridItem: function () {
-      return Promise.all(/*! import() | tuniao-ui/components/tn-grid-item/tn-grid-item */[__webpack_require__.e("common/vendor"), __webpack_require__.e("tuniao-ui/components/tn-grid-item/tn-grid-item")]).then(__webpack_require__.bind(null, /*! @/tuniao-ui/components/tn-grid-item/tn-grid-item.vue */ 548))
+      return Promise.all(/*! import() | tuniao-ui/components/tn-grid-item/tn-grid-item */[__webpack_require__.e("common/vendor"), __webpack_require__.e("tuniao-ui/components/tn-grid-item/tn-grid-item")]).then(__webpack_require__.bind(null, /*! @/tuniao-ui/components/tn-grid-item/tn-grid-item.vue */ 557))
     },
     tnAvatarGroup: function () {
-      return __webpack_require__.e(/*! import() | tuniao-ui/components/tn-avatar-group/tn-avatar-group */ "tuniao-ui/components/tn-avatar-group/tn-avatar-group").then(__webpack_require__.bind(null, /*! @/tuniao-ui/components/tn-avatar-group/tn-avatar-group.vue */ 555))
+      return __webpack_require__.e(/*! import() | tuniao-ui/components/tn-avatar-group/tn-avatar-group */ "tuniao-ui/components/tn-avatar-group/tn-avatar-group").then(__webpack_require__.bind(null, /*! @/tuniao-ui/components/tn-avatar-group/tn-avatar-group.vue */ 564))
     },
     tnStackSwiper: function () {
-      return __webpack_require__.e(/*! import() | tuniao-ui/components/tn-stack-swiper/tn-stack-swiper */ "tuniao-ui/components/tn-stack-swiper/tn-stack-swiper").then(__webpack_require__.bind(null, /*! @/tuniao-ui/components/tn-stack-swiper/tn-stack-swiper.vue */ 562))
+      return __webpack_require__.e(/*! import() | tuniao-ui/components/tn-stack-swiper/tn-stack-swiper */ "tuniao-ui/components/tn-stack-swiper/tn-stack-swiper").then(__webpack_require__.bind(null, /*! @/tuniao-ui/components/tn-stack-swiper/tn-stack-swiper.vue */ 571))
     },
   }
 } catch (e) {

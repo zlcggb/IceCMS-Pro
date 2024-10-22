@@ -143,6 +143,66 @@ module.exports = toPrimitive, module.exports.__esModule = true, module.exports["
 
 /***/ }),
 
+/***/ 148:
+/*!*************************************************************************!*\
+  !*** /Users/apple/Documents/HBuilderProjects/图鸟模板-圈子/common/request.js ***!
+  \*************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(uni) {
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+// common/request.js
+
+var BASE_URL = 'https://api.icecmspro.com'; // 替换为你的实际请求地址
+
+var request = function request(url) {
+  var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+  return new Promise(function (resolve, reject) {
+    var fullUrl = options.params ? "".concat(BASE_URL).concat(url, "?").concat(serializeParams(options.params)) : BASE_URL + url;
+    uni.request({
+      url: fullUrl,
+      method: options.method || 'GET',
+      data: options.data || {},
+      header: options.header || {
+        'Content-Type': 'application/json' // 默认 Content-Type 为 application/json
+      },
+
+      success: function success(res) {
+        if (res.statusCode === 200) {
+          resolve(res.data);
+        } else {
+          reject(res.data);
+        }
+      },
+      fail: function fail(err) {
+        reject(err);
+      }
+    });
+  });
+};
+
+// 将对象参数序列化为查询字符串
+function serializeParams(params) {
+  var serialized = [];
+  for (var key in params) {
+    if (params.hasOwnProperty(key)) {
+      serialized.push("".concat(encodeURIComponent(key), "=").concat(encodeURIComponent(params[key])));
+    }
+  }
+  return serialized.join('&');
+}
+var _default = request;
+exports.default = _default;
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
+
+/***/ }),
+
 /***/ 15:
 /*!**********************************************************!*\
   !*** ./node_modules/@babel/runtime/helpers/construct.js ***!
@@ -966,7 +1026,7 @@ function populateParameters(result) {
 
   var parameters = {
     appId: "",
-    appName: "图鸟模板-圈子",
+    appName: "IceCMS模板-圈子",
     appVersion: "1.0.0",
     appVersionCode: "100",
     appLanguage: getAppLanguage(hostLanguage),
@@ -1065,7 +1125,7 @@ var getAppBaseInfo = {
     var hostLanguage = language.replace('_', '-');
     result = sortObject(Object.assign(result, {
       appId: "",
-      appName: "图鸟模板-圈子",
+      appName: "IceCMS模板-圈子",
       appVersion: "1.0.0",
       appVersionCode: "100",
       appLanguage: getAppLanguage(hostLanguage),
@@ -1747,7 +1807,7 @@ function initData(vueOptions, context) {
     try {
       data = data.call(context); // 支持 Vue.prototype 上挂的数据
     } catch (e) {
-      if (Object({"NODE_ENV":"development","VUE_APP_DARK_MODE":"false","VUE_APP_NAME":"图鸟模板-圈子","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG) {
+      if (Object({"NODE_ENV":"development","VUE_APP_DARK_MODE":"false","VUE_APP_NAME":"IceCMS模板-圈子","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG) {
         console.warn('根据 Vue 的 data 函数初始化小程序 data 失败，请尽量确保 data 函数中不访问 vm 对象，否则可能影响首次数据渲染速度。', data);
       }
     }
@@ -8790,7 +8850,7 @@ function type(obj) {
 
 function flushCallbacks$1(vm) {
     if (vm.__next_tick_callbacks && vm.__next_tick_callbacks.length) {
-        if (Object({"NODE_ENV":"development","VUE_APP_DARK_MODE":"false","VUE_APP_NAME":"图鸟模板-圈子","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG) {
+        if (Object({"NODE_ENV":"development","VUE_APP_DARK_MODE":"false","VUE_APP_NAME":"IceCMS模板-圈子","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG) {
             var mpInstance = vm.$scope;
             console.log('[' + (+new Date) + '][' + (mpInstance.is || mpInstance.route) + '][' + vm._uid +
                 ']:flushCallbacks[' + vm.__next_tick_callbacks.length + ']');
@@ -8811,14 +8871,14 @@ function nextTick$1(vm, cb) {
     //1.nextTick 之前 已 setData 且 setData 还未回调完成
     //2.nextTick 之前存在 render watcher
     if (!vm.__next_tick_pending && !hasRenderWatcher(vm)) {
-        if(Object({"NODE_ENV":"development","VUE_APP_DARK_MODE":"false","VUE_APP_NAME":"图鸟模板-圈子","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG){
+        if(Object({"NODE_ENV":"development","VUE_APP_DARK_MODE":"false","VUE_APP_NAME":"IceCMS模板-圈子","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG){
             var mpInstance = vm.$scope;
             console.log('[' + (+new Date) + '][' + (mpInstance.is || mpInstance.route) + '][' + vm._uid +
                 ']:nextVueTick');
         }
         return nextTick(cb, vm)
     }else{
-        if(Object({"NODE_ENV":"development","VUE_APP_DARK_MODE":"false","VUE_APP_NAME":"图鸟模板-圈子","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG){
+        if(Object({"NODE_ENV":"development","VUE_APP_DARK_MODE":"false","VUE_APP_NAME":"IceCMS模板-圈子","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG){
             var mpInstance$1 = vm.$scope;
             console.log('[' + (+new Date) + '][' + (mpInstance$1.is || mpInstance$1.route) + '][' + vm._uid +
                 ']:nextMPTick');
@@ -8914,7 +8974,7 @@ var patch = function(oldVnode, vnode) {
     });
     var diffData = this.$shouldDiffData === false ? data : diff(data, mpData);
     if (Object.keys(diffData).length) {
-      if (Object({"NODE_ENV":"development","VUE_APP_DARK_MODE":"false","VUE_APP_NAME":"图鸟模板-圈子","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG) {
+      if (Object({"NODE_ENV":"development","VUE_APP_DARK_MODE":"false","VUE_APP_NAME":"IceCMS模板-圈子","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG) {
         console.log('[' + (+new Date) + '][' + (mpInstance.is || mpInstance.route) + '][' + this._uid +
           ']差量更新',
           JSON.stringify(diffData));
@@ -12266,7 +12326,7 @@ module.exports = _slicedToArray, module.exports.__esModule = true, module.export
 
 /***/ }),
 
-/***/ 517:
+/***/ 526:
 /*!************************************************************************************************!*\
   !*** /Users/apple/Documents/HBuilderProjects/图鸟模板-圈子/tuniao-ui/libs/mixin/components_color.js ***!
   \************************************************************************************************/
@@ -12859,66 +12919,6 @@ function _unsupportedIterableToArray(o, minLen) {
   if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return arrayLikeToArray(o, minLen);
 }
 module.exports = _unsupportedIterableToArray, module.exports.__esModule = true, module.exports["default"] = module.exports;
-
-/***/ }),
-
-/***/ 853:
-/*!*************************************************************************!*\
-  !*** /Users/apple/Documents/HBuilderProjects/图鸟模板-圈子/common/request.js ***!
-  \*************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-// common/request.js
-
-var BASE_URL = 'https://api.icecmspro.com'; // 替换为你的实际请求地址
-
-var request = function request(url) {
-  var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-  return new Promise(function (resolve, reject) {
-    var fullUrl = options.params ? "".concat(BASE_URL).concat(url, "?").concat(serializeParams(options.params)) : BASE_URL + url;
-    uni.request({
-      url: fullUrl,
-      method: options.method || 'GET',
-      data: options.data || {},
-      header: options.header || {
-        'Content-Type': 'application/json' // 默认 Content-Type 为 application/json
-      },
-
-      success: function success(res) {
-        if (res.statusCode === 200) {
-          resolve(res.data);
-        } else {
-          reject(res.data);
-        }
-      },
-      fail: function fail(err) {
-        reject(err);
-      }
-    });
-  });
-};
-
-// 将对象参数序列化为查询字符串
-function serializeParams(params) {
-  var serialized = [];
-  for (var key in params) {
-    if (params.hasOwnProperty(key)) {
-      serialized.push("".concat(encodeURIComponent(key), "=").concat(encodeURIComponent(params[key])));
-    }
-  }
-  return serialized.join('&');
-}
-var _default = request;
-exports.default = _default;
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
 

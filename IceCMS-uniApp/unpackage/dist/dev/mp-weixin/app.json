@@ -76,7 +76,8 @@
         "safety",
         "default",
         "reward",
-        "content"
+        "content",
+        "onlogin"
       ]
     }
   ],

@@ -531,6 +531,7 @@
 					success: (res) => {
 						console.log("dtrd");
 						if (res.code) {
+							console.log(res.code)
 							request(`/User/CreateWeChatLogin?scene=${scene}&code=${res.code}`, {
 								method: 'GET',
 							}).then(response => {

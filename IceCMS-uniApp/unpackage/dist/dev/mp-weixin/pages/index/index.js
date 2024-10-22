@@ -99,7 +99,7 @@ var components
 try {
   components = {
     tnTabbar: function () {
-      return Promise.all(/*! import() | tuniao-ui/components/tn-tabbar/tn-tabbar */[__webpack_require__.e("common/vendor"), __webpack_require__.e("tuniao-ui/components/tn-tabbar/tn-tabbar")]).then(__webpack_require__.bind(null, /*! @/tuniao-ui/components/tn-tabbar/tn-tabbar.vue */ 470))
+      return Promise.all(/*! import() | tuniao-ui/components/tn-tabbar/tn-tabbar */[__webpack_require__.e("common/vendor"), __webpack_require__.e("tuniao-ui/components/tn-tabbar/tn-tabbar")]).then(__webpack_require__.bind(null, /*! @/tuniao-ui/components/tn-tabbar/tn-tabbar.vue */ 479))
     },
   }
 } catch (e) {
@@ -164,27 +164,27 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = void 0;
 var Home = function Home() {
   Promise.all(/*! require.ensure | pages/home/home */[__webpack_require__.e("common/vendor"), __webpack_require__.e("pages/home/home")]).then((function () {
-    return resolve(__webpack_require__(/*! @/pages/home/home.vue */ 477));
+    return resolve(__webpack_require__(/*! @/pages/home/home.vue */ 486));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 var CirclePage = function CirclePage() {
   Promise.all(/*! require.ensure | pages/circle/circle */[__webpack_require__.e("common/vendor"), __webpack_require__.e("pages/circle/circle")]).then((function () {
-    return resolve(__webpack_require__(/*! @/pages/circle/circle.vue */ 484));
+    return resolve(__webpack_require__(/*! @/pages/circle/circle.vue */ 493));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 var Activity = function Activity() {
   __webpack_require__.e(/*! require.ensure | pages/activity/activity */ "pages/activity/activity").then((function () {
-    return resolve(__webpack_require__(/*! @/pages/activity/activity.vue */ 491));
+    return resolve(__webpack_require__(/*! @/pages/activity/activity.vue */ 500));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 var Preferred = function Preferred() {
   Promise.all(/*! require.ensure | pages/preferred/preferred */[__webpack_require__.e("common/vendor"), __webpack_require__.e("pages/preferred/preferred")]).then((function () {
-    return resolve(__webpack_require__(/*! @/pages/preferred/preferred.vue */ 498));
+    return resolve(__webpack_require__(/*! @/pages/preferred/preferred.vue */ 507));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 var Mine = function Mine() {
   Promise.all(/*! require.ensure | pages/mine/mine */[__webpack_require__.e("common/vendor"), __webpack_require__.e("pages/mine/mine")]).then((function () {
-    return resolve(__webpack_require__(/*! @/pages/mine/mine.vue */ 505));
+    return resolve(__webpack_require__(/*! @/pages/mine/mine.vue */ 514));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 var _default = {
