@@ -3,7 +3,7 @@
     <div id="__nuxt">
       <!---->
       <div id="__layout">
-        <div data-fetch-key="0" class="app light macwk-animation">
+        <div data-fetch-key="0" :class="[themeClass]" class="app macwk-animation">
           <top :message1="acticve" />
           <div>
             <section class="layout-index pc-model mt-5">
@@ -499,8 +499,16 @@ export default ({
     top: () => import("./components/Top.vue"),
     foot: () => import("./components/Foots.vue"),
   },
+  computed: {
+    themeClass() {
+      return this.isDark ? 'black' : 'light';
+    }
+  },
+  created() {
+  },
   data() {
     return {
+      isDark: false, // 默认白天模式
       isAcitive: false,
       r_sortOrder: "new",
       r_news: "new",
@@ -700,6 +708,12 @@ export default ({
     // alert(this.comsys.val(1));
     // 判断是否在服务端
     if (process.client) {
+      const savedMode = localStorage.getItem('darkMode');
+      if (savedMode === 'true') {
+        this.isDark = true;
+      } else {
+        this.isDark = false;
+      }
       // this.lazyLoad();
       // 在浏览器端调接口，需要服务端做反向代理
       this.getList()
@@ -1094,9 +1108,8 @@ export default ({
 <style  scoped>
 .gaosiImg {
   filter: blur(20px) opacity(70%) brightness(110%);
-  transition: .22s;
-  ;
-  z-index: 8
+  transition: all 0.22s;
+  z-index: 8;
 }
 
 .dingweiImg,

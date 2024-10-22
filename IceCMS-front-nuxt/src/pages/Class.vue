@@ -3,7 +3,7 @@
     <div data-server-rendered="true" id="__nuxt">
       <!---->
       <div id="__layout">
-        <div data-fetch-key="0" class="app light macwk-animation">
+        <div data-fetch-key="0" :class="[themeClass]" class="app macwk-animation">
            <top :message4="acticve" />
           <div>
             <div
@@ -100,6 +100,23 @@ export default ({
     this.getList()
     
   },
+  computed: {
+  themeClass() {
+      console.log(this.isDark)
+      return this.isDark ? 'black' : 'light';
+    }
+  },
+  mounted() {
+    // 检查是否在客户端环境
+    if (process.client) {
+      const savedMode = localStorage.getItem('darkMode');
+      if (savedMode === 'true') {
+        this.isDark = true;
+      } else {
+        this.isDark = false;
+      }
+    }
+  },
    methods: {
       getList() {
       
@@ -113,6 +130,7 @@ export default ({
    },
   data() {
     return {
+      isDark: false,
       classlist:"",
       acticve:'nav-link active',
     }

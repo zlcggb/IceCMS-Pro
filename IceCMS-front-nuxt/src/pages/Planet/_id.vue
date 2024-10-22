@@ -3,7 +3,7 @@
     <div data-server-rendered="true" id="__nuxt">
       <!---->
       <div id="__layout">
-        <div data-fetch-key="0" class="app light macwk-animation">
+        <div data-fetch-key="0" :class="[themeClass]" class="app macwk-animation">
           <top :message5="acticve" />
           <div>
             <div class="body">
@@ -814,7 +814,19 @@ export default {
       this.postForm.content += val
     }
   },
+  computed: {
+  themeClass() {
+      console.log(this.isDark)
+      return this.isDark ? 'black' : 'light';
+    }
+  },
   mounted() {
+    const savedMode = localStorage.getItem('darkMode');
+      if (savedMode === 'true') {
+        this.isDark = true;
+      } else {
+        this.isDark = false;
+      }
     this.getNextUser();
   },
   methods: {
@@ -1199,6 +1211,7 @@ export default {
 
   data() {
     return {
+      isDark: false,
       pagetotal: 0,
       isLoading: false,
       dialogImageUrl: '',

@@ -3,7 +3,7 @@
     <div id="__nuxt">
       <!---->
       <div id="__layout">
-        <div data-fetch-key="0" class="app light macwk-animation">
+        <div data-fetch-key="0" :class="[themeClass]" class="app macwk-animation">
           <top :message1="acticve" />
           <div>
             <section class="layout-index pc-model mt-5">
@@ -312,8 +312,26 @@ import {  ChangeUser } from '@/api/webuser'
 export default ({
   name: 'Home',
   components: { top, foot },
+  computed: {
+  themeClass() {
+      console.log(this.isDark)
+      return this.isDark ? 'black' : 'light';
+    }
+  },
+  mounted() {
+    // 检查是否在客户端环境
+    if (process.client) {
+      const savedMode = localStorage.getItem('darkMode');
+      if (savedMode === 'true') {
+        this.isDark = true;
+      } else {
+        this.isDark = false;
+      }
+    }
+  },
   data() {
     return {
+      isDark: false,
       form: {
         userId: '',
         profile: '',

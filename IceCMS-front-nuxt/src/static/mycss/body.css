@@ -1973,7 +1973,11 @@ a.text-light:focus,a.text-light:hover {
 	-webkit-animation-fill-mode: backwards!important;
 	animation-fill-mode: backwards!important
 }
-
+.macwk-animation .delay-1 {
+	animation-duration: .5s;
+	animation-fill-mode: both;
+	animation-name: vanishInSmall;
+}
 .macwk-animation .delay-3 {
 	-webkit-animation-delay: .15s;
 	animation-delay: .15s;
@@ -5809,7 +5813,8 @@ body {
 	font-size: 24px;
 	font-weight: 700;
 	flex-grow: 1;
-	color: #3c4248
+	color: #3c4248;
+	font-family: Dosis,Open Sans,pingfang SC,helvetica neue,arial,hiragino sans gb,microsoft yahei ui,microsoft yahei,simsun,sans-serif;
 }
 
 .app-header .app-header-main .app-header-nav {

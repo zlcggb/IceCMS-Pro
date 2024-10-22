@@ -1,12 +1,10 @@
-
 <template>
-
   <div class="about">
     <div id="__nuxt" data-server-rendered="true">
       <!---->
       <div id="__layout">
-        <div data-fetch-key="0" class="app light macwk-animation">
-         <top :message11="acticve" />
+        <div data-fetch-key="0" :class="[themeClass]" class="app macwk-animation">
+          <top :message11="acticve" />
           <div class="layout-min-full-height">
             <div class="macwk-about-section">
               <img src="../static/picture/downie-4.png" alt="" class="people">
@@ -54,19 +52,23 @@
                 </div>
               </div>
               <span>
-                <div id="el-popover-1306" role="tooltip" aria-hidden="true" class="el-popover el-popper" style="width:200px;display:none;">
+                <div id="el-popover-1306" role="tooltip" aria-hidden="true" class="el-popover el-popper"
+                  style="width:200px;display:none;">
                   <!---->
                   <div class="text-center">
                     <a href="feedback.html" class="mt-15 mb-0">在线留言</a>
                   </div>
-                </div><span class="el-popover__reference-wrapper" /></span>
+                </div><span class="el-popover__reference-wrapper" />
+              </span>
               <span>
-                <div id="el-popover-762" role="tooltip" aria-hidden="true" class="el-popover el-popper" style="width:200px;display:none;">
+                <div id="el-popover-762" role="tooltip" aria-hidden="true" class="el-popover el-popper"
+                  style="width:200px;display:none;">
                   <!---->
                   <div class="text-center">
                     <a href="feedback.html" class="mt-15 mb-0">在线留言</a>
                   </div>
-                </div><span class="el-popover__reference-wrapper" /></span>
+                </div><span class="el-popover__reference-wrapper" />
+              </span>
             </div>
           </div>
           <foot />
@@ -87,13 +89,30 @@ import foot from './components/Foots.vue'
 
 export default ({
   name: 'Home',
-components: {top, foot},
+  components: { top, foot },
   data() {
     return {
-      acticve:'nav-link active',
+      isDark: false,
+      acticve: 'nav-link active',
     }
   },
-  
+  computed: {
+  themeClass() {
+      console.log(this.isDark)
+      return this.isDark ? 'black' : 'light';
+    }
+  },
+  mounted() {
+    // 检查是否在客户端环境
+    if (process.client) {
+      const savedMode = localStorage.getItem('darkMode');
+      if (savedMode === 'true') {
+        this.isDark = true;
+      } else {
+        this.isDark = false;
+      }
+    }
+  },
 })
 </script>
 

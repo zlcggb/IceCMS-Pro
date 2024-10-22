@@ -3,7 +3,7 @@
     <div data-server-rendered="true" id="__nuxt">
       <!---->
       <div id="__layout">
-        <div data-fetch-key="0" class="app light macwk-animation">
+        <div data-fetch-key="0" :class="[themeClass]" class="app macwk-animation">
           <top :message2="acticve" />
           <div class="app-main mobile-layout">
             <div
@@ -447,8 +447,15 @@ export default ({
     top: () => import("./components/Top.vue"),
     foot: () => import("./components/Foots.vue"),
      },
+     computed: {
+  themeClass() {
+      console.log(this.isDark)
+      return this.isDark ? 'black' : 'light';
+    }
+  },
   data() {
     return {
+      isDark: false,
       setting: "",
       loading: true,
       isAcitive: false,
@@ -660,6 +667,12 @@ export default ({
   mounted() {
     // 判断是否在服务端
     if (process.client) {
+      const savedMode = localStorage.getItem('darkMode');
+      if (savedMode === 'true') {
+        this.isDark = true;
+      } else {
+        this.isDark = false;
+      }
       // this.lazyLoad();
       // 在浏览器端调接口，需要服务端做反向代理
         this.getList()
@@ -800,12 +813,14 @@ export default ({
 }
 
 .gaosiImg {
+  animation-delay: 50ms;
+  animation-fill-mode: backwards !important;
   /* filter: blur(20px) opacity(70%) brightness(110%); */
   filter: blur(20px) opacity(0.7) brightness(110%);
-  transition: filter 0.3s ease; /* 调整过渡时间和效果 */
+  /* transition: filter 0.22s ease; 调整过渡时间和效果 */
+  transition: all 0.22s;
   /* transition: .22s; */
-  ;
-  z-index: 8
+  z-index: 8;
 }
 
 .dingweiImg,

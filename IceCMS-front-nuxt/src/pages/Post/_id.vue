@@ -3,7 +3,7 @@
     <div id="__nuxt" data-server-rendered="true">
       <!---->
       <div id="__layout">
-        <div data-fetch-key="0" class="app light macwk-animation">
+        <div data-fetch-key="0" :class="[themeClass]" class="app macwk-animation">
           <top :message3="acticve" />
           <div class="overflow-hidden">
             <div class="article-details white bg layout-min-full-height">
@@ -515,6 +515,7 @@ export default {
   },
   data() {
     return {
+      isDark: false,
       firstLoveFlag: true,
       lovecheck: false,
       loveNum: "",
@@ -544,9 +545,21 @@ export default {
       show: false,
     };
   },
+  computed: {
+  themeClass() {
+      console.log(this.isDark)
+      return this.isDark ? 'black' : 'light';
+    }
+  },
     mounted() {
     // 判断是否在服务端
     if (process.client) {
+      const savedMode = localStorage.getItem('darkMode');
+      if (savedMode === 'true') {
+        this.isDark = true;
+      } else {
+        this.isDark = false;
+      }
     //数据回填
     this.fetchData()
     // //获取文章评论数量

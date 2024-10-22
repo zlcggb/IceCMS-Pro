@@ -3,7 +3,7 @@
     <div data-server-rendered="true" id="__nuxt">
       <!---->
       <div id="__layout">
-        <div data-fetch-key="0" class="app light IceCMS-animation">
+        <div data-fetch-key="0":class="[themeClass]"  class="app IceCMS-animation">
           <top :message1="acticve"></top>
           <div class="IceCMS-privacy soft-layout white bg my-6 py-5">
             <section class="layout-content">
@@ -116,8 +116,26 @@ import foot from './components/Foots.vue'
 export default ({
   name: 'List',
   components: { top, foot },
+  computed: {
+  themeClass() {
+      console.log(this.isDark)
+      return this.isDark ? 'black' : 'light';
+    }
+  },
+  mounted() {
+    // 检查是否在客户端环境
+    if (process.client) {
+      const savedMode = localStorage.getItem('darkMode');
+      if (savedMode === 'true') {
+        this.isDark = true;
+      } else {
+        this.isDark = false;
+      }
+    }
+  },
   data() {
     return {
+      isDark: false,
       acticve: 'nav-link active',
     }
   },

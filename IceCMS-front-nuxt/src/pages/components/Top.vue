@@ -379,35 +379,27 @@
             </div>
           </div>
           <div class="flex-col-bar self-start group_5">
-        <div class="flex-row-bar items-center group_6 view-bar">
-          <img
-            class="image_4"
-            src="https://ide.code.fun/api/image?token=6716186338a7c10015881310&name=775ab799af101d7db890b565a9a5a372.png"
-          />
-          <span class="ml-20 font_3">个人中心</span>
-        </div>
-        <div class="flex-row-bar group_6 view-bar">
-          <img
-            class="image_5"
-            src="https://ide.code.fun/api/image?token=6716186338a7c10015881310&name=ed2744fa182c3ca2bd86f65c2ea25769.png"
-          />
-          <span class="ml-20 font_3">资源管理</span>
-        </div>
-        <div class="flex-row-bar view-bar">
-          <img
-            class="image_6"
-            src="https://ide.code.fun/api/image?token=6716186338a7c10015881310&name=d2ff13cdd5319e666a93eba391bdaa70.png"
-          />
-          <span class="ml-18 font_3">个人收藏</span>
-        </div>
-        <div @click="loginout()" class="flex-row-bar items-center group_6 view-bar-2">
-          <img
-            class="image_7"
-            src="https://ide.code.fun/api/image?token=6716186338a7c10015881310&name=98ae7ba00542b035ccb62ad4754089a4.png"
-          />
-          <span class="ml-18 font_3">退出登录</span>
-        </div>
-      </div>
+            <div class="flex-row-bar items-center group_6 view-bar">
+              <img class="image_4"
+                src="https://ide.code.fun/api/image?token=6716186338a7c10015881310&name=775ab799af101d7db890b565a9a5a372.png" />
+              <span class="ml-20 font_3">个人中心</span>
+            </div>
+            <div class="flex-row-bar group_6 view-bar">
+              <img class="image_5"
+                src="https://ide.code.fun/api/image?token=6716186338a7c10015881310&name=ed2744fa182c3ca2bd86f65c2ea25769.png" />
+              <span class="ml-20 font_3">资源管理</span>
+            </div>
+            <div class="flex-row-bar view-bar">
+              <img class="image_6"
+                src="https://ide.code.fun/api/image?token=6716186338a7c10015881310&name=d2ff13cdd5319e666a93eba391bdaa70.png" />
+              <span class="ml-18 font_3">个人收藏</span>
+            </div>
+            <div @click="loginout()" class="flex-row-bar items-center group_6 view-bar-2">
+              <img class="image_7"
+                src="https://ide.code.fun/api/image?token=6716186338a7c10015881310&name=98ae7ba00542b035ccb62ad4754089a4.png" />
+              <span class="ml-18 font_3">退出登录</span>
+            </div>
+          </div>
           <div class="top-user-info-box-names">
             <!-- <div class="topic-header-lefts">
               <div class="topic-avatars">
@@ -564,6 +556,43 @@
             </div>
           </div>
         </a>
+
+        <div style="margin-left: 30px;">
+          <div style="margin-left: 30px;">
+            <div class="view-bar-black toggle-button" @click="toggleMode"
+              style="position: relative; display: flex; align-items: center; justify-content: center;">
+              <!-- 圆形边框的外层 div -->
+              <!-- 白天模式图标 -->
+              <div
+              :class="['icon-wrapper', isDark ? 'hidden' : 'visible']"
+                style="position: absolute; width: 35px; height: 35px; border: 1px solid rgba(227, 228, 229, 0.5); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                <div
+                  style="position: absolute; width: 100%; height: 42%; display: flex; align-items: center; justify-content: center; top: 10px; transform: translateY(0); transition: transform 0.2s ease-in-out;">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                    <path fill="currentColor"
+                      d="M8 5.818c1.2 0 2.182.982 2.182 2.182S9.2 10.182 8 10.182 5.818 9.2 5.818 8 6.8 5.818 8 5.818Zm0-1.454A3.638 3.638 0 0 0 4.364 8 3.638 3.638 0 0 0 8 11.636 3.638 3.638 0 0 0 11.636 8 3.638 3.638 0 0 0 8 4.364ZM.727 8.727h1.455A.73.73 0 0 0 2.909 8a.73.73 0 0 0-.727-.727H.727A.73.73 0 0 0 0 8c0 .4.327.727.727.727Zm13.091 0h1.455A.73.73 0 0 0 16 8a.73.73 0 0 0-.727-.727h-1.455a.73.73 0 0 0-.727.727c0 .4.327.727.727.727Zm-6.545-8v1.455c0 .4.327.727.727.727a.73.73 0 0 0 .727-.727V.727A.73.73 0 0 0 8 0a.73.73 0 0 0-.727.727Zm0 13.091v1.455c0 .4.327.727.727.727a.73.73 0 0 0 .727-.727v-1.455A.73.73 0 0 0 8 13.091a.73.73 0 0 0-.727.727ZM3.629 2.604a.724.724 0 1 0-1.025 1.025l.77.771A.724.724 0 1 0 4.4 3.375l-.77-.771Zm8.997 8.996a.724.724 0 1 0-1.026 1.026l.77.77a.724.724 0 1 0 1.025-1.025l-.77-.771Zm.77-7.97a.724.724 0 1 0-1.025-1.025l-.771.77A.724.724 0 1 0 12.626 4.4l.77-.77ZM4.4 12.624A.724.724 0 1 0 3.375 11.6l-.771.772a.724.724 0 1 0 1.025 1.025l.771-.77Z">
+                    </path>
+                  </svg>
+                </div>
+              </div>
+              <!-- 黑夜模式图标 -->
+              <div
+              :class="['icon-wrapper', isDark ? 'visible' : 'hidden']"
+                style="position: absolute; width: 35px; height: 35px; border: 1px solid rgba(227, 228, 229, 0.5); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                <div
+                  style="position: absolute; width: 100%; height: 42%; display: flex; align-items: center; justify-content: center; top: 10px; transform: translateY(0); transition: transform 0.2s ease-in-out;">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                  <path fill="currentColor" fill-rule="evenodd"
+                    d="M6.563 1.66a6.5 6.5 0 1 0 7.778 7.777A5.5 5.5 0 0 1 6.563 1.66ZM0 8A8 8 0 0 1 9.526.146a.75.75 0 0 1 .033 1.465A4.002 4.002 0 0 0 10.5 9.5a4.002 4.002 0 0 0 3.889-3.06.75.75 0 0 1 1.466.034A8 8 0 1 1 0 8Z"
+                    clip-rule="evenodd"></path>
+                </svg>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
 
@@ -589,7 +618,42 @@ export default ({
   computed: {
     ...mapState(['playlist', 'glabledata', 'count'])
   },
+  created() {
+    // 检查是否在客户端环境
+    if (process.client) {
+      const savedMode = localStorage.getItem('darkMode');
+      if (savedMode === 'true') {
+        this.isDark = true;
+      } else {
+        this.isDark = false;
+      }
+    }
+  },
   methods: {
+    toggleMode() {
+      this.isDark = !this.isDark; // 切换模式
+      if (this.isDark) {
+        this.setDarkMode();
+        localStorage.setItem('darkMode', 'true');
+      } else {
+        this.setLightMode();
+        localStorage.setItem('darkMode', 'false');
+      }
+    },
+    setDarkMode() {
+      const appDiv = document.querySelector('.app');
+      if (appDiv) {
+        appDiv.classList.remove('light');
+        appDiv.classList.add('black');
+      }
+    },
+    setLightMode() {
+      const appDiv = document.querySelector('.app');
+      if (appDiv) {
+        appDiv.classList.remove('black');
+        appDiv.classList.add('light');
+      }
+    },
     async fullnum() {
       let res1 = await getAllResourceNumber()
       if (res1) {
@@ -632,7 +696,7 @@ export default ({
         this.user = user
         this.userJudje = (user == null)
         //获取会员有效性
-        let res = await CheckVip();
+        let res = await CheckVip(this.user.userid);
         if (res) {
           if (resp.data) {
             this.vipTrue = true
@@ -1158,7 +1222,8 @@ export default ({
       articleshow: false,
       searchshow: false,
       navlinks: "nav-link active",
-      seachcontent: ''
+      seachcontent: '',
+      isDark: false // 默认白天模式
     }
   },
   mounted() {
@@ -2035,16 +2100,21 @@ span.last-login-way:after {
   cursor: pointer;
   /* 增加鼠标指针样式 */
 }
+
 .font_3:hover {
   color: #007bff;
- 
+
   /* 鼠标悬停时改变字体颜色 */
 }
+
 .view-bar:hover {
   color: #007bff;
-  background-color: #f0f0f0; /* 鼠标悬停时改变背景颜色 */
-  border-radius: 8px; /* 圆角效果 */
-  padding: 8px; /* 增加内边距，使悬停效果更明显 */
+  background-color: #f0f0f0;
+  /* 鼠标悬停时改变背景颜色 */
+  border-radius: 8px;
+  /* 圆角效果 */
+  padding: 8px;
+  /* 增加内边距，使悬停效果更明显 */
   /* 鼠标悬停时改变字体颜色 */
 }
 
@@ -2052,14 +2122,51 @@ span.last-login-way:after {
 .view-bar-2:hover .font_3 {
   color: #ff5722;
 }
+
 .view-bar-2 {
   cursor: pointer;
-  
+
   /* 增加鼠标指针样式 */
 }
-.font-username{
-  font-size: 18px; /* 调整为更大的字体大小 */
-  font-weight: 500; /* 可选：增加字体的粗细 */
-  color: #333; /* 可选：设置字体颜色 */
+
+.view-bar-black {
+  cursor: pointer;
+
+  /* 增加鼠标指针样式 */
+}
+
+.font-username {
+  font-size: 18px;
+  /* 调整为更大的字体大小 */
+  font-weight: 500;
+  /* 可选：增加字体的粗细 */
+  color: #333;
+  /* 可选：设置字体颜色 */
+}
+.toggle-button {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  overflow: hidden;
+  transition: background-color 0.3s ease-in-out, border-color 0.3s ease-in-out;
+}
+
+.icon-wrapper {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s ease-in-out;
+}
+
+.hidden {
+  transform: translateY(40px);
+}
+
+.visible {
+  transform: translateY(0);
 }
 </style>

@@ -107,7 +107,7 @@
     <div data-server-rendered="true" id="__nuxt">
       <!---->
       <div id="__layout">
-        <div data-fetch-key="0" class="app light macwk-animation">
+        <div data-fetch-key="0" :class="[themeClass]" class="app macwk-animation">
           <top :message2="acticve" />
           <div class="overflow-hidden pt-5">
 
@@ -905,6 +905,7 @@ export default {
   },
   data() {
     return {
+      isDark: false,
       videoSource: [],
       videoAddress: "",
       lovecheck: false,
@@ -950,9 +951,21 @@ export default {
       acticve: 'nav-link active',
     }
   },
+  computed: {
+  themeClass() {
+      console.log(this.isDark)
+      return this.isDark ? 'black' : 'light';
+    }
+  },
   mounted() {
     // 判断是否在服务端
     if (process.client) {
+      const savedMode = localStorage.getItem('darkMode');
+      if (savedMode === 'true') {
+        this.isDark = true;
+      } else {
+        this.isDark = false;
+      }
       // this.lazyLoad();
       // 在浏览器端调接口，需要服务端做反向代理
       // //数据回填

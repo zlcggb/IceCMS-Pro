@@ -3,7 +3,7 @@
     <div data-server-rendered="true" id="__nuxt">
       <!---->
       <div id="__layout">
-        <div data-fetch-key="0" class="app light macwk-animation">
+        <div data-fetch-key="0" :class="[themeClass]" class="app macwk-animation">
           <top :message3="acticve" />
           <div class="app-main">
             <div class="w-full bg grid-list layout-min-full-height d-flex">
@@ -291,8 +291,26 @@ export default {
       return statusMap[status]
     }
   },
+  computed: {
+  themeClass() {
+      console.log(this.isDark)
+      return this.isDark ? 'black' : 'light';
+    }
+  },
+  mounted() {
+    // 检查是否在客户端环境
+    if (process.client) {
+      const savedMode = localStorage.getItem('darkMode');
+      if (savedMode === 'true') {
+        this.isDark = true;
+      } else {
+        this.isDark = false;
+      }
+    }
+  },
   data() {
     return {
+      isDark: false,
       acticve:'nav-link active',
       articleCount: "",
       istarget:"_self",
