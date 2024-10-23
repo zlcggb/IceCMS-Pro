@@ -629,6 +629,12 @@ export default ({
       }
     }
   },
+  watch: {
+    isDark(newVal) {
+      // 根据 isDark 的值设置 CSS 变量
+      document.documentElement.style.setProperty('--dialog-bg-color', newVal ? '#202020' : '#ffffff');
+    },
+  },
   methods: {
     toggleMode() {
       this.isDark = !this.isDark; // 切换模式
@@ -1227,6 +1233,9 @@ export default ({
     }
   },
   mounted() {
+     // 初始化时设置 CSS 变量
+     document.documentElement.style.setProperty('--dialog-bg-color', this.isDark ? '#202020' : '#ffffff');
+
     // 判断是否在服务端
     if (process.client) {
       // this.lazyLoad();
@@ -1843,6 +1852,7 @@ export default ({
 <style>
 .el-dialog--center {
   border-radius: 10px;
+  background-color: var(--dialog-bg-color); /* 使用 CSS 变量 */
 }
 
 .other-login {

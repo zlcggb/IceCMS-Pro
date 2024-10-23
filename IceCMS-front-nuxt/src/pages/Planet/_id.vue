@@ -6,7 +6,7 @@
         <div data-fetch-key="0" :class="[themeClass]" class="app macwk-animation">
           <top :message5="acticve" />
           <div>
-            <div class="body">
+            <div class="body" :class="[themeClass]">
               <div class="container">
                 <div class="row">
                   <el-aside width="260px">
@@ -1318,9 +1318,9 @@ export default {
   width: 145px;
 }
 
-.body {
+/* .body {
   background-color: #f3f5f7;
-}
+} */
 </style>
 
 
