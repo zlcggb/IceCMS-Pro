@@ -13,12 +13,16 @@ import java.io.Serializable;
 @EqualsAndHashCode(callSuper = false)
 public class HomeSetting implements Serializable {
 
+  /** 唯一表示uid */
   private static final long serialVersionUID = 1L;
 
+  /** id */
   private Integer id;
 
+  /** 标题 */
   private String featureTitle;
 
+  /** 图标 */
   private String featureSrc;
 
 }
