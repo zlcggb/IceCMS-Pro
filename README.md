@@ -88,9 +88,9 @@ API文档：[api.icecmspro.com/doc.html](https://api.icecmspro.com/doc.html)
 
   ```xml
   <dependency>
-    <groupId>javax.xml.bind</groupId>
-    <artifactId>jaxb-api</artifactId>
-    <version>2.3.0</version>
+  <groupId>javax.xml.bind</groupId>
+  <artifactId>jaxb-api</artifactId>
+  <version>2.3.0</version>
 </dependency>
 ```
 
