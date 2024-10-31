@@ -31,13 +31,18 @@
               fill="url(#c)"></path>
           </g>
         </svg> -->
-        <img src="../../static/image/logo.svg" />
-        <span class="ml-4">{{ setting.sitTitle }}</span></a>
+        <div v-if="setting.sitLogo">
+          <img :src="setting.sitLogo" />
+        </div>
+        <div v-else>
+          <img src="../../static/image/logo.svg" />
+        </div>
+        <span class="ml-4">{{ setting.sitTitle }}</span>
+      </a>
       <div class="nav">
         <a href="/" class="nav-link">首页</a>
         <a href="about" class="nav-link">关于 </a>
-        <a href="contact" class="nav-link">联系 </a><a href="privacy"
-          class="nav-link">隐私 </a><a href="changelogs"
+        <a href="contact" class="nav-link">联系 </a><a href="privacy" class="nav-link">隐私 </a><a href="changelogs"
           class="nav-link">更新日志
         </a>
       </div>
@@ -70,10 +75,10 @@ export default ({
       setting: {},
     }
   },
-    mounted() {
-      this.getSetting()
-    },
-    computed: {
+  mounted() {
+    this.getSetting()
+  },
+  computed: {
     ...mapState(['playlist', 'glabledata', 'count'])
   },
 })

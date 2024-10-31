@@ -3,13 +3,18 @@
     <!-- 登录 -->
     <el-dialog class="dialogdeep" width="30%" top="30px" center title="" @close="closeDialog"
       :visible.sync="dialogFormVisible">
-      <div v-if="IsRegister" class="box">
+      <div v-if="IsRegister && forgotPassword == false" class="box">
         <a> <img class="close-icon"
             src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAHhlWElmTU0AKgAAAAgABAEaAAUAAAABAAAAPgEbAAUAAAABAAAARgEoAAMAAAABAAIAAIdpAAQAAAABAAAATgAAAAAAAACQAAAAAQAAAJAAAAABAAOgAQADAAAAAQABAACgAgAEAAAAAQAAACCgAwAEAAAAAQAAACAAAAAAfgvaUgAAAAlwSFlzAAAWJQAAFiUBSVIk8AAAAalJREFUWAntlr9OwzAQxm2XAV4DIfEQTFHE2p2B5+hSiQ5d+jh0BKlZUJ6i8BxUUBt/up5kOU7iM38W4sWxc3ffz2dfYqWm9t8zoOME7HYv1859Lo3Re6Xspqqq99hGMm6a5lwps7DWXSl1XNV1/Rr6n4UDerYPWus755TS2tz4APNSiLZtLw6Hj0cf69bHVM7NIHEfappwgGfn3BvPwdHTb2kVPJvXw4fF2YOyyiPqOwDG2LWHfWazEohT2rfkS5Eopt1wXO47ZwAvBgKMbofUNwlQCiEVh04vgBSiRHwUIBeiVDwLYAwC71EpiQM3el7gObgFMODWv0qULsqV2um0Z4nDIxsAxikIzHOTisNPBACHPogSccTrfIgw+ZdNlIG+1TNwSRayM9Aj/kSihFDy2c7KQEqcV0vSv1iGQ+L8m86x4W2K+8EMSAJLbEOIXoCSgCU+SYCSQLwqqW8HQBqAhcNeEiNRhmbxnW87QOhw2nlcotaaZQiK5w4A3V7JjEuNT3vsPDROQfiL6WXsk7gVH1e4vf7EtRwQfjt8JuharvVsHQNM4ykDX94FYhBKOJraAAAAAElFTkSuQmCC"
             @click="closeDialog"></a>
 
         <div class="login-logo">
+        <div v-if="setting.sitLogo">
+          <img height="40" width="40" :src="setting.sitLogo" />
+        </div>
+        <div v-else>
           <img height="40" width="40" src="../../static/image/logo.svg" />
+        </div>
         </div>
         <div class="login-title">
           <!-- <span><b>登录可享更多权益</b></span> -->
@@ -95,6 +100,13 @@
 
                 <el-button :loading="loading" type="primary" style="width: 100%; margin-bottom: 30px"
                   @click.native.prevent="handleLogin">登录</el-button>
+                <!-- 找回密码链接和提示文字 -->
+                <div class="forgot-password" style="text-align: left; margin-bottom: 30px;">
+                  <span style="color: #666; font-size: 12px; margin-right: 5px;">
+                    忘记密码？
+                  </span>
+                  <a @click="handleforgotPassword" target="_blank" style="color: #409EFF;">找回密码</a>
+                </div>
                 <div class="ss-login_statement">
                   <span>登录注册即代表同意</span>
                   <a href="/Protocol">
@@ -144,13 +156,18 @@
           <span> </span>
         </div>
       </div>
-      <div v-else class="box">
+      <div v-if="!IsRegister && forgotPassword == false" class="box">
         <a> <img class="close-icon"
             src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAHhlWElmTU0AKgAAAAgABAEaAAUAAAABAAAAPgEbAAUAAAABAAAARgEoAAMAAAABAAIAAIdpAAQAAAABAAAATgAAAAAAAACQAAAAAQAAAJAAAAABAAOgAQADAAAAAQABAACgAgAEAAAAAQAAACCgAwAEAAAAAQAAACAAAAAAfgvaUgAAAAlwSFlzAAAWJQAAFiUBSVIk8AAAAalJREFUWAntlr9OwzAQxm2XAV4DIfEQTFHE2p2B5+hSiQ5d+jh0BKlZUJ6i8BxUUBt/up5kOU7iM38W4sWxc3ffz2dfYqWm9t8zoOME7HYv1859Lo3Re6Xspqqq99hGMm6a5lwps7DWXSl1XNV1/Rr6n4UDerYPWus755TS2tz4APNSiLZtLw6Hj0cf69bHVM7NIHEfappwgGfn3BvPwdHTb2kVPJvXw4fF2YOyyiPqOwDG2LWHfWazEohT2rfkS5Eopt1wXO47ZwAvBgKMbofUNwlQCiEVh04vgBSiRHwUIBeiVDwLYAwC71EpiQM3el7gObgFMODWv0qULsqV2um0Z4nDIxsAxikIzHOTisNPBACHPogSccTrfIgw+ZdNlIG+1TNwSRayM9Aj/kSihFDy2c7KQEqcV0vSv1iGQ+L8m86x4W2K+8EMSAJLbEOIXoCSgCU+SYCSQLwqqW8HQBqAhcNeEiNRhmbxnW87QOhw2nlcotaaZQiK5w4A3V7JjEuNT3vsPDROQfiL6WXsk7gVH1e4vf7EtRwQfjt8JuharvVsHQNM4ykDX94FYhBKOJraAAAAAElFTkSuQmCC"
             @click="closeDialog"></a>
 
         <div class="login-logo">
+          <div v-if="setting.sitLogo">
+          <img height="40" width="40" :src="setting.sitLogo" />
+        </div>
+        <div v-else>
           <img height="40" width="40" src="../../static/image/logo.svg" />
+        </div>          
         </div>
         <div class="register-text">
           <span><b>注册</b></span>
@@ -165,7 +182,6 @@
             <el-input ref="password" v-model="emailRegisterForm.password" placeholder="密码" name="phone" type="password"
               tabindex="1" auto-complete="on" />
           </el-form-item>
-
           <el-form-item prop="code">
             <el-input class="check-code-box" v-model="emailRegisterForm.code" placeholder="请输入验证码" name="code"
               type="text" tabindex="2" auto-complete="on">
@@ -212,15 +228,92 @@
           <span> </span>
         </div>
       </div>
+      <div v-show="forgotPassword" class="box">
+        <a> <img class="close-icon"
+            src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAHhlWElmTU0AKgAAAAgABAEaAAUAAAABAAAAPgEbAAUAAAABAAAARgEoAAMAAAABAAIAAIdpAAQAAAABAAAATgAAAAAAAACQAAAAAQAAAJAAAAABAAOgAQADAAAAAQABAACgAgAEAAAAAQAAACCgAwAEAAAAAQAAACAAAAAAfgvaUgAAAAlwSFlzAAAWJQAAFiUBSVIk8AAAAalJREFUWAntlr9OwzAQxm2XAV4DIfEQTFHE2p2B5+hSiQ5d+jh0BKlZUJ6i8BxUUBt/up5kOU7iM38W4sWxc3ffz2dfYqWm9t8zoOME7HYv1859Lo3Re6Xspqqq99hGMm6a5lwps7DWXSl1XNV1/Rr6n4UDerYPWus755TS2tz4APNSiLZtLw6Hj0cf69bHVM7NIHEfappwgGfn3BvPwdHTb2kVPJvXw4fF2YOyyiPqOwDG2LWHfWazEohT2rfkS5Eopt1wXO47ZwAvBgKMbofUNwlQCiEVh04vgBSiRHwUIBeiVDwLYAwC71EpiQM3el7gObgFMODWv0qULsqV2um0Z4nDIxsAxikIzHOTisNPBACHPogSccTrfIgw+ZdNlIG+1TNwSRayM9Aj/kSihFDy2c7KQEqcV0vSv1iGQ+L8m86x4W2K+8EMSAJLbEOIXoCSgCU+SYCSQLwqqW8HQBqAhcNeEiNRhmbxnW87QOhw2nlcotaaZQiK5w4A3V7JjEuNT3vsPDROQfiL6WXsk7gVH1e4vf7EtRwQfjt8JuharvVsHQNM4ykDX94FYhBKOJraAAAAAElFTkSuQmCC"
+            @click="closeDialog"></a>
+
+        <div class="login-logo">
+          <img height="40" width="40" src="../../static/image/logo.svg" />
+        </div>
+        <div class="register-text">
+          <span><b>找回密码</b></span>
+        </div>
+        <el-form ref="emailRegisterForm" :model="emailRegisterForm" :rules="emailRegisterRules" class="login-form"
+          auto-complete="on" label-position="left">
+          <el-form-item prop="email">
+            <el-input ref="email" v-model="emailRegisterForm.email" placeholder="邮箱" name="phone" type="text"
+              tabindex="1" auto-complete="on" />
+          </el-form-item>
+          <el-form-item prop="code">
+            <el-input class="check-code-box" v-model="emailRegisterForm.code" placeholder="请输入验证码" name="code"
+              type="text" tabindex="2" auto-complete="on">
+              <el-button :disabled="codeButtonDisabled" size="small" slot="append" @click="RegistersendCode">获取验证码
+                <span v-if="RegistercodeCd">({{ long }})</span>
+              </el-button>
+            </el-input>
+          </el-form-item>
+          <el-form-item prop="password">
+            <el-input ref="password" v-model="emailRegisterForm.password" placeholder="密码" name="phone" type="password"
+              tabindex="1" auto-complete="on" />
+          </el-form-item>
+          <el-form-item prop="password">
+            <el-input ref="password" v-model="emailRegisterForm.password" placeholder="确认密码" name="phone"
+              type="password" tabindex="1" auto-complete="on" />
+          </el-form-item>
+
+
+
+          <el-button :loading="loading" type="primary" style="width: 100%; margin-bottom: 30px"
+            @click.native.prevent="handleEmailLogin">提交</el-button>
+          <div class="ss-login_statement">
+            <span>登录注册即代表同意</span>
+            <a href="/Protocol">
+              <a target="_blank">用户协议</a></a><span>及</span>
+            <a href="/Privacy">
+              <a target="_blank">隐私条款</a></a>
+          </div>
+          <div class="line"></div>
+        </el-form>
+        <div class="footer">
+          <p class="text-align-center">
+            已有账号？
+            <a style="text-decoration: none"></a>
+            <a @click="tohandleLogin">
+              <a class="text-align-center">立即登录</a></a>
+          </p>
+          <div class="other-login">
+            <button class="btn-login circle weixin">
+              <img class="qqloginsvg" src="../../static/image/qq.png" />
+            </button>
+            <button class="btn-login circle weibo">
+              <img class="qqloginsvg" src="../../static/image/weibo.png" />
+            </button>
+            <button class="btn-login circle weibo">
+              <img class="qqloginsvg" src="../../static/image/github.png" />
+            </button>
+          </div>
+        </div>
+
+        <div class="tips">
+          <span style="margin-right: 20px"></span>
+          <span> </span>
+        </div>
+      </div>
       <el-form :model="form"> </el-form>
     </el-dialog>
     <div class="app-header-navbar white shadow-4 border-bottom pc-model">
       <div class="app-header-main">
 
         <a href="/" class="app-header-logo active" aria-current="page">
-          <img src="../../static/image/logo.svg" />
-          <span class="ml-4">{{ setting.sitTitle }}</span></a>
-
+          <div v-if="setting.sitLogo">
+            <img :src="setting.sitLogo" />
+          </div>
+          <div v-else> 
+            <img src="../../static/image/logo.svg" />
+          </div>
+          <span class="ml-4">{{ setting.sitTitle }}</span>
+        </a>
         <div class="app-header-nav nav">
           <nuxt-link target="_self" class="nav-link" :class="message1" aria-current="page" to="/">首页</nuxt-link>
           <nuxt-link target="_self" class="nav-link" :class="message2" to="/Alllist">资源</nuxt-link>
@@ -563,8 +656,7 @@
               style="position: relative; display: flex; align-items: center; justify-content: center;">
               <!-- 圆形边框的外层 div -->
               <!-- 白天模式图标 -->
-              <div
-              :class="['icon-wrapper', isDark ? 'hidden' : 'visible']"
+              <div :class="['icon-wrapper', isDark ? 'hidden' : 'visible']"
                 style="position: absolute; width: 35px; height: 35px; border: 1px solid rgba(227, 228, 229, 0.5); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
                 <div
                   style="position: absolute; width: 100%; height: 42%; display: flex; align-items: center; justify-content: center; top: 10px; transform: translateY(0); transition: transform 0.2s ease-in-out;">
@@ -576,16 +668,15 @@
                 </div>
               </div>
               <!-- 黑夜模式图标 -->
-              <div
-              :class="['icon-wrapper', isDark ? 'visible' : 'hidden']"
+              <div :class="['icon-wrapper', isDark ? 'visible' : 'hidden']"
                 style="position: absolute; width: 35px; height: 35px; border: 1px solid rgba(227, 228, 229, 0.5); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
                 <div
                   style="position: absolute; width: 100%; height: 42%; display: flex; align-items: center; justify-content: center; top: 10px; transform: translateY(0); transition: transform 0.2s ease-in-out;">
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                  <path fill="currentColor" fill-rule="evenodd"
-                    d="M6.563 1.66a6.5 6.5 0 1 0 7.778 7.777A5.5 5.5 0 0 1 6.563 1.66ZM0 8A8 8 0 0 1 9.526.146a.75.75 0 0 1 .033 1.465A4.002 4.002 0 0 0 10.5 9.5a4.002 4.002 0 0 0 3.889-3.06.75.75 0 0 1 1.466.034A8 8 0 1 1 0 8Z"
-                    clip-rule="evenodd"></path>
-                </svg>
+                    <path fill="currentColor" fill-rule="evenodd"
+                      d="M6.563 1.66a6.5 6.5 0 1 0 7.778 7.777A5.5 5.5 0 0 1 6.563 1.66ZM0 8A8 8 0 0 1 9.526.146a.75.75 0 0 1 .033 1.465A4.002 4.002 0 0 0 10.5 9.5a4.002 4.002 0 0 0 3.889-3.06.75.75 0 0 1 1.466.034A8 8 0 1 1 0 8Z"
+                      clip-rule="evenodd"></path>
+                  </svg>
                 </div>
               </div>
 
@@ -771,6 +862,10 @@ export default ({
       }, 1000)
 
     },
+    handleforgotPassword() {
+      this.forgotPassword = true;
+      // this.IsRegister = false;
+    },
     handleEmailLogin() {
       var that = this
       this.$refs.emailRegisterForm.validate(valid => {
@@ -881,6 +976,7 @@ export default ({
     tohandleLogin() {
       console.log('打开登录框');
       this.IsRegister = true;
+      this.forgotPassword = false;
     },
     handleLogin() {
       var that = this
@@ -1146,6 +1242,7 @@ export default ({
 
   data() {
     return {
+      forgotPassword: false,
       IsRegister: true,
       intervalId: null,
       activeTab: 'wechat', // 默认选中的标签
@@ -1233,8 +1330,8 @@ export default ({
     }
   },
   mounted() {
-     // 初始化时设置 CSS 变量
-     document.documentElement.style.setProperty('--dialog-bg-color', this.isDark ? '#202020' : '#ffffff');
+    // 初始化时设置 CSS 变量
+    document.documentElement.style.setProperty('--dialog-bg-color', this.isDark ? '#202020' : '#ffffff');
 
     // 判断是否在服务端
     if (process.client) {
@@ -1852,7 +1949,8 @@ export default ({
 <style>
 .el-dialog--center {
   border-radius: 10px;
-  background-color: var(--dialog-bg-color); /* 使用 CSS 变量 */
+  background-color: var(--dialog-bg-color);
+  /* 使用 CSS 变量 */
 }
 
 .other-login {
@@ -2153,6 +2251,7 @@ span.last-login-way:after {
   color: #333;
   /* 可选：设置字体颜色 */
 }
+
 .toggle-button {
   position: relative;
   width: 40px;
@@ -2178,5 +2277,18 @@ span.last-login-way:after {
 
 .visible {
   transform: translateY(0);
+}
+
+.forgot-password {
+  text-align: left;
+  font-size: 12px;
+  color: #666;
+  margin-left: 20px;
+
+}
+
+.forgot-password a {
+  color: #409EFF;
+  margin-left: 5px;
 }
 </style>

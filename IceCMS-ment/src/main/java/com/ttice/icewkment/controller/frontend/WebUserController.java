@@ -2,6 +2,7 @@ package com.ttice.icewkment.controller.frontend;
 
 import cn.hutool.core.lang.Assert;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.api.R;
 import com.tencentcloudapi.cms.v20190321.models.Logo;
 import com.ttice.icewkment.Util.*;
 import com.ttice.icewkment.commin.lang.Result;
@@ -142,9 +143,9 @@ public class WebUserController {
             // 新增一个用户
             User user1 = new User();
             user1.setOpenid(openid);
-//        user1.setProfile(user.getProfile());
+            // user1.setProfile(user.getProfile());
             user1.setName("微信用户");
-//        user1.setGender(user.getGender());
+            // user1.setGender(user.getGender());
             user1.setCreateTime(new Date());
             user1.setLastLogin(new Date());
             user1.setVipDisableTip(true);
@@ -193,12 +194,12 @@ public class WebUserController {
     public Result Create(User Newuser) {
 
         // 检查用户名是否重复
-//    QueryWrapper<User> wrapper = new QueryWrapper<>();
-//    wrapper.eq("USERNAME", Newuser.getUsername());
-//    Integer Count = userMapper.selectCount(wrapper);
-//    if (Count >= 1) {
-//      return Result.fail(("用户名重复"));
-//    }
+        //    QueryWrapper<User> wrapper = new QueryWrapper<>();
+        //    wrapper.eq("USERNAME", Newuser.getUsername());
+        //    Integer Count = userMapper.selectCount(wrapper);
+        //    if (Count >= 1) {
+        //      return Result.fail(("用户名重复"));
+        //    }
         // 检查邮箱是否重复
         QueryWrapper<User> wrapper = new QueryWrapper<>();
         wrapper.eq("email", Newuser.getEmail());
@@ -226,7 +227,7 @@ public class WebUserController {
         // 用户名判断
         User user = new User();
 
-//    user.setUsername(Newuser.getUsername());
+        //    user.setUsername(Newuser.getUsername());
         // 密码加密
         user.setPassword(hashPassword(Newuser.getPassword()));
         // 默认信息
@@ -234,14 +235,14 @@ public class WebUserController {
         user.setCreateTime(new Date());
         user.setName("新用户");
         user.setUsername(randomUsername);
-//    user.setGender(Newuser.getGender());
-//    user.setName(Newuser.getName());
-//    user.setHeight(Newuser.getHeight());
-//    user.setUserage(Newuser.getUserage());
-//    user.setBirthday(Newuser.getBirthday());
-//    user.setAcademic(Newuser.getAcademic());
-//    user.setMonthly(Newuser.getMonthly());
-//    user.setPermanent(Newuser.getPermanent());
+        //    user.setGender(Newuser.getGender());
+        //    user.setName(Newuser.getName());
+        //    user.setHeight(Newuser.getHeight());
+        //    user.setUserage(Newuser.getUserage());
+        //    user.setBirthday(Newuser.getBirthday());
+        //    user.setAcademic(Newuser.getAcademic());
+        //    user.setMonthly(Newuser.getMonthly());
+        //    user.setPermanent(Newuser.getPermanent());
 
         user.setEmail(Newuser.getEmail());
 
@@ -393,7 +394,7 @@ public class WebUserController {
                         + "</div>"
                         + "</div>";
 
-// 发送邮件
+                // 发送邮件
                 Email email1 = new Email();
                 email1.setTos(new String[]{email})
                         .setSubject("验证码")
@@ -525,9 +526,9 @@ public class WebUserController {
             if (user == null) {
                 // 新增一个用户
                 User user1 = new User();
-//        user1.setProfile(user.getProfile());
+                // user1.setProfile(user.getProfile());
                 user1.setName("手机用户");
-//        user1.setGender(user.getGender());
+                // user1.setGender(user.getGender());
                 user1.setPhone(phone);
                 user1.setCreateTime(new Date());
                 user1.setLastLogin(new Date());
@@ -738,20 +739,14 @@ public class WebUserController {
                         + "        " + setting.getSitTitle() + " 团队</p>"
                         + "</div>"
                         + "</div>";
-
-// 发送邮件
+                // 发送邮件
                 Email email1 = new Email();
                 email1.setTos(new String[]{email})
                         .setSubject("验证码")
                         .setContent(emailContent); // 设置内容类型为 HTML
-
-
                 int IsSend = mailUtils.sendEmailUseHtml(email1, setting.getSitTitle());
-
-
                 int r = mailUtils.sendCommonEmail(email1, setting.getSitTitle());
                 System.out.println(r);
-
                 if (r == 1) {
                     return Result.succ("验证码已发送");
                 } else {

@@ -10057,7 +10057,7 @@ body:not(.navigation-with-keyboard) :not(input):focus {
 	.macwk-privacy .h-150 {
 		height: 80px!important
 	}
-}
+} 
 
 @-webkit-keyframes bounce-in {
 	0% {

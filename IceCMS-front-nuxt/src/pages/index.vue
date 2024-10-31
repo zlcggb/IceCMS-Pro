@@ -1107,8 +1107,13 @@ export default ({
 </style>
 <style  scoped>
 .gaosiImg {
-  filter: blur(20px) opacity(70%) brightness(110%);
+  animation-delay: 50ms;
+  animation-fill-mode: backwards !important;
+  /* filter: blur(20px) opacity(70%) brightness(110%); */
+  filter: blur(20px) opacity(0.7) brightness(110%);
+  /* transition: filter 0.22s ease; 调整过渡时间和效果 */
   transition: all 0.22s;
+  /* transition: .22s; */
   z-index: 8;
 }
 

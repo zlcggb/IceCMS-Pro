@@ -39,4 +39,8 @@ public class Setting implements Serializable {
 
   /** 网站图片 */
   private boolean imageFormat;
+
+  /** 移动端展示 */
+  private boolean h5Show;
+
 }

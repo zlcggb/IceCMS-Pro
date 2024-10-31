@@ -7,8 +7,8 @@ export default {
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
       { 'http-equiv': 'content-language', content: 'zh-cn' },
-      { hid: 'description', name: 'description', content: '书写心得,分享感悟。' },
-      { hid: 'keywords', name: 'keywords', content: 'javascript技术分享,js技术,vuejs,web前端,前端开发,前端面试,web开发,dsiab,个人博客,前端博客' },
+      { hid: 'description', name: 'description', content: 'IceCMS内容管理系统。' },
+      { hid: 'keywords', name: 'keywords', content: 'vuejs,web前端,前端开发,前端面试,web开发,个人博客,前端博客' },
       // { name: 'referrer', content: 'no-referrer-when-downgrade' }, // 解决其他开启网站防盗链功能,全局会导致百度统计失效
 
     ],
