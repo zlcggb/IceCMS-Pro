@@ -134,7 +134,7 @@
           </div>
           <!-- ---------- -->
           <div v-for="(item, id) in this.comment" :key="id" class="d-flex mb-3">
-            <div class="w-28 mr-3">
+            <div v-if="!item.profile" class="w-28 mr-3">
               <svg
                 viewBox="0 0 264 280"
                 version="1.1"
@@ -475,6 +475,9 @@
                 </g>
               </svg>
             </div>
+            <div v-else class="w-28 mr-3">
+              <img :src="item.profile" style="border-radius: 50%; width: 100%; height: auto;"></img>
+            </div>
             <section class="flex-grow">
               <div class="mb-1">
                 <span class="fs-12 mr-1 fw-600 text-darken">{{
@@ -706,6 +709,7 @@ export default ({
     //获取评论数据
     getallArticleComment(this.articleId).then(resp => {
       this.comment = resp.data
+      console.log(this.comment, "3123")
     })
     //判断是否登录显示临时登录框
     this.judjelogin()
@@ -733,8 +737,7 @@ export default ({
     savetempsuser(){
 
       if(validEmail(this.tempuserform.email)){
-        localStorage.setItem('temp-admin', JSON.stringify(this.tempuserform))
-
+        localStorage.setItem('temp-user', JSON.stringify(this.tempuserform))
         //关闭登录框
          this.cansoles()
       }else{
@@ -752,8 +755,8 @@ export default ({
       this.userJudje = false
     },
     async judjelogin(){
-       const user = JSON.parse(window.localStorage.getItem('access-admin'))
-      this.user = user.data
+       const user = this.$cookies.get("access-user")
+      this.user = user
     },
     formatDate(time) {
       let data = new Date(time)
@@ -763,7 +766,8 @@ export default ({
       //判断是否登录
       //1.是否有登录账户
       //2.是否有本地缓存
-       const temp = JSON.parse(window.localStorage.getItem('temp-admin'))
+       const temp = this.$cookies.get("temp-user")
+
       if(this.user == null && temp == null){
         //显示需要登录页面
          this.userJudje = true
@@ -772,12 +776,13 @@ export default ({
 
       else{
         //正常执行提交流程
-      const user = JSON.parse(window.localStorage.getItem('access-admin'))
+      const user = this.$cookies.get("access-user")
       this.form.content = this.contentarea
       if(user !== null){
-        this.form.username = user.data.name
-        this.form.email = user.data.email
-        this.form.userId = user.data.userid
+        this.form.username = user.name
+        this.form.email = user.email
+        this.form.profile = user.profile
+        this.form.userId = user.userid
       }else{
          this.form.username = temp.username
         this.form.email = temp.email
