@@ -195,9 +195,9 @@
                     <a class="nav-link">最多评论</a>
                   </nav>
                   <div class="more-action">
-                    <nuxt-link to="/list" class="btn btn-more active">
+                    <nuxt-link to="/alllist" class="btn btn-more active">
 
-                      更多软件 <i class="icon-arrow-right fw-600 fs-12 v-2"></i></nuxt-link>
+                      更多资源 <i class="icon-arrow-right fw-600 fs-12 v-2"></i></nuxt-link>
 
                   </div>
                 </div>
@@ -207,8 +207,8 @@
                     <div v-for="item, index in rlist" :key="item.id" class="mw-col list-animation-leftIn delay-3">
                       <nuxt-link :to="'/List/' + item.id">
 
-                      <div v-if="!setting.imageFormat">
-                        <div>
+                        <div v-if="!setting.imageFormat">
+                          <div>
                             <div class="macwk-app border white cursor-pointer">
                               <el-image v-show="item.thumb != null" class="listtitleimg delay-3" :src="item.thumb" lazy>
                                 <div slot="placeholder" class="image-slot">
@@ -246,7 +246,7 @@
                                   <div style="margin-left:12px">
                                     <span style="font-size: 36px;line-height: 1;">
 
-                                      <i  class="light-icon-more icon-next-arrow"></i>
+                                      <i class="light-icon-more icon-next-arrow"></i>
                                     </span>
                                   </div>
 
@@ -256,18 +256,17 @@
                                 </div>
                               </div>
                             </div>
+                          </div>
                         </div>
-                      </div>
-                      <div v-else>
-                        <div @mouseover="dowmloadover(index)" @mouseleave="downloadleave(index)"
-                       >
+                        <div v-else>
+                          <div @mouseover="dowmloadover(index)" @mouseleave="downloadleave(index)">
                             <div class="macwk-app border white cursor-pointer padding-xl">
-
                               <div class="soft-card">
                                 <div class="li-card-img-div">
                                   <img :src="item.thumb" class="budongImg img72 dingweiImg" />
                                   <transition name="fade">
-                                    <img v-show="isAcitive == index" :src="item.thumb" class="gaosiImg img72 dingweiImg" />
+                                    <img v-show="isAcitive == index" :src="item.thumb"
+                                      class="gaosiImg img72 dingweiImg" />
                                   </transition>
                                 </div>
                                 <div class="size-12 text-B6BABF margin-top-90" style="min-height: 20px;">
@@ -279,30 +278,27 @@
                                 <div class="margin-top1 size-14 text-B6BABF limitText">
                                   <span>{{ item.intro }}</span>
                                 </div>
-                                <div class="margin-top2 text-B6BABF flex-row size-12" style=" bottom: 20px; width: 100%;">
-                                  <div>
+                                <div class="margin-top2 text-B6BABF flex-row size-12"
+                                  style="display: flex; flex-wrap: wrap; justify-content: space-between; width: 100%;">
+                                  <div style="margin-left: 0px; display: flex; align-items: center;">
                                     <i class="el-icon-view"></i>
-                                    <span>34.5k</span>
+                                    <span>{{ item.hits || 0 }}</span>
                                   </div>
-                                  <div style="margin-left: 6px;" class="margin-left">
-                                    <i class="el-icon-download"></i>
-                                    <span>1500</span>
+                                  <div style="margin: auto; display: flex; align-items: center;">
+                                    <i class="el-icon-user"></i>
+                                    <span>{{ item.author }}</span>
                                   </div>
-                                  <div style="position: absolute; right: 35px;">
-                                    <span v-if="item.createTime != null"> {{ formatDate(item.createTime) }}</span>
-                                    <span v-else> {{ formatDate(item.addTime) }}</span>
+                                  <div style="position: relative; right: 0px; display: flex; align-items: center;">
+                                    <span v-if="item.createTime != null">{{ formatDate(item.createTime) }}</span>
+                                    <span v-else>{{ formatDate(item.addTime) }}</span>
                                   </div>
                                 </div>
                               </div>
-
                             </div>
-
+                          </div>
                         </div>
-                      </div>
                       </nuxt-link>
                     </div>
-
-
                   </div>
                 </div>
               </div>
@@ -337,7 +333,7 @@
                           delay-0
                           list-animation-leftIn
                         ">
-                        <div >
+                        <div>
                           <nuxt-link :to="'/post/' + item.id">
                             <div class="d-flex align-items-center">
                               <div class="icon-box icon-one">
@@ -400,7 +396,7 @@
                           delay-5
                           list-animation-leftIn
                         ">
-                        <div >
+                        <div>
                           <nuxt-link :to="'/post/' + item.id">
                             <div class="d-flex align-items-center">
                               <div class="icon-box icon-one">
@@ -678,15 +674,37 @@ export default ({
       });
     },
     formatDate(time) {
-      let data = new Date(time)
-      return formatDate(data, 'yyyy-MM-dd hh:mm ')
+      const date = new Date(time);
+      const currentYear = new Date().getFullYear();
+      const year = date.getFullYear();
+
+      if (currentYear - year === 1) {
+        return '去年 ' + date.toLocaleDateString('zh-CN', { month: '2-digit', day: '2-digit' });
+      } else if (currentYear - year === 2) {
+        return '前年 ' + date.toLocaleDateString('zh-CN', { month: '2-digit', day: '2-digit' });
+      } else if (currentYear - year > 2) {
+        return '多年前';
+      } else {
+        return date.toLocaleDateString('zh-CN', { month: '2-digit', day: '2-digit' });
+      }
     },
     rformatDate(time) {
-      let data = new Date(time);
-      return formatDate(data, "yyyy-MM-dd ");
+      const date = new Date(time);
+      const currentYear = new Date().getFullYear();
+      const year = date.getFullYear();
+
+      if (currentYear - year === 1) {
+        return '去年 ' + date.toLocaleDateString('zh-CN', { month: '2-digit', day: '2-digit' });
+      } else if (currentYear - year === 2) {
+        return '前年 ' + date.toLocaleDateString('zh-CN', { month: '2-digit', day: '2-digit' });
+      } else if (currentYear - year > 2) {
+        return '多年前';
+      } else {
+        return date.toLocaleDateString('zh-CN', { month: '2-digit', day: '2-digit' });
+      }
     },
     async getSetting() {
-        this.setting = this.$cookies.get("setting")
+      this.setting = this.$cookies.get("setting")
       let res = await getCarousel();
       if (res) {
         this.Carousel = res.data
@@ -704,7 +722,7 @@ export default ({
       this.rightArr = this.addBackgroundStyles(this.rightArr);
     }
   },
-  mounted() {    
+  mounted() {
     // alert(this.comsys.val(1));
     // 判断是否在服务端
     if (process.client) {
@@ -789,29 +807,28 @@ export default ({
 }
 </style>
 <style lang="scss" scoped>
- 
-  :deep(.delayImg) {
-    .el-image__inner {
-      border-radius: 8px;
-    }
+:deep(.delayImg) {
+  .el-image__inner {
+    border-radius: 8px;
   }
+}
 
 
- 
-  :deep(.delayImgss) {
-    .el-image__inner {
-      border-radius: 8px;
-    }
+
+:deep(.delayImgss) {
+  .el-image__inner {
+    border-radius: 8px;
   }
+}
 
 
-  :deep(.delay-3) {
-    .el-image__inner {
-      width: 224px;
-      height: 128px;
-      border-radius: 8px 8px 0px 0px;
-    }
+:deep(.delay-3) {
+  .el-image__inner {
+    width: 224px;
+    height: 128px;
+    border-radius: 8px 8px 0px 0px;
   }
+}
 
 
 .delayImgs {
@@ -1091,11 +1108,11 @@ export default ({
   transform: translateY(-50%);
 }
 
-  :deep(.delay-3) {
-    .el-image__inner {
-      border-radius: 8px 8px 0px 0px;
-    }
+:deep(.delay-3) {
+  .el-image__inner {
+    border-radius: 8px 8px 0px 0px;
   }
+}
 
 .app-content-main .app-content-bottom {
   border-radius: 15px;
@@ -1105,7 +1122,7 @@ export default ({
   padding: 13px 9px 5px;
 }
 </style>
-<style  scoped>
+<style scoped>
 .gaosiImg {
   animation-delay: 50ms;
   animation-fill-mode: backwards !important;

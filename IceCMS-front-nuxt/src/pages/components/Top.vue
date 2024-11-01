@@ -1234,7 +1234,6 @@ export default ({
       this.activeTab = tab;
     }
   },
-
   data() {
     return {
       forgotPassword: false,

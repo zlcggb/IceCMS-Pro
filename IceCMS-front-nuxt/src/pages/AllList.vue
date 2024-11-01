@@ -6,10 +6,7 @@
         <div data-fetch-key="0" :class="[themeClass]" class="app macwk-animation">
           <top :message2="acticve" />
           <div class="app-main mobile-layout">
-            <div
-              class="w-full bg auto d-flex layout-min-full-height"
-              :class="gridOrlist"
-            >
+            <div class="w-full bg auto d-flex layout-min-full-height" :class="gridOrlist">
               <div class="app-sidebar pc-model">
                 <div class="pr-3 pl-2">
                   <p class="fs-12 opacity-40 mb-0 pt-1">分类</p>
@@ -17,35 +14,20 @@
                     <div class="vsm--scroll-wrapper">
                       <div class="vsm--list">
                         <div class="vsm--item" @click="getList()">
-                          <span
-                            role="link"
-                            href="[object Object]"
-                            class="vsm--link vsm--link_level-1"
-                            :class="{ ' vsm--link_active': allIndex }"
-                            ><span class="vsm--title">全部资源</span>
-                            <!----></span
-                          >
+                          <span role="link" href="[object Object]" class="vsm--link vsm--link_level-1"
+                            :class="{ ' vsm--link_active': allIndex }"><span class="vsm--title">全部资源</span>
+                            <!----></span>
                           <!---->
                         </div>
-                        <div
-                          @click="getNewarticleclass(item.id)"
-                          class="vsm--item"
-                          v-for="(item, id) in this.classlist"
-                          :key="id"
-                        >
-                          <span
-                            role="link"
-                            href="[object Object]"
-                            class="vsm--link vsm--link_level-1"
-                            :class="{
-                              'vsm--link_active': item.id == clickIndex,
-                            }"
-                            ><span class="vsm--title">{{ item.name }}</span>
+                        <div @click="getNewarticleclass(item.id)" class="vsm--item" v-for="(item, id) in this.classlist"
+                          :key="id">
+                          <span role="link" href="[object Object]" class="vsm--link vsm--link_level-1" :class="{
+                            'vsm--link_active': item.id == clickIndex,
+                          }"><span class="vsm--title">{{ item.name }}</span>
                             <div class="vsm--arrow vsm--arrow_slot">
-                              <span
-                                ><i class="icon-chevron-right"></i
-                              ></span></div
-                          ></span>
+                              <span><i class="icon-chevron-right"></i></span>
+                            </div>
+                          </span>
                           <!---->
                         </div>
                       </div>
@@ -117,246 +99,181 @@
                           </span>
                         </h5>
                       </div>
-                      <nav
-                        class="menu menu--macwk——list macwk-soft-list-menu flex"
-                      >
+                      <nav class="menu menu--macwk——list macwk-soft-list-menu flex">
                         <ul class="menu__list">
-                          <li
-                            class="menu__item"
-                            @click="changeNews()"
-                            :class="{
-                              'menu__item--current': news === sortOrder,
-                            }"
-                          >
+                          <li class="menu__item" @click="changeNews()" :class="{
+                            'menu__item--current': news === sortOrder,
+                          }">
                             <a class="menu__link"> 最新 </a>
                           </li>
-                          <li
-                            class="menu__item"
-                            @click="changeDownload()"
-                            :class="{
-                              'menu__item--current': download === sortOrder,
-                            }"
-                          >
+                          <li class="menu__item" @click="changeDownload()" :class="{
+                            'menu__item--current': download === sortOrder,
+                          }">
                             <a class="menu__link"> 下载 </a>
                           </li>
-                          <li
-                            class="menu__item"
-                            @click="changeDiscuss()"
-                            :class="{
-                              'menu__item--current': discuss === sortOrder,
-                            }"
-                          >
+                          <li class="menu__item" @click="changeDiscuss()" :class="{
+                            'menu__item--current': discuss === sortOrder,
+                          }">
                             <a class="menu__link"> 评论 </a>
                           </li>
-                          <li
-                            class="menu__item"
-                            @click="changeLove()"
-                            :class="{
-                              'menu__item--current': love === sortOrder,
-                            }"
-                          >
+                          <li class="menu__item" @click="changeLove()" :class="{
+                            'menu__item--current': love === sortOrder,
+                          }">
                             <a class="menu__link"> 喜欢 </a>
                           </li>
-                          <li
-                            class="menu__item"
-                            @click="changeRecommend()"
-                            :class="{
-                              'menu__item--current': recommend === sortOrder,
-                            }"
-                          >
+                          <li class="menu__item" @click="changeRecommend()" :class="{
+                            'menu__item--current': recommend === sortOrder,
+                          }">
                             <a class="menu__link"> 推荐 </a>
                           </li>
                           <li class="menu__line"></li>
                         </ul>
                       </nav>
                       <div class="target-blank">
-                        <div
-                          role="switch"
-                          class="el-switch mr-6"
-                          style="margin-top: -3px"
-                        >
-                          <input
-                            type="checkbox"
-                            name=""
-                            true-value="true"
-                            class="el-switch__input"
-                          />
+                        <div role="switch" class="el-switch mr-6" style="margin-top: -3px">
+                          <input type="checkbox" name="" true-value="true" class="el-switch__input" />
                           <!---->
                           <div>
-                            <el-switch
-                              v-model="istargetjudje"
-                              @change="istargetJudje()"
-                              active-color="#13ce66"
-                              inactive-color="#ff4949"
-                            >
+                            <el-switch v-model="istargetjudje" @change="istargetJudje()" active-color="#13ce66"
+                              inactive-color="#ff4949">
                             </el-switch>
                           </div>
 
-                          <span class="el-switch__label el-switch__label--right"
-                            ><!----><span aria-hidden="true"
-                              >新窗口打开</span
-                            ></span
-                          >
+                          <span class="el-switch__label el-switch__label--right"><!----><span
+                              aria-hidden="true">新窗口打开</span></span>
                         </div>
                       </div>
                       <div class="d-flex justify-content-end">
                         <div class="grid-change">
-                          <a
-                            @click="changelayout()"
-                            class="i-con-h-a position-relative cursor"
-                            :class="layoutactive"
-                            ><i class="i-con i-con-layout"><i></i></i></a
-                          ><a
-                            @click="changelist()"
-                            class="i-con-h-a position-relative cursor"
-                            :class="listactive"
-                            ><i class="i-con i-con-list"><i></i></i></a
-                          ><a
-                            @click="changegrid()"
-                            class="i-con-h-a position-relative cursor"
-                            :class="gridactive"
-                            ><i class="i-con i-con-grid"><i></i></i
-                          ></a>
+                          <a @click="changelayout()" class="i-con-h-a position-relative cursor" :class="layoutactive"><i
+                              class="i-con i-con-layout"><i></i></i></a><a @click="changelist()"
+                            class="i-con-h-a position-relative cursor" :class="listactive"><i
+                              class="i-con i-con-list"><i></i></i></a><a @click="changegrid()"
+                            class="i-con-h-a position-relative cursor" :class="gridactive"><i
+                              class="i-con i-con-grid"><i></i></i></a>
                         </div>
                       </div>
                     </div>
                     <!---->
                     <!---->
-                    <div
-                      id="listAppContainer"
-                      class="app-content-body listAppContainer"
-                    >
+                    <div id="listAppContainer" class="app-content-body listAppContainer">
                       <div class="mw-row">
                         <template>
-                            <div v-for="item, index in list" :key="item.id"
-                              class="mw-col list-animation-leftIn delay-3">
-                              <div v-if="setting.imageFormat">
-                                <div v-if="item.status.includes('published')">
-                                  <nuxt-link :target="istarget" :to="'/list/' + item.id">
-                                    <a class="macwk-app border white cursor-pointer">
-                                      <el-image v-if="item.thumb != null" class="listtitleimg delay-3" :src="item.thumb"
-                                        lazy>
-                                        <div slot="placeholder" class="image-slot">
-                                          <img style="
+                          <div v-for="item, index in list" :key="item.id" class="mw-col list-animation-leftIn delay-3">
+                            <div v-if="!setting.imageFormat">
+                              <div v-if="item.status.includes('published')">
+                                <nuxt-link :target="istarget" :to="'/list/' + item.id">
+                                  <a class="macwk-app border white cursor-pointer">
+                                    <el-image v-if="item.thumb != null" class="listtitleimg delay-3" :src="item.thumb"
+                                      lazy>
+                                      <div slot="placeholder" class="image-slot">
+                                        <img style="
                                         width: 100%;
                                         height: 100%;
                                         object-fit: cover;
                                       " src="../static/image/loding.gif" />
-                                        </div>
-                                      </el-image>
+                                      </div>
+                                    </el-image>
 
-                                      <div v-else class="delayImg" :style="getStyles()">
-                                        <h3 class="
+                                    <div v-else class="delayImg" :style="getStyles()">
+                                      <h3 class="
                                       flex
                                       text-center text-white
                                       opacity-50
                                     ">
-                                          NOPIC
-                                        </h3>
-                                      </div>
+                                        NOPIC
+                                      </h3>
+                                    </div>
 
-                                      <div class="macwk-app__body">
-                                        <div class="card-meta">
-                                          <div class="meta-item post-author">
-                                            <el-avatar style=" margin-bottom: 3px;  margin-right: 3px;"
-                                              :src="item.authorThumb"></el-avatar>
-                                            <a class="author-name">{{ item.author }}</a>
-                                          </div>
-                                          <span v-if="item.createTime != null" class="meta-item">
-                                            {{ formatDate(item.createTime) }}</span>
-                                          <span v-else class="meta-item"> {{ formatDate(item.addTime) }}</span>
-
-                                          <span class="meta-item"><i class="el-icon-share"></i></span>
+                                    <div class="macwk-app__body">
+                                      <div class="card-meta">
+                                        <div class="meta-item post-author">
+                                          <el-avatar style=" margin-bottom: 3px;  margin-right: 3px;"
+                                            :src="item.authorThumb"></el-avatar>
+                                          <a class="author-name">{{ item.author }}</a>
                                         </div>
-                                        <h3 class="heading-tertiary-list">{{ item.title }}</h3>
+                                        <span v-if="item.createTime != null" class="meta-item">
+                                          {{ formatDate(item.createTime) }}</span>
+                                        <span v-else class="meta-item"> {{ formatDate(item.addTime) }}</span>
+
+                                        <span class="meta-item"><i class="el-icon-share"></i></span>
                                       </div>
-                                      <div class="extend">
-                                        <div class="button">
-                                          <div style="margin-left:12px">
-                                            <span style="font-size: 36px;line-height: 1;">
+                                      <h3 class="heading-tertiary-list">{{ item.title }}</h3>
+                                    </div>
+                                    <div class="extend">
+                                      <div class="button">
+                                        <div style="margin-left:12px">
+                                          <span style="font-size: 36px;line-height: 1;">
 
-                                              <i  class="light-icon-more icon-next-arrow"></i>
-                                            </span>
-                                          </div>
-
-                                          <div style="margin-right:12px">
-                                            <span class="value">￥{{ item.price }}</span>
-                                          </div>
+                                            <i class="light-icon-more icon-next-arrow"></i>
+                                          </span>
                                         </div>
-                                      </div>
-                                      <div class="macwk-app__footer">
-                                        <div v-show="showfootnext" class="macwk-app__footer--more">
-                                          <i class="light-icon-more icon-next-arrow"></i>
+
+                                        <div style="margin-right:12px">
+                                          <span class="value">￥{{ item.price }}</span>
                                         </div>
                                       </div>
-                                    </a>
-                                  </nuxt-link>
-                                </div>
+                                    </div>
+                                    <div class="macwk-app__footer">
+                                      <div v-show="showfootnext" class="macwk-app__footer--more">
+                                        <i class="light-icon-more icon-next-arrow"></i>
+                                      </div>
+                                    </div>
+                                  </a>
+                                </nuxt-link>
                               </div>
-                              <div v-else>
-                                <div @mouseover="dowmloadover(index)" @mouseleave="downloadleave(index)"
-                                  v-if="item.status.includes('published')">
-                                  <nuxt-link :target="istarget" :to="'/list/' + item.id">
-                                    <a class="macwk-app border white cursor-pointer padding-xl">
-
-                                      <div      class="soft-card">
-                                        <div      class="li-card-img-div">
-                                          <img      :src="item.thumb"
-                                            class="budongImg img72 dingweiImg" />
-                                          <transition name="fade">
-                                            <img      v-if="isAcitive === index" :src="item.thumb"
-                                              class="gaosiImg img72 dingweiImg" />
-                                          </transition>
-                                        </div>
-                                        <div      class="size-12 text-B6BABF margin-top-90"
-                                          style="min-height: 20px;">
-                                          <span     >{{ item.subhead }}</span>
-                                        </div>
-                                        <div     
-                                          class="margin-top size-18 text-bold  text-block card-hover-red">
-                                          <span     >{{ item.title }} </span>
-                                        </div>
-                                        <div      class="margin-top1 size-14 text-B6BABF limitText">
-                                          <span     >{{ item.intro }}</span>
-                                        </div>
-                                        <div      class="margin-top2 text-B6BABF flex-row size-12"
-                                          style=" bottom: 20px; width: 100%;">
-                                          <div     >
-                                            <i      class="el-icon-view"></i>
-                                            <span     >{{ item.hits }}</span>
-                                          </div>
-                                          <div      style="margin-left: 6px;" class="margin-left">
-                                            <i      class="el-icon-user"></i>
-                                            <span     >{{ item.author }}</span>
-                                          </div>
-                                          <div      style="position: absolute; right: 35px;">
-                                            <span v-if="item.createTime != null"> {{ formatDate(item.createTime)
-                                            }}</span>
-                                            <span v-else> {{ formatDate(item.addTime) }}</span>
-                                          </div>
-                                        </div>
-                                      </div>
-
-                                    </a>
-
-                                  </nuxt-link>
-                                </div>
-                              </div>
-
                             </div>
-                          </template>
+                            <div v-else>
+                              <div @mouseover="dowmloadover(index)" @mouseleave="downloadleave(index)"
+                                v-if="item.status.includes('published')">
+                                <nuxt-link :target="istarget" :to="'/list/' + item.id">
+                                  <a class="macwk-app border white cursor-pointer padding-xl">
+                                    <div class="soft-card">
+                                      <div class="li-card-img-div">
+                                        <img :src="item.thumb" class="budongImg img72 dingweiImg" />
+                                        <transition name="fade">
+                                          <img v-if="isAcitive === index" :src="item.thumb"
+                                            class="gaosiImg img72 dingweiImg" />
+                                        </transition>
+                                      </div>
+                                      <div class="size-12 text-B6BABF margin-top-90" style="min-height: 20px;">
+                                        <span>{{ item.subhead }}</span>
+                                      </div>
+                                      <div class="margin-top size-18 text-bold  text-block card-hover-red">
+                                        <span>{{ item.title }} </span>
+                                      </div>
+                                      <div class="margin-top1 size-14 text-B6BABF limitText">
+                                        <span>{{ item.intro }}</span>
+                                      </div>
+                                      <div class="margin-top2 text-B6BABF flex-row size-12"
+                                        style="display: flex; flex-wrap: wrap; justify-content: space-between; width: 100%;">
+                                        <div style="margin-left: 0px; display: flex; align-items: center;">
+                                          <i class="el-icon-view"></i>
+                                          <span>{{ item.hits || 0 }}</span>
+                                        </div>
+                                        <div style="margin: auto; display: flex; align-items: center;">
+                                          <i class="el-icon-user"></i>
+                                          <span>{{ item.author }}</span>
+                                        </div>
+                                        <div
+                                          style="position: relative; right: 0px; display: flex; align-items: center;">
+                                          <span v-if="item.createTime != null">{{ formatDate(item.createTime) }}</span>
+                                          <span v-else>{{ formatDate(item.addTime) }}</span>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </a>
+                                </nuxt-link>
+                              </div>
+                            </div>
+                          </div>
+                        </template>
                       </div>
                     </div>
                     <!---->
-                         <el-pagination
-                     class="app-content-bottom"
-                         @size-change="handleSizeChange" 
-                           @current-change="handleCurrentChange" 
-                          :current-page.sync="listQuery.page"
-                          :page-size="listQuery.limit"
-                           layout="prev, pager, next"
-                          :total="total"
-                    />
+                    <el-pagination class="app-content-bottom" @size-change="handleSizeChange"
+                      @current-change="handleCurrentChange" :current-page.sync="listQuery.page"
+                      :page-size="listQuery.limit" layout="prev, pager, next" :total="total" />
                   </div>
                   <div class="app-content-info">
                     <div class="siderbar-apps border d-flex flex-column mb-5">
@@ -368,26 +285,15 @@
                     <div class="siderbar-apps border d-flex flex-column">
                       <div class="van-tabs van-tabs--line">
                         <div class="van-tabs__wrap">
-                          <div
-                            role="tablist"
-                            class="van-tabs__nav van-tabs__nav--line"
-                          >
+                          <div role="tablist" class="van-tabs__nav van-tabs__nav--line">
                             <div class="van-tabs__line"></div>
                           </div>
                         </div>
                         <div class="van-tabs__content">
-                          <div
-                            role="tabpanel"
-                            class="van-tab__pane"
-                            style="display: none"
-                          >
+                          <div role="tabpanel" class="van-tab__pane" style="display: none">
                             <!---->
                           </div>
-                          <div
-                            role="tabpanel"
-                            class="van-tab__pane"
-                            style="display: none"
-                          >
+                          <div role="tabpanel" class="van-tab__pane" style="display: none">
                             <!---->
                           </div>
                         </div>
@@ -398,14 +304,12 @@
                 </div>
               </div>
               <div class="app-content mobile-model">
-                <div
-                  class="
+                <div class="
                     d-flex
                     layout-min-full-height
                     justify-content-center
                     align-items-center
-                  "
-                >
+                  ">
                   <div class="text-center" style="width: 80%; margin: 0 auto">
                     <h1 class="mb-4">哇，窗口太小啦</h1>
                     <p class="mb-6">请调整浏览器窗口大小或者请使用手机查看！</p>
@@ -414,17 +318,15 @@
               </div>
             </div>
           </div>
-         <foot/>
+          <foot />
           <div infos="0">
-            <div
-              class="
+            <div class="
                 adBanner
                 pub_300x250 pub_300x250m pub_728x90
                 text-ad
                 textAd
                 text_ad text_ads text-ads text-ad-links
-              "
-            ></div>
+              "></div>
           </div>
         </div>
       </div>
@@ -443,12 +345,12 @@ import { formatDate, GetWeekdate } from '@/utils/date.js'
 // import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 export default ({
   name: 'List',
-  components: {  
+  components: {
     top: () => import("./components/Top.vue"),
     foot: () => import("./components/Foots.vue"),
-     },
-     computed: {
-  themeClass() {
+  },
+  computed: {
+    themeClass() {
       console.log(this.isDark)
       return this.isDark ? 'black' : 'light';
     }
@@ -456,7 +358,7 @@ export default ({
   data() {
     return {
       isDark: false,
-      setting: "",
+      setting: {},
       loading: true,
       isAcitive: false,
       news: "new",
@@ -524,28 +426,28 @@ export default ({
     },
     async getSetting() {
 
-    let res1 = await getSetting();
-    if (res1) {
-      this.setting = res1.data
-    }
+      let res1 = await getSetting();
+      if (res1) {
+        this.setting = res1.data
+      }
     },
-         // 分页
-         // 每页显示的条数
-        handleSizeChange(val) {
-            // 改变每页显示的条数 
-            this.listQuery.limit=val
-            // 点击每页显示的条数时，显示第一页
-            this.getData(val,1)
-            // 注意：在改变每页显示的条数时，要将页码显示到第一页
-            this.currentPage=1  
-        },
-          // 显示第几页
-        handleCurrentChange(val) {
-            // 改变默认的页数
-            this.listQuery.page=val
-            // 切换页码时，要获取每页显示的条数
-            this.getList()
-        },
+    // 分页
+    // 每页显示的条数
+    handleSizeChange(val) {
+      // 改变每页显示的条数 
+      this.listQuery.limit = val
+      // 点击每页显示的条数时，显示第一页
+      this.getData(val, 1)
+      // 注意：在改变每页显示的条数时，要将页码显示到第一页
+      this.currentPage = 1
+    },
+    // 显示第几页
+    handleCurrentChange(val) {
+      // 改变默认的页数
+      this.listQuery.page = val
+      // 切换页码时，要获取每页显示的条数
+      this.getList()
+    },
     changeNews() {
       this.sortOrder = "news"
     },
@@ -618,23 +520,23 @@ export default ({
       }
     },
     async getNumber() {
-      let res = await  getAllResourceNumber();
+      let res = await getAllResourceNumber();
       if (res) {
-      this.ResourceNumber = res.data
+        this.ResourceNumber = res.data
       }
     },
     async getList() {
       this.allIndex = true
       this.clickIndex = false
       let res1 = await getAllResource(this.listQuery);
-       if (res1) {
+      if (res1) {
         console.log(res1)
         //获取文章
         this.list = res1.data.data
         this.template = res1.data.data
         this.total = res1.data.total
       }
-       let res2 = await getResourceClasslist();
+      let res2 = await getResourceClasslist();
       if (res2) {
         //获取分类
         this.classlist = res2.data
@@ -675,8 +577,9 @@ export default ({
       }
       // this.lazyLoad();
       // 在浏览器端调接口，需要服务端做反向代理
-        this.getList()
-        this.getNumber()
+      this.getList()
+      this.getNumber()
+      this.getSetting()
     }
     // 顶部广告
     // (window.slotbydup = window.slotbydup || []).push({
@@ -705,12 +608,11 @@ export default ({
 </style>
 
 <style lang="scss" scoped>
- 
-  :deep(.delay-3) {
-    .el-image__inner {
-      border-radius: 8px 8px 0px 0px;
-    }
+:deep(.delay-3) {
+  .el-image__inner {
+    border-radius: 8px 8px 0px 0px;
   }
+}
 
 
 .delayImg {
@@ -803,13 +705,21 @@ export default ({
   transform: translateY(-50%);
 }
 </style>
-<style  scoped>
-.fade-enter-active, .fade-leave-active {
-  transition: opacity 0.3s ease, visibility 0.3s ease; /* 定义过渡效果 */
+<style scoped>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  /* 定义过渡效果 */
 }
-.fade-enter, .fade-leave-to /* .fade-leave-active 在 Vue.js 2.1.8+ 中自动应用 */ {
+
+.fade-enter,
+.fade-leave-to
+
+/* .fade-leave-active 在 Vue.js 2.1.8+ 中自动应用 */
+  {
   opacity: 0;
-  visibility: hidden; /* 在过渡开始时隐藏元素 */
+  visibility: hidden;
+  /* 在过渡开始时隐藏元素 */
 }
 
 .gaosiImg {
@@ -895,11 +805,12 @@ export default ({
   margin-top: 20px;
 }
 
-:deep(.home)  {
+:deep(.home) {
   display: flex;
   flex-wrap: wrap;
 }
-:deep(.el-skeleton)  {
+
+:deep(.el-skeleton) {
   display: flex;
   flex-wrap: wrap;
 }

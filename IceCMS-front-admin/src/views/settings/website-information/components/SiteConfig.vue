@@ -93,7 +93,9 @@ const siteConfig = ref({
   sitLogo: '',
   sitSrc: '',
   banquan: '',
-  beian: ''
+  imageFormat: '',
+  beian: '',
+  h5Show: '',
 });
 
 // 初始化网站配置

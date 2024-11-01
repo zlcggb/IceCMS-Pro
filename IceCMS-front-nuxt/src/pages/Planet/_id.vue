@@ -1779,7 +1779,7 @@ button:hover {
   --width: 150px;
   --timing: 8s;
   border: 0;
-  width: 80px;
+  width: 100px;
   height: 40px;
   padding-block: 1em;
   color: #fff;
