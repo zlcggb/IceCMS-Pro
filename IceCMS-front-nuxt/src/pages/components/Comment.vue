@@ -651,7 +651,7 @@
                   >
                     <div class="w-60" />
                     <div class="flex-grow">
-                      <span class="fw-300 fs-24">MacWk.com</span>
+                      <span class="fw-300 fs-24">IceCMS.com</span>
                     </div>
                   </div>
                 </div>
@@ -709,7 +709,6 @@ export default ({
     //获取评论数据
     getallArticleComment(this.articleId).then(resp => {
       this.comment = resp.data
-      console.log(this.comment, "3123")
     })
     //判断是否登录显示临时登录框
     this.judjelogin()

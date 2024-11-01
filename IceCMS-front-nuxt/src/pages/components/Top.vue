@@ -445,15 +445,10 @@
                 </div>
               </div>
             </div>
-            <div class="flex-row justify-between items-start self-start group_1">
-              <img class="image image_3"
-                src="https://ide.code.fun/api/image?token=6716186338a7c10015881310&name=55167cb7355819bd03753c9bd6f25a6b.png" />
-              <img class="image image_2"
-                src="https://ide.code.fun/api/image?token=6716186338a7c10015881310&name=17866fe53ba884d3f24c5aef69da7a79.png" />
-            </div>
+          
             <div class="flex-col self-stretch group_3">
               <div class="flex-col items-start self-stretch group_4">
-                <span class="text_4">当前成长10515，距离升级Lv.5 还需要285</span>
+                <span class="text_4"></span>
                 <div class="flex-row justify-between equal-division mt-15">
                   <div class="flex-col items-center equal-division-item">
                     <span class="font">119</span>
@@ -474,22 +469,22 @@
           <div class="flex-col-bar self-start group_5">
             <div class="flex-row-bar items-center group_6 view-bar">
               <img class="image_4"
-                src="https://ide.code.fun/api/image?token=6716186338a7c10015881310&name=775ab799af101d7db890b565a9a5a372.png" />
+                src="../../static/image/top/top-user.png" />
               <span class="ml-20 font_3">个人中心</span>
             </div>
             <div class="flex-row-bar group_6 view-bar">
               <img class="image_5"
-                src="https://ide.code.fun/api/image?token=6716186338a7c10015881310&name=ed2744fa182c3ca2bd86f65c2ea25769.png" />
+              src="../../static/image/top/top-start.png" />
               <span class="ml-20 font_3">资源管理</span>
             </div>
             <div class="flex-row-bar view-bar">
               <img class="image_6"
-                src="https://ide.code.fun/api/image?token=6716186338a7c10015881310&name=d2ff13cdd5319e666a93eba391bdaa70.png" />
+              src="../../static/image/top/top-star.png" />
               <span class="ml-18 font_3">个人收藏</span>
             </div>
             <div @click="loginout()" class="flex-row-bar items-center group_6 view-bar-2">
               <img class="image_7"
-                src="https://ide.code.fun/api/image?token=6716186338a7c10015881310&name=98ae7ba00542b035ccb62ad4754089a4.png" />
+              src="../../static/image/top/top-out.png" />
               <span class="ml-18 font_3">退出登录</span>
             </div>
           </div>

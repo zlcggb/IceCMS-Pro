@@ -7,22 +7,24 @@ const service = axios.create({
   timeout: 5000 // request timeout
 })
 
-// request interceptor
-service.interceptors.request.use(
-  config => {
-    //这里得加个判空条件
-    const admin = JSON.parse(window.localStorage.getItem('access-admin'))
-    if(admin != null) {  config.headers.Authorization = admin.data.token;
-    }
-    // do something before request is sent
-    return config
-  },
-  error => {
-    // do something with request error
-    console.log(error) // for debug
-    return Promise.reject(error)
-  }
-)
+// request interceptor 身份验证
+// service.interceptors.request.use(
+//   config => {
+//     //这里得加个判空条件
+//           const user = this.$cookies.get("access-user")
+
+//     console.log(user,"user")
+//     if(admin != null) {  config.headers.Authorization = admin.data.token;
+//     }
+//     // do something before request is sent
+//     return config
+//   },
+//   error => {
+//     // do something with request error
+//     console.log(error) // for debug
+//     return Promise.reject(error)
+//   }
+// )
 
 // response interceptor
 service.interceptors.response.use(

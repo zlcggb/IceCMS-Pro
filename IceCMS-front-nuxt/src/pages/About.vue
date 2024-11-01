@@ -20,7 +20,7 @@
                   <div class="main-content">
                     <div class="macwk-about-slider">
                       <div class="item">
-                        <p>在 <span class="fw-600 text-primary fs-22">MacWk.com</span>，</p>
+                        <p>在 <span class="fw-600 text-primary fs-22">IceCMS.cn</span>，</p>
                         <p>不但有众多业界所推崇的主流软件，</p>
                         <p>还有许多你不曾了解的小众精品软件。</p>
                         <p>它们是工具，</p>
@@ -28,7 +28,7 @@
                         <p>它们又不仅仅是工具，</p>
                         <p>或许还可以成为和你一路成长并肩作战的“好朋友、好兄弟”。</p>
                         <p>够精品，才高效！</p>
-                        <p>MacWk.com，为你精选！</p>
+                        <p>IceCMS.cn，为你精选！</p>
                       </div>
                     </div>
                   </div>

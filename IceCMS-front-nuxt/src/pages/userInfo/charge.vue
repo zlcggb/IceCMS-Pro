@@ -191,7 +191,8 @@ export default {
   methods: {
     // 查询订单状态
     queryOrderStatus() {
-      const user = JSON.parse(window.localStorage.getItem('access-admin'))
+            const user = this.$cookies.get("access-user")
+
       console.log('查询订单状态')
       UpdateIntegral(user.data.userid, this.form.integral, this.orderNo).then(resp => {
         console.log(resp)
@@ -240,7 +241,8 @@ export default {
         //打开支付二维码
         this.aliDialogVisible = true
         //调用统一下单接口
-        const user = JSON.parse(window.localStorage.getItem('access-admin'))
+              const user = this.$cookies.get("access-user")
+
         aliPayApi.ftofPayVipIntegralLogin(this.form.integral, user.data.userid).then(response => {
           console.log(response.data.data.codeUrl)
           this.codeUrl = response.data.data.codeUrl
@@ -259,7 +261,8 @@ export default {
         //打开支付二维码
         this.wxDialogVisible = true
         //调用统一下单接口
-        const user = JSON.parse(window.localStorage.getItem('access-admin'))
+              const user = this.$cookies.get("access-user")
+
         wxPayApi.nativePayVipIntegralLogin(this.form.integral, user.data.userid).then(response => {
           console.log(response.data.data.codeUrl)
           this.codeUrl = response.data.data.codeUrl
@@ -276,7 +279,8 @@ export default {
       }
     },
     onSubmit() {
-      const user = JSON.parse(window.localStorage.getItem('access-admin'))
+            const user = this.$cookies.get("access-user")
+
       this.userJudje = (user == null)
       if (!this.userJudje) { this.userid = user.data.userid }
       if (this.userJudje) {

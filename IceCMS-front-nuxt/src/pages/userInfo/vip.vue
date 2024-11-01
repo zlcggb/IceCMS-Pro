@@ -2,18 +2,9 @@
   <div class="home">
     <!-- 微信支付二维码 -->
     <div>
-      <el-dialog
-        :visible.sync="wxDialogVisible"
-        :show-close="false"
-        @close="closeDialog"
-        width="320px"
-        center
-      >
+      <el-dialog :visible.sync="wxDialogVisible" :show-close="false" @close="closeDialog" width="320px" center>
         <h5 class="outh5">
-          <img
-            src="../../static/image/pay/weixinbig.png"
-            class="alipaybig_icon"
-          />
+          <img src="../../static/image/pay/weixinbig.png" class="alipaybig_icon" />
         </h5>
         <h5 class="outh5">
           <div class="bottom alipay">
@@ -33,18 +24,9 @@
     </div>
     <!-- 支付宝支付二维码 -->
     <div>
-      <el-dialog
-        :visible.sync="aliDialogVisible"
-        :show-close="false"
-        @close="closeDialog"
-        width="320px"
-        center
-      >
+      <el-dialog :visible.sync="aliDialogVisible" :show-close="false" @close="closeDialog" width="320px" center>
         <h5 class="outh5">
-          <img
-            src="../../static/image/pay/alipaybig.png"
-            class="alipaybig_icon"
-          />
+          <img src="../../static/image/pay/alipaybig.png" class="alipaybig_icon" />
         </h5>
         <h5 class="outh5">
           <div class="bottom alipay">
@@ -63,77 +45,36 @@
       </el-dialog>
     </div>
     <!-- 选择支付方式（登录） -->
-    <el-dialog
-      :visible.sync="PaymentDialogVisibleLogin"
-      :show-close="false"
-      @close="closeDialog"
-      width="320px"
-      center
-    >
+    <el-dialog :visible.sync="PaymentDialogVisibleLogin" :show-close="false" @close="closeDialog" width="320px" center>
       <h6 class="outh5">请选择支付方式</h6>
       <div class="swal2-content">
         <div id="swal2-content" style="display: block">
           <div class="pay-button-box">
-            <div
-              @click="selectPayTypeLogin('alipay')"
-              class="pay-item"
-              id="alipay"
-              data-type="1"
-            >
-              <img
-                style="margin-right: 14px"
-                height="40"
-                width="40"
-                src="../../static/image/pay/zhifubaorenzheng.svg"
-              /><span>支付宝</span>
+            <div @click="selectPayTypeLogin('alipay')" class="pay-item" id="alipay" data-type="1">
+              <img style="margin-right: 14px" height="40" width="40"
+                src="../../static/image/pay/zhifubaorenzheng.svg" /><span>支付宝</span>
             </div>
-            <div
-              @click="selectPayTypeLogin('wxpay')"
-              class="pay-item"
-              id="weixinpay"
-              data-type="2"
-            >
-              <img
-                style="margin: 12px"
-                height="40"
-                width="40"
-                src="../../static/image/pay/weixinzhifu.svg"
-              /><span>微信支付</span>
+            <div @click="selectPayTypeLogin('wxpay')" class="pay-item" id="weixinpay" data-type="2">
+              <img style="margin: 12px" height="40" width="40"
+                src="../../static/image/pay/weixinzhifu.svg" /><span>微信支付</span>
             </div>
-            <div
-              @click="selectPayTypeLogin('wxpay')"
-              class="pay-item"
-              id="weixinpay"
-              data-type="2"
-            >
-              <img
-                style="margin: 12px"
-                height="40"
-                width="40"
-                src="../../static/image/pay/jifen.svg"
-              /><span>积分支付</span>
+            <div @click="selectPayTypeLogin('wxpay')" class="pay-item" id="weixinpay" data-type="2">
+              <img style="margin: 12px" height="40" width="40"
+                src="../../static/image/pay/jifen.svg" /><span>积分支付</span>
             </div>
           </div>
           <p style="font-size: 13px; padding: 0; margin: 0"></p>
         </div>
-        <input class="swal2-input" style="display: none" /><input
-          type="file"
-          class="swal2-file"
-          style="display: none"
-        />
+        <input class="swal2-input" style="display: none" /><input type="file" class="swal2-file"
+          style="display: none" />
         <div class="swal2-range" style="display: none">
           <input type="range" /><output></output>
         </div>
         <select class="swal2-select" style="display: none"></select>
         <div class="swal2-radio" style="display: none"></div>
-        <label for="swal2-checkbox" class="swal2-checkbox" style="display: none"
-          ><input type="checkbox" /><span class="swal2-label"></span></label
-        ><textarea class="swal2-textarea" style="display: none"></textarea>
-        <div
-          class="swal2-validation-message"
-          id="swal2-validation-message"
-          style="display: none"
-        ></div>
+        <label for="swal2-checkbox" class="swal2-checkbox" style="display: none"><input type="checkbox" /><span
+            class="swal2-label"></span></label><textarea class="swal2-textarea" style="display: none"></textarea>
+        <div class="swal2-validation-message" id="swal2-validation-message" style="display: none"></div>
       </div>
     </el-dialog>
 
@@ -142,49 +83,35 @@
         <el-row :gutter="12">
           <el-col :span="8">
             <div @click="Byclick1()">
-              <el-card
-                style="border-radius: 12px"
-                :style="cardStyle1"
-                shadow="hover"
-              >
+              <el-card style="border-radius: 12px" :style="cardStyle1" shadow="hover">
                 20积分
               </el-card>
             </div>
           </el-col>
           <el-col :span="8">
             <div @click="Byclick2()">
-              <el-card
-                style="border-radius: 12px"
-                :style="cardStyle2"
-                shadow="hover"
-              >
+              <el-card style="border-radius: 12px" :style="cardStyle2" shadow="hover">
                 78积分
               </el-card>
             </div>
           </el-col>
           <el-col :span="8">
             <div @click="Byclick3()">
-              <el-card
-                style="border-radius: 12px"
-                :style="cardStyle3"
-                shadow="hover"
-              >
+              <el-card style="border-radius: 12px" :style="cardStyle3" shadow="hover">
                 988积分
               </el-card>
             </div>
           </el-col>
         </el-row>
         <div style="height: 40px"></div>
-        <el-form-item
-          style="
+        <el-form-item style="
             display: flex;
             line-height: 40px;
             position: relative;
             font-size: 14px;
             flex-wrap: nowrap;
             justify-content: center;
-          "
-        >
+          ">
           <el-button type="primary" @click="onSubmit">立即充值</el-button>
         </el-form-item>
       </el-form>
@@ -243,7 +170,7 @@ export default {
     },
     // 查询订单状态
     queryOrderStatus() {
-      const user = JSON.parse(window.localStorage.getItem('access-admin'))
+      const user = this.$cookies.get("access-user")
       console.log('查询订单状态')
       CreateVip(user.data.userid, this.payid, this.orderNo).then(resp => {
         console.log(resp)
@@ -291,7 +218,8 @@ export default {
       if (this.payOrder.payType === 'alipay') {
         this.aliDialogVisible = true
         //调用统一下单接口
-        const user = JSON.parse(window.localStorage.getItem('access-admin'))
+        const user = this.$cookies.get("access-user")
+
         aliPayApi.ftofPayForVipLogin(this.form.integral, user.data.userid, this.payid).then(response => {
           this.codeUrl = response.data.data.codeUrl
           this.orderNo = response.data.data.orderNo
@@ -309,7 +237,8 @@ export default {
         //打开支付二维码
         this.wxDialogVisible = true
         //调用统一下单接口
-        const user = JSON.parse(window.localStorage.getItem('access-admin'))
+        const user = this.$cookies.get("access-user")
+
         wxPayApi.nativePayVipLogin(this.form.integral, user.data.userid, this.payid).then(response => {
           console.log(response.data.data.codeUrl)
           this.codeUrl = response.data.data.codeUrl
@@ -326,7 +255,7 @@ export default {
       }
     },
     onSubmit() {
-      const user = JSON.parse(window.localStorage.getItem('access-admin'))
+      const user = this.$cookies.get("access-user")
       this.userJudje = (user == null)
       if (!this.userJudje) { this.userid = user.data.userid }
       if (this.userJudje) {
@@ -358,6 +287,7 @@ export default {
   background-color: #ffffff;
   border-radius: 13px;
 }
+
 .homeContent {
   margin-top: 40px;
 }
@@ -379,26 +309,31 @@ export default {
 </style>
 
 <style scoped>
-.myVEmojiPicker     :deep(.category) {
+.myVEmojiPicker :deep(.category) {
   background: none;
 }
-.myVEmojiPicker     :deep(.border)  {
-  border: 0px solid hsla(210, 8%, 51%, 0.09) !important;
-}
-.myVEmojiPicker     :deep(.myVEmojiPicker[data-v-3bfe90b7])  .border {
+
+.myVEmojiPicker :deep(.border) {
   border: 0px solid hsla(210, 8%, 51%, 0.09) !important;
 }
 
-.myVEmojiPicker     :deep(.category) .active[data-v-6d975e7c] {
+.myVEmojiPicker :deep(.myVEmojiPicker[data-v-3bfe90b7]) .border {
+  border: 0px solid hsla(210, 8%, 51%, 0.09) !important;
+}
+
+.myVEmojiPicker :deep(.category) .active[data-v-6d975e7c] {
   border-bottom: 3px solid #50a1ff;
 }
-.myVEmojiPicker     :deep(.grid-emojis[data-v-5c988bee])  {
+
+.myVEmojiPicker :deep(.grid-emojis[data-v-5c988bee]) {
   background: #ffffff;
 }
-.myVEmojiPicker     :deep(.emoji-picker[data-v-f1d527bc])  {
+
+.myVEmojiPicker :deep(.emoji-picker[data-v-f1d527bc]) {
   --ep-color-bg: #ffffff;
   --ep-color-sbg: none;
 }
+
 .myVEmojiPicker {
   position: fixed;
   display: flex;
@@ -407,6 +342,7 @@ export default {
   bottom: 20px;
   z-index: 10;
 }
+
 .alipaybig_icon {
   display: inline-block;
   width: 120px;
@@ -414,6 +350,7 @@ export default {
   padding: 0;
   text-align: center;
 }
+
 .outh5 {
   padding: 0px;
   display: flex;
@@ -421,6 +358,7 @@ export default {
   justify-content: center;
   flex-wrap: wrap;
 }
+
 .outh6 {
   height: 66px;
   text-align: center;
@@ -436,6 +374,7 @@ export default {
   flex-wrap: wrap;
   border-radius: 0 0 10px 10px;
 }
+
 .outh7 {
   height: 66px;
   text-align: center;
@@ -456,11 +395,13 @@ export default {
 .el-dialog--center {
   border-radius: 10px;
 }
+
 .el-dialog--center .el-dialog__body {
   border-radius: 10px;
   text-align: initial;
   background-color: #fff;
 }
+
 .el-dialog__header {
   display: none;
   background-color: #e0e0e0;
@@ -472,6 +413,7 @@ export default {
   z-index: 1;
   text-align: center;
 }
+
 .swal2-content {
   z-index: 1;
   justify-content: center;
@@ -484,6 +426,7 @@ export default {
   text-align: center;
   word-wrap: break-word;
 }
+
 .pay-item {
   width: 100%;
   height: 60px;
@@ -494,6 +437,7 @@ export default {
   line-height: 60px;
   text-align: center;
 }
+
 .device-macbook-pro .device-frame:before {
   bottom: 10px;
   color: #c8cacb;
@@ -508,6 +452,7 @@ export default {
   width: 200px;
   z-index: 1;
 }
+
 .el-carousel__item h3 {
   color: #475669;
   font-size: 14px;
@@ -523,6 +468,7 @@ export default {
 .el-carousel__item:nth-child(2n + 1) {
   background-color: #d3dce6;
 }
+
 .dianzan {
   weight: 25px;
   height: 25px;

@@ -86,7 +86,8 @@ export default {
 
     //显示订单列表
     showOrderList(){
-       const user = JSON.parse(window.localStorage.getItem('access-admin'))
+            const user = this.$cookies.get("access-user")
+
       this.userJudje = (user == null)
        if (!this.userJudje) {
          this.userid = user.data.userid

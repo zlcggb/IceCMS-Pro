@@ -373,7 +373,7 @@
                   <div class="emoji-footer b-t px-3 py-2 d-flex align-items-center">
                     <div class="w-60" />
                     <div class="flex-grow">
-                      <span class="fw-300 fs-24">MacWk.com</span>
+                      <span class="fw-300 fs-24">IceCMS.com</span>
                     </div>
                   </div>
                 </div>
@@ -418,7 +418,6 @@ export default ({
     //获取评论数据
     getallResourceComment(this.articleId).then(resp => {
       this.comment = resp.data
-      console.log(this.comment)
     })
     //判断是否登录显示临时登录框
     this.judjelogin()
@@ -476,9 +475,7 @@ export default ({
       //判断是否登录
       //1.是否有登录账户
       //2.是否有本地缓存
-      console.log("判断是否登录")
       const temp = this.$cookies.get("temp-user")
-      console.log(temp)
       if (this.user == null && temp == null) {
         //显示需要登录页面
         this.userJudje = true
@@ -489,7 +486,6 @@ export default ({
         const user = this.$cookies.get("access-user")
         this.form.content = this.contentarea
         if (user !== null) {
-          console.log(user, "123")
           this.form.username = user.name
           this.form.email = user.email
           this.form.profile = user.profile

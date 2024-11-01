@@ -213,7 +213,8 @@ export default {
   },
   methods: {
     onSubmit() {
-      const user = JSON.parse(window.localStorage.getItem('access-admin'))
+            const user = this.$cookies.get("access-user")
+
       ChangeUser(user.data.token, this.form).then(resp => {
         if (resp.data.code == 402 || resp.data.code == 400) {
           this.$notify({
@@ -234,7 +235,8 @@ export default {
       })
     },
     async getList() {
-      const user = JSON.parse(window.localStorage.getItem('access-admin'))
+            const user = this.$cookies.get("access-user")
+
       GetUserInfoByid(user.data.userid).then(resp => {
         this.form = resp.data
         console.log(resp)

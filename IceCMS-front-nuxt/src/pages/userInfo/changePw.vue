@@ -92,7 +92,8 @@ export default {
         this.form.NewPassWord = ''
         this.form.ShowPassWord = ''
       }
-      const user = JSON.parse(window.localStorage.getItem('access-admin'))
+            const user = this.$cookies.get("access-user")
+
       ChangePassword(user.data.token, this.form.yuanPassWord, this.form.NewPassWord, user.data.userid ).then(resp => {
         if(resp.data.code == 400){
                this.$notify({

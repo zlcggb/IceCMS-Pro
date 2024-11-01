@@ -9,14 +9,14 @@
                     <section class="layout-index mt-5 pb-7">
                         <div class="container">
                             <div class="text-center pt-8 pb-5">
-                                <h1>联系 MacWk.com.cn</h1>
+                                <h1>联系 IceCMS.cn</h1>
                                 <p class="fs-20 text-muted">软件版权及合作请发邮件，每周处理一次，谢谢合作。</p>
                             </div>
                             <div class="row mb-8">
                                 <div class="col-xl-6 offset-xl-3">
                                     <div
                                         class="form-group input-group rss-input-group radius-top-left-5x radius-bottom-left-5x">
-                                        <input type="text" value="macwk.com.cn@gmail.com" disabled
+                                        <input type="text" value="IceCMS.com.cn@gmail.com" disabled
                                             class="form-control radius-top-left-5x radius-bottom-left-5x">
                                         <div class="input-group-append"><button type="button"
                                                 class="btn btn-theme px-5 radius-top-right-5x radius-bottom-right-5x">复制

@@ -131,11 +131,6 @@
                       <div class="list-body">
                         <h2 class="mb-4">
                           {{ title }}
-                          <!---->
-                          <!---->
-                          <!---->
-                          <!---->
-                          <!---->
                         </h2>
                         <div class="mb-15">
                           <el-button size="mini" v-if="payJudej" :disabled="payBtnDisabled" @click="Download()"
@@ -174,7 +169,7 @@
                     </div>
                   </div>
                   <div class="col-xs-12 col-lg-6 col-xl-6 text-center">
-                    <vue-core-video-player :src="videoSource" :title="this.title"></vue-core-video-player>
+                    <vue-core-video-player :src="videoSource" :title="this.title" theme="#50A1FF"></vue-core-video-player>
 
                     <!-- <div class="
                         device device-macbook-pro device-silver device-silver
@@ -249,14 +244,14 @@
                       ">
                       <div v-if="carouselNum === 0" class="device-frame">
                         <el-carousel height="350px">
-                          <el-carousel-item v-for="item in 1" :key="item">
+                          <el-carousel-item v-for="item in 1" :key="item.id">
                             <img style="height: 360px; width: 620px" :src="thumb" /><img />
                           </el-carousel-item>
                         </el-carousel>
                       </div>
                       <div v-else class="device-frame">
                         <el-carousel height="350px">
-                          <el-carousel-item v-for="item in carousel" :key="item">
+                          <el-carousel-item v-for="item in carousel" :key="item.id">
                             <img style="height: 360px; width: 620px" :src="item.url" /><img />
                           </el-carousel-item>
                         </el-carousel>
@@ -279,7 +274,7 @@
                     <div class="w-c w-c-4">
                       <div class="border-right my-4">
                         <p class="text-muted text-uppercase fs-10 ls-2 mb-0">
-                          大小
+                          其他
                         </p>
                         <p class="
                             mb-0
@@ -291,7 +286,7 @@
                           31.9
                         </p>
                         <p class="text-uppercase fs-10 ls-2 mb-0 opacity-70">
-                          MB
+                          
                         </p>
                       </div>
                     </div>
@@ -816,8 +811,10 @@ export default {
     },
     Download() {
       if (process.client) {
-        const user = JSON.parse(window.localStorage.getItem('access-admin'))
-        this.userJudje = (user == null)
+        if (process.client) {
+        const user = this.$cookies.get("access-user")
+      }
+              this.userJudje = (user == null)
         if (!this.userJudje) { this.userid = user.data.userid }
         if (this.userJudje) {
           //游客购买
@@ -839,7 +836,9 @@ export default {
       }
     },
     async judgeResource() {
-      const user = JSON.parse(window.localStorage.getItem('access-admin'))
+      if (process.client) {
+        const user = this.$cookies.get("access-user")
+      }
       this.userJudje = (user == null)
       if (!this.userJudje) {
         this.userid = user.data.userid
@@ -856,6 +855,7 @@ export default {
       }
     },
     async fetchData() {
+
       this.hits = this.Resource.hits
       this.loveNum = this.Resource.loveNum
       if (this.loveNum == null) {
@@ -867,7 +867,7 @@ export default {
         src: this.videoAddress,
         resolution: '1080p' // 你也可以根据需求添加其他分辨率
       }];
-      console.log(this.videoAddress)
+
       this.thumb = this.Resource.thumb
       this.title = this.Resource.title
       this.price = this.Resource.price
@@ -881,7 +881,7 @@ export default {
       var sortClasss = this.Resource.sortClass
       this.sortClasss = sortClasss
       //根据classid获取分类名称
-      let [res] = await getResourceClassNameByid(sortClasss);
+      var res = await getResourceClassNameByid(sortClasss);
       if (res) {
         this.className = res.data;
       }
