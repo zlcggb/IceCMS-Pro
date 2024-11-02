@@ -1,4 +1,4 @@
-简体中文 | [English](README_EN.md)
+简体中文 | [English](README_en.md)
 
 <p align="center">
   <a href="https://www.icecmspro.com" target="_blank">
