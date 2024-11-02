@@ -1,3 +1,5 @@
+简体中文 | [English](./README_EN.md)
+
 <p align="center">
   <a href="https://www.icecmspro.com" target="_blank">
     <img alt="logo" style="height: 120px" src="https://res.cloudinary.com/dxl1idlr5/image/upload/v1700470902/logo_s4maqv.svg"/>

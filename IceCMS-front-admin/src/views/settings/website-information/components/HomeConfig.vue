@@ -23,6 +23,7 @@
           <el-table-column prop="title" label="标题"></el-table-column>
           <el-table-column prop="button" label="按钮"></el-table-column>
           <el-table-column prop="introduce" label="简介"></el-table-column>
+          <el-table-column prop="introduce" label="链接"></el-table-column>
           <el-table-column label="操作" width="180">
             <template #default="scope">
               <el-button type="primary" plain size="small" @click="showEditCarouselDialog(scope.row)">编辑</el-button>
@@ -42,13 +43,45 @@
         <el-switch v-model="featureAreaEnabled"></el-switch>
       </el-form-item>
 
-      <!-- 特色区域内容输入框 -->
 <!-- 特色区域内容输入框 -->
+
 <el-form-item label="特色区域内容">
   <div class="feature-area">
-    <div v-for="(block, index) in featureBlocks" :key="index" class="feature-block">
-      <el-input v-model="block.featureTitle" style="padding: 10px;" class="input-width" placeholder="标题"></el-input>
-      <el-input v-model="block.featureSrc" style="padding: 10px;" class="input-width" placeholder="链接"></el-input>
+    <div
+      v-for="(block, index) in featureBlocks"
+      :key="index"
+      class="feature-block"
+      style="margin-bottom: 20px;"
+    >
+      <!-- Content label at the top of each block -->
+      <div style="font-weight: bold; margin-bottom: 10px;">
+        内容{{ index + 1 }}:
+      </div>
+
+      <!-- Divider line -->
+      <hr style="border: 1px solid #ddd; margin: 10px 0;" />
+
+      <!-- Inputs for name, link, and color -->
+      <div style="display: flex; gap: 10px; align-items: center;">
+        <el-input
+          v-model="block.featureName"
+          style="flex: 1; padding: 10px;"
+          placeholder="名称"
+        ></el-input>
+        <el-input
+          v-model="block.featureLink"
+          style="flex: 2; padding: 10px;"
+          placeholder="链接"
+        ></el-input>
+        
+        <div style="display: flex; align-items: center;">
+          <span style="margin-right: 5px;">颜色：</span>
+          <el-color-picker
+            v-model="block.featureColor"
+            style="padding: 0;"
+          ></el-color-picker>
+        </div>
+      </div>
     </div>
   </div>
 </el-form-item>
