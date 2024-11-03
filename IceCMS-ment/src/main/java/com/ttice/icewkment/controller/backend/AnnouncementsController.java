@@ -8,10 +8,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @io.swagger.annotations.Api(tags = "后台公告接口")
 @RestController
@@ -56,7 +53,7 @@ public class AnnouncementsController {
 
     @RequiresAuthentication // 需要登录认证的接口
     @ApiOperation(value = "获取全部公告列表")
-    @PostMapping("/getAnnouncementslist")
+    @GetMapping("/getAnnouncementslist")
     public Result getAnnouncementslist() {
         return Result.succ(announcementsMapper.selectList(null));
     }

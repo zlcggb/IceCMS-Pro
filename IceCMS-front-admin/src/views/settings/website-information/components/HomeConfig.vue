@@ -45,7 +45,7 @@
 
 <!-- 特色区域内容输入框 -->
 
-<el-form-item label="特色区域内容">
+<el-form-item v-show="featureAreaEnabled" label="特色区域内容">
   <div class="feature-area">
     <div
       v-for="(block, index) in featureBlocks"
@@ -75,7 +75,14 @@
         ></el-input>
         
         <div style="display: flex; align-items: center;">
-          <span style="margin-right: 5px;">颜色：</span>
+          <span style="margin-right: 5px;">颜色1：</span>
+          <el-color-picker
+            v-model="block.featureColor"
+            style="padding: 0;"
+          ></el-color-picker>
+        </div>
+        <div style="display: flex; align-items: center;">
+          <span style="margin-right: 5px;">颜色2：</span>
           <el-color-picker
             v-model="block.featureColor"
             style="padding: 0;"
@@ -89,9 +96,43 @@
     <!-- <el-button type="danger" @click="removeFeatureBlock" v-if="featureBlocks.length > 1">删除区块</el-button> -->
 
       <!-- 首页公告输入框 -->
-      <el-form-item label="首页公告">
-        <el-input v-model="homeAnnouncement" class="input-width" type="textarea"></el-input>
-      </el-form-item>
+  <!-- 首页公告管理卡片 -->
+<el-card class="box-card" shadow="never">
+  <template #header>
+    <div class="table-operations">
+      <el-button type="primary" @click="showAddAnnouncementDialog">添加公告</el-button>
+    </div>
+  </template>
+  
+  <el-table :data="announcementList" style="width: 100%">
+    <!-- ID列 -->
+    <el-table-column prop="id" label="ID" width="80"></el-table-column>
+    
+    <!-- 标题列 -->
+    <el-table-column prop="title" label="标题"></el-table-column>
+
+        <!-- 标题列 -->
+        <el-table-column prop="title" label="作者"></el-table-column>
+
+            <!-- 标题列 -->
+    <el-table-column prop="title" label="显示"></el-table-column>
+
+    <!-- 内容列 -->
+    <el-table-column prop="content" label="内容">
+      <template #default="scope">
+        <el-input v-model="scope.row.content" type="textarea" readonly style="width: 100%;"></el-input>
+      </template>
+    </el-table-column>
+    
+    <!-- 操作列 -->
+    <el-table-column label="操作" width="180">
+      <template #default="scope">
+        <el-button type="primary" plain size="small" @click="showEditAnnouncementDialog(scope.row)">编辑</el-button>
+        <el-button type="danger" plain size="small" @click="confirmDeleteAnnouncement(scope.row.id)">删除</el-button>
+      </template>
+    </el-table-column>
+  </el-table>
+</el-card>
 
       <!-- 按钮操作区 -->
       <div class="button-container">
@@ -149,6 +190,10 @@
 <script setup lang="ts">
 import { getAllDispositionCarousel, addDispositionCarousel, deleteAllDispositionCarousel, setAllDispositionCarousel,
   getAllFeature, setAllFeature } from '@/api/setting/webinfo';
+
+  import { getAnnouncementslist, newAnnouncements, deleteAnnouncements, updateAnnouncements,
+     } from '@/api/setting/announcements';
+
 import { ref, onMounted } from 'vue';
 import { ElMessageBox, ElNotification } from 'element-plus';
 
@@ -174,6 +219,13 @@ const featureBlocks = ref([
   {id: '', featureTitle: '', featureSrc: '' }
 ]);
 
+// 初始化公告列表数据
+const announcementList = ref([
+  { id: 1, title: "公告标题1", content: "公告内容1" },
+  { id: 2, title: "公告标题2", content: "公告内容2" },
+  // 可以根据需要添加更多公告
+]);
+
 // 初始化网站配置
 const initSiteConfig = async () => {
   try {
@@ -187,6 +239,12 @@ const initSiteConfig = async () => {
     if (response1 && response1.data) {
       featureBlocks.value = response1.data;
       console.log('Site config loaded:', response1);
+    }
+
+    const response2 = await getAnnouncementslist();
+    if (response2 && response2.data) {
+      announcementList.value = response2.data;
+      console.log('Site config loaded:', response2);
     }
 
   } catch (error) {
@@ -208,7 +266,9 @@ const showAddCarouselDialog = () => {
   console.log('Showing add carousel dialog');
   dialogVisible.value = true;
 };
+const showAddAnnouncementDialog= () => {
 
+};
 const addCarousel = () => {
   // 表单验证
   errors.value = {};
@@ -248,6 +308,11 @@ const handleDialogClose = (done: () => void) => {
 };
 
 const showEditCarouselDialog = (carousel) => {
+  editCarousel.value = { ...carousel };
+  editDialogVisible.value = true;
+};
+
+const showEditAnnouncementDialog = (carousel) => {
   editCarousel.value = { ...carousel };
   editDialogVisible.value = true;
 };
@@ -307,6 +372,26 @@ const confirmDeleteCarousel = async (carouselId) => {
   }
 };
 
+const confirmDeleteAnnouncement = async (carouselId) => {
+  try {
+    await ElMessageBox.confirm('此操作将永久删除该轮播图, 是否继续?', '提示', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
+    });
+    const response = await deleteAllDispositionCarousel(carouselId);
+    if (response && response.data) {
+      dispositionCarousel.value = dispositionCarousel.value.filter(c => c.id !== carouselId);
+      ElNotification({
+        title: '成功',
+        message: '删除成功',
+        type: 'success',
+      });
+    }
+  } catch (error) {
+    console.error('Error deleting carousel:', error);
+  }
+};
 
 const saveSettings = async () => {
   console.log('featureBlocks.value', featureBlocks.value[0]);

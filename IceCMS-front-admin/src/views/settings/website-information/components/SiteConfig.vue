@@ -13,6 +13,10 @@
         <el-input v-model="siteConfig.sitSrc" class="input-width">
         </el-input>
       </el-form-item>
+         <!-- 启用域名图片开关 -->
+         <el-form-item label="启用图片域名绑定">
+        <el-switch v-model="imageSiteEnabled"></el-switch>
+      </el-form-item>
       <el-form-item label="主图上传">
             <div class="updata" shadow="never">
               <el-upload v-model:file-list="fileList" drag multiple class="pure-upload" list-type="picture-card"
@@ -87,6 +91,7 @@ import Sortable from "sortablejs";
 import { getKeyList, extractFields, downloadByData } from "@pureadmin/utils";
 import { message } from "@/utils/message";
 
+const imageSiteEnabled = ref(true);
 
 const siteConfig = ref({
   sitTitle: '',
