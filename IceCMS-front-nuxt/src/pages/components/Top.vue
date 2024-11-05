@@ -101,7 +101,7 @@
                 <el-button :loading="loading" type="primary" style="width: 100%; margin-bottom: 30px"
                   @click.native.prevent="handleLogin">登录</el-button>
                 <!-- 找回密码链接和提示文字 -->
-                <div class="forgot-password" style="text-align: left; margin-bottom: 30px;">
+                <div class="forgot-password" style="text-align: left">
                   <span style="color: #666; font-size: 12px; margin-right: 5px;">
                     忘记密码？
                   </span>
@@ -790,7 +790,7 @@ export default ({
         //获取会员有效性
         let res = await CheckVip(this.user.userid);
         if (res) {
-          if (resp.data) {
+          if (res.data) {
             this.vipTrue = true
           }
         }

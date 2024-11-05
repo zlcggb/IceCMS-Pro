@@ -133,7 +133,6 @@
     </el-table-column>
   </el-table>
 </el-card>
-
       <!-- 按钮操作区 -->
       <div class="button-container">
         <el-button type="primary" @click="saveSettings">保存</el-button>
@@ -326,6 +325,8 @@ const updateCarousel = async () => {
   if (!editCarousel.value.button) editErrors.value.button = '按钮不能为空';
 
   if (Object.values(editErrors.value).some(error => error)) return;
+  // 登陆
+  
 
   try {
     const response = await setAllDispositionCarousel(editCarousel.value.id, editCarousel.value);

@@ -691,21 +691,18 @@
                               <div class="user-w-announcement">
                                 <div>
                                   <ul class="planet-aside-ul">
-                                    <li class="planet-aside-li-ad">
-                                      <b>通知：</b>
-                                      <span href="#">这是一条公告1</span>
+                                    <div  v-for="item in announcementsList" :key="item.id" >
+                                      <li class="planet-aside-li-ad">
+                                      <b>{{ item.title }}:</b>
+                                      <span href="#">{{ item.content }}</span>
                                     </li>
-                                    <li class="planet-aside-li-ad">
-                                      <b>通知：</b>
-                                      <span href="#">这是一条公告2</span>
-                                    </li>
+                                    </div>
                                   </ul>
                                 </div>
                               </div>
                             </div>
                             <div class="widget-mission-footer">
-                              <a class="allad" target="_blank">全部公告</a>
-                            </div>
+                              <router-link to="/Notification/system" class="allad" target="_blank">全部公告</router-link>                            </div>
                           </div>
                         </div>
                       </div>
@@ -748,6 +745,8 @@ import {
   getSquareClasslist,
   getArticleClassByotherName,
 } from "@/api/websquareClass";
+import { getAnnouncementslistByNum } from "@/api/webannouncements";
+
 
 import { updateImage } from '@/api/updateImage'
 
@@ -914,10 +913,20 @@ export default {
         this.squaredata = this.squaredata.concat(response.data.data)
       });
     },
+    getAnnouncements() {
+      getAnnouncementslistByNum(2).then(
+        (response) => {
+          console.log(response)
+          this.announcementsList = response.data;
+        }
+      );
+    },
     fetchData() {
       //数据置空
       this.squaredata = [];
       this.getSquare();
+      //获取公告
+      this.getAnnouncements();
       //获取圈子列表
       getSquareClasslist().then((res) => {
         this.classlist = res.data;
@@ -1211,6 +1220,7 @@ export default {
 
   data() {
     return {
+      announcementsList: [],
       isDark: false,
       pagetotal: 0,
       isLoading: false,
