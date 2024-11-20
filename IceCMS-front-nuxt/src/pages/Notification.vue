@@ -221,10 +221,8 @@
             this.theprogress = false
             var imgUrl = resp.data.url;//根据返回值得不同这里要自己定义
             this.user.profile = imgUrl
-            console.log(imgUrl)
   
             const user = this.$cookies.get('access-user')
-            console.log("1123",user)
             this.form.userId = user.userid
             this.form.name = user.name
             this.form.profile = imgUrl
@@ -251,7 +249,6 @@
                 this.user = user
               }
             })
-  
           }).catch((e) => {
             this.$message.error('抱歉,上传失败,请检查网络环境或图片大小');
             this.theprogress = false

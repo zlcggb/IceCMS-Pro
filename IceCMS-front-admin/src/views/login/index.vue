@@ -75,7 +75,6 @@ const onLogin = async (formEl: FormInstance | undefined) => {
       const response = await CommonAPI.loginByPassword({ username: ruleForm.username, password: ruleForm.password });
       console.log(response);
        if (response.code === 200) {
-        
           // 获取后端路由
           initRouter().then(() => {
             router.push(getTopMenu(true).path);
@@ -85,10 +84,12 @@ const onLogin = async (formEl: FormInstance | undefined) => {
           });
           // 登录成功后 将token存储到sessionStorage中
           setTokenFromBackend(response.data);
+
         }else{
            //如果登录失败则重新获取验证码
           // getCaptchaCode();
           loading.value = false;
+          // getTopMenu(true).path;
           message("登录失败", { type: "error" });
           
         }

@@ -16,3 +16,11 @@ export function getSetting(params) {
   })
 }
 
+export function getFourKingKong(params) {
+  return request({
+    url: 'WebSitting/getFourKingKong',
+    method: 'get',
+    params
+  })
+}
+

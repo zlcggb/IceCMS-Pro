@@ -72,19 +72,19 @@
               <!-- class="container" -->
               <div class="container">
                 <div class="index-special row mb-6">
-                  <div class="col-3">
-
+                  <div v-for="item, index in FourKingKong" :key="item.id" class="col-3">
+                    <router-link :to="'/'+item.featureSrc" class="allad" target="_blank">
+                   
                     <div class="
                           macwk-card
-                          bg-gradient-green
                           hover-shadow-6
                           py-3
                           text-center
-                        " style="
-                          will-change: transform;
-                          transform: perspective(1000px) rotateX(0deg)
-                            rotateY(0deg) scale3d(1, 1, 1);
-                        ">
+                        " :style="{
+    backgroundImage: `linear-gradient(45deg, ${item.colorLeft}, ${item.colorRight})`,
+    willChange: 'transform',
+    transform: 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)'
+  }">
                       <!---->
                       <div class="
                             macwk-card__collapsible-content
@@ -93,15 +93,15 @@
                         <div class="macwk-card__body">
                           <h6 class="mb-0 text-white">
                             <i class="icon-office fs-22 mr-3 v-m-3"></i>
-                            <span>新人必备</span>
+                            <span>{{ item.featureTitle }}</span>
                           </h6>
                         </div>
                         <!---->
                       </div>
                     </div>
-
+                  </router-link>
                   </div>
-                  <div class="col-3">
+                  <!-- <div class="col-3">
 
                     <div class="
                           macwk-card
@@ -110,7 +110,6 @@
                           py-3
                           text-center
                         ">
-                      <!---->
                       <div class="
                             macwk-card__collapsible-content
                             vs-con-loading__container
@@ -121,7 +120,6 @@
                             <span>图像处理工具</span>
                           </h6>
                         </div>
-                        <!---->
                       </div>
                     </div>
 
@@ -135,7 +133,6 @@
                           py-3
                           text-center
                         ">
-                      <!---->
                       <div class="
                             macwk-card__collapsible-content
                             vs-con-loading__container
@@ -146,7 +143,6 @@
                             <span>产品经理工具</span>
                           </h6>
                         </div>
-                        <!---->
                       </div>
                     </div>
 
@@ -160,7 +156,6 @@
                           py-3
                           text-center
                         ">
-                      <!---->
                       <div class="
                             macwk-card__collapsible-content
                             vs-con-loading__container
@@ -173,11 +168,10 @@
                             </h6>
                           </div>
                         </nuxt-link>
-                        <!---->
                       </div>
                     </div>
 
-                  </div>
+                  </div> -->
                 </div>
               </div>
               <div class="container mb-5">
@@ -487,7 +481,7 @@ import { getNewResource } from "../asyncApi/webresource";
 import { getNewArticle } from '../asyncApi/webarticle'
 
 import { formatDate } from '@/utils/date.js'
-import { getCarousel } from '@/api/websetting'
+import { getCarousel, getFourKingKong } from '@/api/websetting'
 
 export default ({
   name: 'Home',
@@ -504,6 +498,7 @@ export default ({
   },
   data() {
     return {
+      FourKingKong: "",
       isDark: false, // 默认白天模式
       isAcitive: false,
       r_sortOrder: "new",
@@ -709,6 +704,12 @@ export default ({
       if (res) {
         this.Carousel = res.data
       }
+
+      let res1 = await getFourKingKong();
+      if (res1) {
+        this.FourKingKong = res1.data
+      }
+
     },
     async getList() {
       this.listLoading = true

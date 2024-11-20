@@ -22,16 +22,16 @@ public class HomeSetting implements Serializable {
   /** 标题 */
   private String featureTitle;
 
-  /** 图标 */
+  /** 链接 */
   private String featureSrc;
 
   /** 左颜色 */
-  private String color_left;
+  private String colorLeft;
 
   /** 右颜色 */
-  private String color_right;
+  private String colorRight;
 
   /** 是否启用特色区域 */
-  private String feature_enabled;
+  private String featureEnabled;
 
 }

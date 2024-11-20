@@ -680,11 +680,12 @@
                                 </div>
                                 <div>
                                   <div class="oauth-login-button">
-                                    <a href="javascript:void(0)" class="login-weixin">微信登录</a><a
-                                      href="https://api.weibo.com/oauth2/authorize?client_id=2224666867&amp;response_type=code&amp;redirect_uri=https%3A%2F%2F7b2.com%2Fopen%3Ftype%3Dweibo"
-                                      class="login-weibo">微博登录</a><a
-                                      href="https://graph.qq.com/oauth2.0/authorize?client_id=101057247&amp;state=6b96c86f14fab2f3ce7af8fc5d72c943&amp;response_type=code&amp;redirect_uri=https%3A%2F%2F7b2.com%2Fopen%3Ftype%3Dqq"
-                                      class="login-qq">QQ</a>
+                                    <a href="" class="login-weixin">微信登录</a>
+                                    <a
+                                      href=""
+                                      class="login-weibo">Github登录</a>
+                                      <!-- <a href="https://graph.qq.com/oauth2.0/authorize?client_id=101057247&amp;state=6b96c86f14fab2f3ce7af8fc5d72c943&amp;response_type=code&amp;redirect_uri=https%3A%2F%2F7b2.com%2Fopen%3Ftype%3Dqq"
+                                      class="login-qq">QQ</a> -->
                                   </div>
                                 </div>
                               </div>
