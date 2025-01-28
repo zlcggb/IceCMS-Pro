@@ -1,3 +1,13 @@
+
+<script setup lang="ts">
+
+const setting = ref<any>({});
+
+import { useSettingStore } from '../../stores/setting';
+const settingStore = useSettingStore();
+setting.value = settingStore.settings
+
+</script>
 <template>
   <header class="app-header">
     <!-- 登录 -->
@@ -9,12 +19,12 @@
             @click="closeDialog"></a>
 
         <div class="login-logo">
-        <!-- <div v-if="setting.sitLogo">
+        <div v-if="setting.sitLogo">
           <img height="40" width="40" :src="setting.sitLogo" />
         </div>
         <div v-else>
           <img height="40" width="40" src="../static/image/logo.svg" />
-        </div> -->
+        </div>
         </div>
         <div class="login-title">
           <!-- <span><b>登录可享更多权益</b></span> -->
@@ -162,12 +172,12 @@
             @click="closeDialog"></a>
 
         <div class="login-logo">
-        <!-- <div v-if="setting.sitLogo">
+        <div v-if="setting.sitLogo">
           <img height="40" width="40" :src="setting.sitLogo" />
         </div>
         <div v-else>
           <img height="40" width="40" src="../static/image/logo.svg" />
-        </div>           -->
+        </div>          
         </div>
         <div class="register-text">
           <span><b>注册</b></span>
@@ -306,13 +316,14 @@
       <div class="app-header-main">
 
         <a href="/" class="app-header-logo active" aria-current="page">
-          <!-- <div v-if="setting.sitLogo">
+          <div v-if="setting.sitLogo">
             <img :src="setting.sitLogo" />
           </div>
           <div v-else> 
             <img src="../static/image/logo.svg" />
-          </div> -->
-          <!-- <span class="ml-4">{{ setting.sitTitle }}</span> -->
+          </div>
+          <span class="ml-4">{{ setting.sitTitle }}</span>
+
         </a>
         <div class="app-header-nav nav">
           <nuxt-link target="_self" class="nav-link" :class="message1" aria-current="page" to="/">首页</nuxt-link>
@@ -328,7 +339,7 @@
               <el-input @keyup.native="keyup()" @focus="focus()" @blur="blur()" v-model="seachcontent" type="text"
                 autocomplete="off" aria-autocomplete="list" aria-activedescendant=""
                 aria-controls="autosuggest-autosuggest__results" id="autosuggest__input" placeholder="输入关键词搜索软件或文章…"
-                value="" class="" />
+                value="" class="inputDeep large-serach-input" />
             </div>
             <div class="popUp" v-show="searchshow" @mouseenter="enter" @mouseleave="leave">
               <div aria-labelledby="autosuggest" class="autosuggest__results">
@@ -1337,6 +1348,25 @@ export default ({
 
 <style scoped>
 @import "../static/mycss/margin_top.css";
+
+.large-serach-input{
+  width: 380px;
+  height: 40px;
+  font-size: 16px;
+}
+:deep(.el-input__wrapper) {
+    box-shadow: 0 0 0 0px var(--el-input-border-color, var(--el-border-color)) inset;
+    cursor: default;
+    .el-input__inner {
+        cursor: default !important;
+    }
+}
+:deep(.el-textarea__inner) {
+    outline: none;
+    border: none;
+    resize: none;
+    box-shadow: none;
+}
 
 .navbar .navbar-button,
 .off-canvas .canvas-close {

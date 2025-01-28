@@ -50,5 +50,7 @@ export default defineNuxtConfig({
 
   ],
   compatibilityDate: '2024-11-01',
+  plugins: ['./plugins/initSettings.ts'],
+
   devtools: { enabled: true }
 })

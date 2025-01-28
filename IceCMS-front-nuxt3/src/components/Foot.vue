@@ -1,3 +1,12 @@
+<script setup lang="ts">
+
+const setting = ref<any>({});
+
+import { useSettingStore } from '../../stores/setting';
+const settingStore = useSettingStore();
+setting.value = settingStore.settings
+</script>
+
 <template>
   <div class="macwk-footer white border-top pc-model">
     <div class="container">
@@ -33,14 +42,14 @@
         </svg> -->
         <div class="login-logo">
 
-        <!-- <div v-if="setting.sitLogo">
+        <div v-if="setting.sitLogo">
           <img :src="setting.sitLogo" />
         </div>
         <div v-else>
           <img src="../../static/image/logo.svg" />
-        </div> -->
+        </div>
       </div>
-        <!-- <span class="ml-4">{{ setting.sitTitle }}</span> -->
+        <span class="ml-4">{{ setting.sitTitle }}</span>
       </a>
       <div class="nav">
         <a href="/" class="nav-link">首页</a>
@@ -50,45 +59,16 @@
         </a>
       </div>
       <div class="copyright">
-        <!-- <p class="mb-0">
+        <p class="mb-0">
           <span class="mr-3"><a href="https://beian.miit.gov.cn/" target="_blank">{{ setting.beian }}</a></span>
           <span>{{ setting.banquan }}</span>
-        </p> -->
+        </p>
       </div>
     </div>
   </div>
 </template>
-<!-- <script>
 
-import { mapState, mapMutations } from 'vuex'
-
-export default ({
-  name: 'Foots',
-  setup() {
-
-  },
-  methods: {
-    async getSetting() {
-      const setting = this.$cookies.get("setting")
-      this.setting = setting
-    },
-  },
-  data() {
-    return {
-      setting: {},
-    }
-  },
-  mounted() {
-    this.getSetting()
-  },
-  computed: {
-    ...mapState(['playlist', 'glabledata', 'count'])
-  },
-})
-</script> -->
 <style scoped>
-@import "../static/mycss/body.css";
-
 .login-logo {
   image-rendering: -webkit-optimize-contrast;
   --bs-blue: #0d6efd;

@@ -1,0 +1,18 @@
+import httpRequest from "../service/index";
+
+/**
+ * @description 获取广场分类列表
+ * @return Promise<any>
+ */
+export const getSquareClasslist = () => {
+  return httpRequest.get<any>('/WebaSquareClass/getSquareClasslist');
+};
+
+/**
+ * @description 根据其他名称获取文章分类
+ * @param otherName 其他名称
+ * @return Promise<any>
+ */
+export const getArticleClassByotherName = (otherName: string) => {
+  return httpRequest.get<any>(`/WebaSquareClass/getArticleClassByotherName/${otherName}`);
+};

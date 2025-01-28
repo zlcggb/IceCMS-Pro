@@ -762,11 +762,6 @@ export default {
   },
 }
 </script> -->
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-@import "../static/mycss/top.css";
-@import "../static/mycss/body.css";
-</style>
 <style scoped>
 .menu__link {
   font-weight: bold;

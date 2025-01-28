@@ -1,9 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, defineProps } from 'vue';
-// import { getNewResource } from "../asyncApi/webresource";
-// import { getNewArticle } from '../asyncApi/webarticle';
-import { formatDate } from '../utils/date.js';
-// import { getCarousel, getFourKingKong } from '@/api/websetting';
+import { formatDate } from '../utils/date.js'
 
 // Props
 const props = defineProps({
@@ -16,7 +13,7 @@ const props = defineProps({
 // Reactive state with types
 const FourKingKong = ref<any>(""); // Could define a more specific type for the API response
 const isDark = ref<boolean>(false); // 默认白天模式
-const isAcitive = ref<boolean>(false);
+const isAcitive = ref<number | null>(null);
 const r_sortOrder = ref<string>("new");
 const r_news = ref<string>("new");
 const r_download = ref<string>("download");
@@ -35,26 +32,19 @@ const leftArr = ref<any[]>([]);
 const rightArr = ref<any[]>([]);
 const setting = ref<any>({});
 
+// 鼠标移入赋值index 
+async function dowmloadover(index: number) {
+  isAcitive.value = index;
+}
+// 鼠标移出 
+async function downloadleave() {
+  isAcitive.value = null;
+}
+
 // Computed
 const themeClass = computed<string>(() => {
   return isDark.value ? 'black' : 'light';
 });
-
-// Methods
-const a_changeDiscuss = async (): Promise<void> => {
-  a_sortOrder.value = "discuss";
-  listLoading.value = true;
-  const resp = await getNewArticle(6, a_sortOrder.value);
-  list.value = resp.data;
-  total.value = resp.data.total;
-  listLoading.value = false;
-  leftArr.value = list.value.filter((_item: any, index: number) => index % 2 === 0);
-  rightArr.value = list.value.filter((_item: any, index: number) => index % 2 !== 0);
-  leftArr.value = addBackgroundStyles(leftArr.value);
-  rightArr.value = addBackgroundStyles(rightArr.value);
-};
-
-// Similar methods for `a_changeRecommend`, `a_changeNews`, `r_changeRecommend`, etc...
 
 // Utility function to add background styles
 const addBackgroundStyles = (items: any[]): any[] => {
@@ -77,50 +67,69 @@ const addBackgroundStyles = (items: any[]): any[] => {
   });
 };
 
-// Get the settings
-const getSetting = async (): Promise<void> => {
-  setting.value = $cookies.get("setting");
-  const res = await getCarousel();
-  if (res) {
-    Carousel.value = res.data;
-  }
+import { getNewResource } from '../../api/webresource';
+import { getNewArticle } from '../../api/webarticle';
 
-  const res1 = await getFourKingKong();
-  if (res1) {
-    FourKingKong.value = res1.data;
-  }
-};
+await handlegetNewResource();
+await handlegetNewArticle();
 
-const settings = ref<any[]>([]);
-
-import { getStaffInfoByPage } from "../../api/staff";
-
-await handleGetUserInfo();
-
-async function handleGetUserInfo  ()  {
+async function handlegetNewResource  ()  {
   try {
-    const result = await getStaffInfoByPage("");
-    settings.value = result;
-    console.log('文档列表1:', result)
+    const result = await getNewResource(10, 'new') as { data: { value: any } };
+    rlist.value = result.data.value
   } catch (error) {
-    console.error('获取文档列表出错:', error);
+    console.error('获取NewResource出错:', error);
   }
 };
+async function handlegetNewArticle  ()  {
+  try {
+    const result = await getNewArticle(6, 'new') as { data: { value: any } };
+    list.value = result.data.value
+  } catch (error) {
+    console.error('获取NewArticle出错:', error);
+  }
+};
+
+// Get the settings
+import { getCarousel, getFourKingKong } from '../../api/websetting';
+
+await handlegetCarousel();
+
+async function handlegetCarousel  ()  {
+  try {
+    const result = await getCarousel("") as { data: { value: any } };
+    Carousel.value = result.data.value
+  } catch (error) {
+    console.error('获取Carousel出错:', error);
+  }
+};
+
+await handlegetFourKingKong();
+
+async function handlegetFourKingKong  ()  {
+  try {
+    const result = await getFourKingKong("") as { data: { value: any } };
+    FourKingKong.value = result.data.value
+  } catch (error) {
+    console.error('获取FourKingKong出错:', error);
+  }
+};
+
+import { useSettingStore } from '../../stores/setting';
+const settingStore = useSettingStore();
+setting.value = settingStore.settings
 
 // Mounted lifecycle hook
 onMounted(() => {
-  if (process.client) {
+  getList()
+
+  if (!process.server) {
     const savedMode = localStorage.getItem('darkMode');
     isDark.value = savedMode === 'true';
-    getList();
-    getSetting();    
   }
 });
 
-const getList = async (): Promise<void> => {
-  listLoading.value = true;
-  total.value = list.value.total;
-  listLoading.value = false;
+async function getList() {
   leftArr.value = list.value.filter((_item: any, index: number) => index % 2 === 0);
   rightArr.value = list.value.filter((_item: any, index: number) => index % 2 !== 0);
   leftArr.value = addBackgroundStyles(leftArr.value);
@@ -231,77 +240,6 @@ const getList = async (): Promise<void> => {
                     </div>
                   </router-link>
                   </div>
-                  <!-- <div class="col-3">
-
-                    <div class="
-                          macwk-card
-                          bg-gradient-orange
-                          hover-shadow-6
-                          py-3
-                          text-center
-                        ">
-                      <div class="
-                            macwk-card__collapsible-content
-                            vs-con-loading__container
-                          ">
-                        <div class="macwk-card__body">
-                          <h6 class="mb-0 text-white">
-                            <i class="icon-gallery fs-22 mr-3 v-m-3"></i>
-                            <span>图像处理工具</span>
-                          </h6>
-                        </div>
-                      </div>
-                    </div>
-
-                  </div>
-                  <div class="col-3">
-
-                    <div class="
-                          macwk-card
-                          bg-gradient-blue
-                          hover-shadow-6
-                          py-3
-                          text-center
-                        ">
-                      <div class="
-                            macwk-card__collapsible-content
-                            vs-con-loading__container
-                          ">
-                        <div class="macwk-card__body">
-                          <h6 class="mb-0 text-white">
-                            <i class="icon-cp fs-22 mr-3 v-m-3"></i>
-                            <span>产品经理工具</span>
-                          </h6>
-                        </div>
-                      </div>
-                    </div>
-
-                  </div>
-                  <div class="col-3">
-
-                    <div class="
-                          macwk-card
-                          bg-gradient-purple
-                          hover-shadow-6
-                          py-3
-                          text-center
-                        ">
-                      <div class="
-                            macwk-card__collapsible-content
-                            vs-con-loading__container
-                          ">
-                        <nuxt-link to="/class">
-                          <div class="macwk-card__body">
-                            <h6 class="mb-0 text-white">
-                              <i class="icon-code fs-22 mr-3 v-m-3"></i>
-                              <span>更多专题</span>
-                            </h6>
-                          </div>
-                        </nuxt-link>
-                      </div>
-                    </div>
-
-                  </div> -->
                 </div>
               </div>
               <div class="container mb-5">
@@ -313,8 +251,7 @@ const getList = async (): Promise<void> => {
                     </h4>
                   </div>
                   <nav class="nav nav-title flex-grow-1">
-                    <a class="nav-link active">新鲜发布{{settings
-                      }}</a>
+                    <a class="nav-link active">新鲜发布</a>
                     <a class="nav-link">热门下载</a>
                     <a class="nav-link">站长推荐</a>
                     <a class="nav-link">最多评论</a>
@@ -322,8 +259,7 @@ const getList = async (): Promise<void> => {
                   <div class="more-action">
                     <nuxt-link to="/alllist" class="btn btn-more active">
 
-                      更多资源 <i class="icon-arrow-right fw-600 fs-12 v-2"></i></nuxt-link>
-
+                      更多资源 <i class="icon-arrow-right fw-600 fs-12 v-2"></i></nuxt-link>                   
                   </div>
                 </div>
                 <div id="listAppContainer" class="app-content-body listAppContainer">
@@ -360,8 +296,8 @@ const getList = async (): Promise<void> => {
                                     <div class="author-name">{{ item.author }}</div>
                                   </div>
                                   <span v-if="item.createTime != null" class="meta-item">
-                                    {{ rformatDate(item.createTime) }}</span>
-                                  <span v-else class="meta-item"> {{ rformatDate(item.addTime) }}</span>
+                                    {{ formatDate(item.createTime) }}</span>
+                                  <span v-else class="meta-item"> {{ formatDate(item.addTime) }}</span>
 
                                 </div>
                                 <h3 class="heading-tertiary-list">{{ item.title }}</h3>
@@ -384,7 +320,7 @@ const getList = async (): Promise<void> => {
                           </div>
                         </div>
                         <div v-else>
-                          <div @mouseover="dowmloadover(index)" @mouseleave="downloadleave(index)">
+                          <div @mouseover="dowmloadover(index)" @mouseleave="downloadleave()">
                             <div class="macwk-app border white cursor-pointer padding-xl">
                               <div class="soft-card">
                                 <div class="li-card-img-div">
@@ -442,14 +378,16 @@ const getList = async (): Promise<void> => {
                       <a class="nav-link">最多评论</a>
                     </nav>
                     <div class="more-action">
-                      <a target="_self" class="nav-link" href="post/all">
-                        更多文章
-                        <i class="icon-arrow-right fw-600 fs-12 v-2"></i></a>
+ 
+                        <nuxt-link to="/allpost" class="btn btn-more active">
+
+                          更多文章 <i class="icon-arrow-right fw-600 fs-12 v-2"></i></nuxt-link>
+
                     </div>
                   </div>
                   <div class="row gap-a">
                     <div class="com-md-12 col-lg-6">
-                      <!-- <a v-for="(item, id) in this.leftArr" :key="id" class="
+                      <a v-for="(item, id) in leftArr" :key="id" class="
                           feature-block-three
                           border
                           white
@@ -483,16 +421,17 @@ const getList = async (): Promise<void> => {
                                     display: -webkit-box;
                                     -webkit-box-orient: vertical;
                                     overflow: hidden;
-                                    word-break: break-all;
+                                    word-break: break-word; /* 更广泛的兼容性 */
                                     text-overflow: ellipsis;
-                                    -webkit-line-clamp: 2;
+                                    -webkit-line-clamp: 2; /* WebKit 专用 */
+                                    line-clamp: 2; /* 标准属性（未来兼容性） */
                                   ">
                                   {{ item.title }}
                                 </h5>
                                 <div class="text-muted fs-16 mr-3">
-                                  <span v-show="item.createTime != null" v-text="formatDate(item.createTime)">
+                                  <span v-show="item.createTime != null" v-text="item.createTime">
                                   </span>
-                                  <span v-show="item.createTime = null" v-text="formatDate(item.addTime)">
+                                  <span v-show="item.createTime = null" v-text="item.addTime">
                                   </span>
                                 </div>
                               </div>
@@ -508,11 +447,11 @@ const getList = async (): Promise<void> => {
                             </div>
                           </nuxt-link>
                         </div>
-                      </a> -->
+                      </a>
                     </div>
 
                     <div class="com-md-12 col-lg-6">
-                      <!-- <a v-for="(item, id) in this.rightArr" :key="id" class="
+                      <a v-for="(item, id) in rightArr" :key="id" class="
                           feature-block-three
                           border
                           white
@@ -543,19 +482,20 @@ const getList = async (): Promise<void> => {
                               </div>
                               <div class="text">
                                 <h5 style="
-                                    display: -webkit-box;
-                                    -webkit-box-orient: vertical;
-                                    overflow: hidden;
-                                    word-break: break-all;
-                                    text-overflow: ellipsis;
-                                    -webkit-line-clamp: 2;
+                               display: -webkit-box;
+                              -webkit-box-orient: vertical;
+                              overflow: hidden;
+                              word-break: break-word; /* 更广泛的兼容性 */
+                              text-overflow: ellipsis;
+                              -webkit-line-clamp: 2; /* WebKit 专用 */
+                              line-clamp: 2; /* 标准属性（未来兼容性） */
                                   ">
                                   {{ item.title }}
                                 </h5>
                                 <div class="text-muted fs-16 mr-3">
-                                  <span v-show="item.createTime != null" v-text="formatDate(item.createTime)">
+                                  <span v-show="item.createTime != null" v-text="item.createTime">
                                   </span>
-                                  <span v-show="item.createTime = null" v-text="formatDate(item.addTime)">
+                                  <span v-show="item.createTime = null" v-text="item.addTime">
                                   </span>
                                 </div>
                               </div>
@@ -571,7 +511,7 @@ const getList = async (): Promise<void> => {
                             </div>
                           </nuxt-link>
                         </div>
-                      </a> -->
+                      </a>
                     </div>
                   </div>
                 </div>
