@@ -1,9 +1,182 @@
+<script setup lang="ts">
+import { ref, computed, onMounted } from 'vue';
+
+import { getResourceClasslist } from '../../api/webresourceclass';
+import { getAllResource, getAllResourceNumber } from '../../api/webresource';
+
+// Reactive state
+const setting = ref<any>({});
+const acticve = ref<string>("nav-link active");
+const loading = ref(true);
+const isAcitive = ref<number | null>(null);
+const news = ref("new");
+const download = ref("download");
+const discuss = ref("discuss");
+const love = ref("love");
+const recommend = ref("recommend");
+const sortOrder = ref("new");
+const allIndex = ref(true);
+const classlist = ref("");
+const istargetjudje = ref(false);
+const istarget = ref("_self");
+const ResourceNumber = ref("");
+const list = ref<any[]>([]);
+const total = ref(0);
+const layoutactive = ref("");
+const gridactive = ref("active");
+const listactive = ref("");
+const showfootnext = ref(false);
+const gridOrlist = ref("grid-grid");
+
+const listQuery = ref({
+  page: 1,
+  limit: 10
+});
+
+const listQueryClass = ref({
+  page: 1,
+  limit: 20,
+  class: ""
+});
+
+import { useSettingStore } from '../../stores/setting';
+const settingStore = useSettingStore();
+setting.value = settingStore.settings
+
+// 获取网站设置
+// await handleGetSetting();
+// async function handleGetSetting() {
+//   try {
+//     const result = await getSetting("") as { data: any };
+//     // setting.value = result.data;
+//   } catch (error) {
+//     console.error('获取设置信息出错:', error);
+//   }
+// }
+
+// 获取资源数量
+// await handleGetNumber();
+// async function handleGetNumber() {
+//   try {
+//     const result = await getAllResourceNumber() as { data: any };
+//     console.log(result)
+//     ResourceNumber.value = result.data;
+//   } catch (error) {
+//     console.error('获取资源数量出错:', error);
+//   }
+// }
+
+// 获取资源列表
+await handleGetList();
+async function handleGetList() {
+  try {
+    const result = await getAllResource(listQuery.value);
+    console.log(result)
+    list.value = result.data.value.data;
+    total.value = result.data.value.total;
+    console.log(list)
+
+  } catch (error) {
+    console.error('获取资源列表出错:', error);
+  }
+}
+
+// 获取资源分类
+await handleGetClasslist();
+async function handleGetClasslist() {
+  try {
+    const result = await getResourceClasslist() as { data: any };
+    classlist.value = result.data.value;
+  } catch (error) {
+    console.error('获取资源分类出错:', error);
+  }
+}
+
+// Pagination handlers
+function handleSizeChange(val: number) {
+  listQuery.value.limit = val;
+  handleGetList();
+}
+
+function handleCurrentChange(val: number) {
+  listQuery.value.page = val;
+  handleGetList();
+}
+
+// Sorting functions
+function changeNews() {
+  sortOrder.value = "news";
+}
+function changeDownload() {
+  sortOrder.value = "download";
+}
+function changeDiscuss() {
+  sortOrder.value = "discuss";
+}
+function changeLove() {
+  sortOrder.value = "love";
+}
+function changeRecommend() {
+  sortOrder.value = "recommend";
+}
+
+// Layout change functions
+function changeGrid() {
+  layoutactive.value = "";
+  gridactive.value = "active";
+  listactive.value = "";
+  gridOrlist.value = "grid-grid";
+  showfootnext.value = false;
+}
+
+function changeList() {
+  layoutactive.value = "";
+  gridactive.value = "";
+  listactive.value = "active";
+  gridOrlist.value = "grid-list";
+  showfootnext.value = true;
+}
+
+function changeLayout() {
+  layoutactive.value = "active";
+  gridactive.value = "";
+  listactive.value = "";
+}
+
+// 鼠标移入赋值index 
+async function dowmloadover(index: number) {
+  isAcitive.value = index;
+}
+// 鼠标移出 
+async function downloadleave() {
+  isAcitive.value = null;
+}
+
+// Date formatting function
+function formatDate(time: string) {
+  const date = new Date(time);
+  const currentYear = new Date().getFullYear();
+  const year = date.getFullYear();
+
+  if (currentYear - year === 1) {
+    return '去年 ' + date.toLocaleDateString('zh-CN', { month: '2-digit', day: '2-digit' });
+  } else if (currentYear - year === 2) {
+    return '前年 ' + date.toLocaleDateString('zh-CN', { month: '2-digit', day: '2-digit' });
+  } else if (currentYear - year > 2) {
+    return '多年前';
+  } else {
+    return date.toLocaleDateString('zh-CN', { month: '2-digit', day: '2-digit' });
+  }
+}
+</script>
+
+
 <template>
   <div class="home">
     <div data-server-rendered="true" id="__nuxt">
       <!---->
       <div id="__layout">
-        <div data-fetch-key="0" :class="[themeClass]" class="app macwk-animation">
+        <div data-fetch-key="0" class="app macwk-animation">
           <top :message2="acticve" />
           <div class="app-main mobile-layout">
             <div class="w-full bg auto d-flex layout-min-full-height" :class="gridOrlist">
@@ -19,7 +192,7 @@
                             <!----></span>
                           <!---->
                         </div>
-                        <div @click="getNewarticleclass(item.id)" class="vsm--item" v-for="(item, id) in this.classlist"
+                        <div @click="getNewarticleclass(item.id)" class="vsm--item" v-for="(item, id) in classlist"
                           :key="id">
                           <span role="link" href="[object Object]" class="vsm--link vsm--link_level-1" :class="{
                             'vsm--link_active': item.id == clickIndex,
@@ -28,7 +201,6 @@
                               <span><i class="icon-chevron-right"></i></span>
                             </div>
                           </span>
-                          <!---->
                         </div>
                       </div>
                     </div>
@@ -95,7 +267,7 @@
                         <h5 class="i-con-h-a">
                           全部资源
                           <span class="text-muted fs-13 v-1 ml-1">
-                            {{ this.ResourceNumber }}
+                            <!-- {{ ResourceNumber }} -->
                           </span>
                         </h5>
                       </div>
@@ -158,7 +330,6 @@
                     <!---->
                     <div id="listAppContainer" class="app-content-body listAppContainer">
                       <div class="mw-row">
-                        <template>
                           <div v-for="item, index in list" :key="item.id" class="mw-col list-animation-leftIn delay-3">
                             <div v-if="!setting.imageFormat">
                               <div v-if="item.status.includes('published')">
@@ -224,7 +395,7 @@
                               </div>
                             </div>
                             <div v-else>
-                              <div @mouseover="dowmloadover(index)" @mouseleave="downloadleave(index)"
+                              <div @mouseover="dowmloadover(index)" @mouseleave="downloadleave()"
                                 v-if="item.status.includes('published')">
                                 <nuxt-link :target="istarget" :to="'/list/' + item.id">
                                   <a class="macwk-app border white cursor-pointer padding-xl">
@@ -232,7 +403,7 @@
                                       <div class="li-card-img-div">
                                         <img :src="item.thumb" class="budongImg img72 dingweiImg" />
                                         <transition name="fade">
-                                          <img v-if="isAcitive === index" :src="item.thumb"
+                                          <img v-show="isAcitive == index" :src="item.thumb"
                                             class="gaosiImg img72 dingweiImg" />
                                         </transition>
                                       </div>
@@ -267,13 +438,12 @@
                               </div>
                             </div>
                           </div>
-                        </template>
                       </div>
                     </div>
                     <!---->
-                    <!-- <el-pagination class="app-content-bottom" @size-change="handleSizeChange"
+                    <el-pagination class="app-content-bottom" @size-change="handleSizeChange"
                       @current-change="handleCurrentChange" :current-page.sync="listQuery.page"
-                      :page-size="listQuery.limit" layout="prev, pager, next" :total="total" /> -->
+                      :page-size="listQuery.limit" layout="prev, pager, next" :total="total" />
                   </div>
                   <div class="app-content-info">
                     <div class="siderbar-apps border d-flex flex-column mb-5">

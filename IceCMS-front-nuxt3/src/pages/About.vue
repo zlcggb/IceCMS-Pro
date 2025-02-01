@@ -1,9 +1,20 @@
+<script setup lang="ts">
+
+// 标题栏默认值为 'nav-link active'
+const acticve = ref<string>("nav-link active");
+const setting = ref<any>({});
+
+import { useSettingStore } from '../../stores/setting';
+const settingStore = useSettingStore();
+setting.value = settingStore.settings
+</script>
+
 <template>
   <div class="about">
     <div id="__nuxt" data-server-rendered="true">
       <!---->
       <div id="__layout">
-        <div data-fetch-key="0" :class="[themeClass]" class="app macwk-animation">
+        <div data-fetch-key="0" class="app macwk-animation">
           <top :message11="acticve" />
           <div class="layout-min-full-height">
             <div class="macwk-about-section">

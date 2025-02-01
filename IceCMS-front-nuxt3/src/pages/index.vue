@@ -41,11 +41,6 @@ async function downloadleave() {
   isAcitive.value = null;
 }
 
-// Computed
-const themeClass = computed<string>(() => {
-  return isDark.value ? 'black' : 'light';
-});
-
 // Utility function to add background styles
 const addBackgroundStyles = (items: any[]): any[] => {
   const backgroundColors = [
@@ -77,6 +72,7 @@ async function handlegetNewResource  ()  {
   try {
     const result = await getNewResource(10, 'new') as { data: { value: any } };
     rlist.value = result.data.value
+    console.log(rlist)
   } catch (error) {
     console.error('获取NewResource出错:', error);
   }
@@ -122,11 +118,6 @@ setting.value = settingStore.settings
 // Mounted lifecycle hook
 onMounted(() => {
   getList()
-
-  if (!process.server) {
-    const savedMode = localStorage.getItem('darkMode');
-    isDark.value = savedMode === 'true';
-  }
 });
 
 async function getList() {
@@ -142,7 +133,7 @@ async function getList() {
     <div id="__nuxt">
       <!---->
       <div id="__layout">
-        <div data-fetch-key="0" :class="[themeClass]" class="app macwk-animation">
+        <div data-fetch-key="0" class="app macwk-animation">
           <top :message1="acticve" />
           <div>
             <section class="layout-index pc-model mt-5">

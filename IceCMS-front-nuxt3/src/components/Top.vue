@@ -1,5 +1,14 @@
 
 <script setup lang="ts">
+import { ref, onMounted } from 'vue';
+
+defineProps<{
+  message1?: string;
+  message2?: string;
+  message3?: string;
+  message4?: string;
+  message5?: string;
+}>();
 
 const setting = ref<any>({});
 
@@ -7,6 +16,49 @@ import { useSettingStore } from '../../stores/setting';
 const settingStore = useSettingStore();
 setting.value = settingStore.settings
 
+// Define a reactive property for dark mode
+const isDark = ref<boolean>(false);
+
+// Function to toggle the dark/light mode
+const toggleMode = () => {
+  isDark.value = !isDark.value;
+  if (isDark.value) {
+    setDarkMode();
+    localStorage.setItem('darkMode', 'true');
+  } else {
+    setLightMode();
+    localStorage.setItem('darkMode', 'false');
+  }
+};
+
+// Function to apply dark mode
+const setDarkMode = () => {
+  const appDiv = document.querySelector('.app');
+  if (appDiv) {
+    appDiv.classList.remove('light');
+    appDiv.classList.add('black');
+  }
+};
+
+// Function to apply light mode
+const setLightMode = () => {
+  const appDiv = document.querySelector('.app');
+  if (appDiv) {
+    appDiv.classList.remove('black');
+    appDiv.classList.add('light');
+  }
+};
+
+// Check for saved dark mode preference on mount
+onMounted(() => {
+  const savedMode = localStorage.getItem('darkMode');
+  if (savedMode === 'true') {
+    isDark.value = true;
+    setDarkMode();
+  } else {
+    setLightMode();
+  }
+});
 </script>
 <template>
   <header class="app-header">
@@ -701,52 +753,10 @@ import { mapState, mapMutations } from 'vuex'
 
 export default ({
   name: 'Top',
-  props: ['message1', 'message2', 'message3', 'message4', 'message5'],
   computed: {
     ...mapState(['playlist', 'glabledata', 'count'])
   },
-  created() {
-    // 检查是否在客户端环境
-    if (process.client) {
-      const savedMode = localStorage.getItem('darkMode');
-      if (savedMode === 'true') {
-        this.isDark = true;
-      } else {
-        this.isDark = false;
-      }
-    }
-  },
-  watch: {
-    isDark(newVal) {
-      // 根据 isDark 的值设置 CSS 变量
-      document.documentElement.style.setProperty('--dialog-bg-color', newVal ? '#202020' : '#ffffff');
-    },
-  },
   methods: {
-    toggleMode() {
-      this.isDark = !this.isDark; // 切换模式
-      if (this.isDark) {
-        this.setDarkMode();
-        localStorage.setItem('darkMode', 'true');
-      } else {
-        this.setLightMode();
-        localStorage.setItem('darkMode', 'false');
-      }
-    },
-    setDarkMode() {
-      const appDiv = document.querySelector('.app');
-      if (appDiv) {
-        appDiv.classList.remove('light');
-        appDiv.classList.add('black');
-      }
-    },
-    setLightMode() {
-      const appDiv = document.querySelector('.app');
-      if (appDiv) {
-        appDiv.classList.remove('black');
-        appDiv.classList.add('light');
-      }
-    },
     async fullnum() {
       let res1 = await getAllResourceNumber()
       if (res1) {

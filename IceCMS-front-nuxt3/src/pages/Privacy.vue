@@ -1,9 +1,20 @@
+<script setup lang="ts">
+
+// 标题栏默认值为 'nav-link active'
+const acticve = ref<string>("nav-link active");
+const setting = ref<any>({});
+
+import { useSettingStore } from '../../stores/setting';
+const settingStore = useSettingStore();
+setting.value = settingStore.settings
+</script>
+
 <template>
   <div class="home">
     <div data-server-rendered="true" id="__nuxt">
       <!---->
       <div id="__layout">
-        <div data-fetch-key="0":class="[themeClass]"  class="app IceCMS-animation">
+        <div data-fetch-key="0"  class="app IceCMS-animation">
           <top :message1="acticve"></top>
           <div class="IceCMS-privacy soft-layout white bg my-6 py-5">
             <section class="layout-content">
