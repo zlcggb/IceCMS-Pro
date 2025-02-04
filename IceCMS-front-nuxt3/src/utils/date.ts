@@ -16,16 +16,32 @@ export function formatDate(dateString: string): string {
   return `${year}年${month}月${day}日`;
 }
 
-function padLeftZero(str) {
+function padLeftZero(str: string | any[]) {
   return ("00" + str).substr(str.length);
 }
 
 
-// Get the day of the week (0–6) from an ISO date string
-export function GetWeekdate(isoDateString) {
-  const dateObject = new Date(isoDateString);
+// Function to convert custom formatted date string to a valid JavaScript Date object
+function parseCustomDate(dateString: string): Date {
+  const regex = /(\d{4})年(\d{1,2})月(\d{1,2})日/;
+  const match = dateString.match(regex);
+
+  if (!match) {
+    throw new Error("Invalid date format");
+  }
+
+  const [, year, month, day] = match;
+  // Months are 0-indexed in JavaScript, so subtract 1 from the month
+  return new Date(Number(year), Number(month) - 1, Number(day));
+}
+
+// Function to get the weekday (0–6) from a custom date format
+export function GetWeekdate(dateString: string): number {
+  const dateObject = parseCustomDate(dateString);
+  
   if (isNaN(dateObject.getTime())) {
     throw new Error("Invalid date string");
   }
+  
   return dateObject.getDay(); // 0 = Sunday, 6 = Saturday
 }

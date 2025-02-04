@@ -1,4 +1,4 @@
-import httpRequest from "../service/index";
+import httpRequest from "../../service/index";
 
 // Define types for request parameters
 interface PaymentParams {

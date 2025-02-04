@@ -12,7 +12,6 @@ const props = defineProps({
 
 // Reactive state with types
 const FourKingKong = ref<any>(""); // Could define a more specific type for the API response
-const isDark = ref<boolean>(false); // 默认白天模式
 const isAcitive = ref<number | null>(null);
 const r_sortOrder = ref<string>("new");
 const r_news = ref<string>("new");
@@ -72,7 +71,6 @@ async function handlegetNewResource  ()  {
   try {
     const result = await getNewResource(10, 'new') as { data: { value: any } };
     rlist.value = result.data.value
-    console.log(rlist)
   } catch (error) {
     console.error('获取NewResource出错:', error);
   }
@@ -508,19 +506,7 @@ async function getList() {
                 </div>
               </div>
             </section>
-            <div class="mobile-model">
-              <div class="
-                  d-flex
-                  layout-min-full-height
-                  justify-content-center
-                  align-items-center
-                ">
-                <div class="text-center" style="width: 80%; margin: 0px auto">
-                  <h1 class="mb-4">哇，窗口太小啦</h1>
-                  <p class="mb-6">请调整浏览器窗口大小或者请使用手机查看！</p>
-                </div>
-              </div>
-            </div>
+            <mobile/>
           </div>
           <foot />
           <div infos="0">
@@ -540,6 +526,7 @@ async function getList() {
 
 
 <style scoped>
+
 .delayImg {
   height: 100px;
   width: 145px;
@@ -551,10 +538,7 @@ async function getList() {
   width: 100%;
   border-radius: 8px;
 }
-</style>
 
-
-<style scoped>
 .white1 {
   background-color: rgb(255, 255, 255);
   z-index: -1;
@@ -604,14 +588,11 @@ async function getList() {
   }
 }
 
-
-
 :deep(.delayImgss) {
   .el-image__inner {
     border-radius: 8px;
   }
 }
-
 
 :deep(.delay-3) {
   .el-image__inner {
@@ -620,7 +601,6 @@ async function getList() {
     border-radius: 8px 8px 0px 0px;
   }
 }
-
 
 .delayImgs {
   width: 224px;
@@ -920,9 +900,9 @@ async function getList() {
   /* filter: blur(20px) opacity(70%) brightness(110%); */
   filter: blur(20px) opacity(0.7) brightness(110%);
   /* transition: filter 0.22s ease; 调整过渡时间和效果 */
-  transition: all 0.22s;
+  transition: all 90ms;
   /* transition: .22s; */
-  z-index: 8;
+  z-index: 20;
 }
 
 .dingweiImg,

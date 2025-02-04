@@ -71,11 +71,8 @@ await handleGetList();
 async function handleGetList() {
   try {
     const result = await getAllResource(listQuery.value);
-    console.log(result)
     list.value = result.data.value.data;
     total.value = result.data.value.total;
-    console.log(list)
-
   } catch (error) {
     console.error('获取资源列表出错:', error);
   }
@@ -898,7 +895,7 @@ export default ({
   /* filter: blur(20px) opacity(70%) brightness(110%); */
   filter: blur(20px) opacity(0.7) brightness(110%);
   /* transition: filter 0.22s ease; 调整过渡时间和效果 */
-  transition: all 0.22s;
+  transition: all 900ms;
   /* transition: .22s; */
   z-index: 8;
 }

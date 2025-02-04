@@ -1,5 +1,30 @@
 <script setup lang="ts">
+import { ref, computed, onMounted } from "vue";
+import { useRoute } from "vue-router";
+import { GetArticleBtmatte, getAllArticle, getAllArticleNumber } from "../../api/webarticle";
+import { getArticleClasslist } from "../../api/webarticleclass";
+import { getNewArticleComment } from "../../api/webarticleComment";
+import { formatDate } from "@/utils/date";
 
+// 读取路由参数
+const route = useRoute();
+
+// 状态变量
+const MatterArticleFirst = ref<any>(null);
+const MatterArticles = ref<any[]>([]);
+const NewArticleComment = ref<any[]>([]);
+const allIndex = ref(true);
+const articleCount = ref<number | null>(null);
+const list = ref<any[]>([]);
+const articleData = ref<any[]>([]);
+const total = ref<number>(0);
+const listLoading = ref(true);
+const classlist = ref<any[]>([]);
+const listQuery = ref({
+  page: 1,
+  limit: 8,
+  click: 0,
+});
 // 标题栏默认值为 'nav-link active'
 const acticve = ref<string>("nav-link active");
 const setting = ref<any>({});
@@ -7,6 +32,105 @@ const setting = ref<any>({});
 import { useSettingStore } from '../../stores/setting';
 const settingStore = useSettingStore();
 setting.value = settingStore.settings
+
+// **获取文章数据**
+await getArticleData();
+async function getArticleData() {
+  try {
+    const res = await GetArticleBtmatte({ page: Number(route.params.id) || 1 });
+
+    MatterArticleFirst.value = res.data.value[0];
+    MatterArticles.value = res.data.value;
+
+  } catch (error) {
+    console.error("获取文章数据出错:", error);
+  }
+}
+
+await getList();
+// **获取文章列表**
+async function getList() {
+  listLoading.value = true;
+  try {
+    const res = await getAllArticle(listQuery.value, 0);
+    if (res) {
+      list.value = addBackgroundStyles(res.data.value.data);
+      total.value = res.data.value.total;
+    }
+
+    const classRes = await getArticleClasslist();
+
+    if (classRes) classlist.value = classRes.data.value;
+
+    const commentRes = await getNewArticleComment(9);
+
+    if (commentRes) NewArticleComment.value = commentRes.data.value;
+    console.log( NewArticleComment)
+
+  } catch (error) {
+    console.error("获取文章列表出错:", error);
+  } finally {
+    listLoading.value = false;
+  }
+}
+
+await getNumber();
+// **获取文章总数**
+async function getNumber() {
+  try {
+    const res = await getAllArticleNumber();
+    if (res) articleCount.value = res.data;
+  } catch (error) {
+    console.error("获取文章总数出错:", error);
+  }
+}
+
+
+// **切换分页**
+function handleSizeChange(val: number) {
+  listQuery.value.limit = val;
+  listQuery.value.page = 1;
+  getList();
+}
+
+// **切换页码**
+function handleCurrentChange(val: number) {
+  listQuery.value.page = val;
+  getList();
+}
+
+// **获取分类文章**
+function getNewarticleclass(id: number) {
+  allIndex.value = false;
+  list.value = list.value.filter(item => item.sortClass === id);
+  list.value = addBackgroundStyles(list.value);
+}
+
+// **随机背景色**
+function addBackgroundStyles(items: any[]) {
+  const backgroundColors = [
+    "linear-gradient(135deg, #ABDCFF 10%, #0396FF 100%)",
+    "linear-gradient(135deg, #FEB692 10%, #EA5455 100%)",
+    "linear-gradient(135deg, #CE9FFC 10%, #7367F0 100%)",
+    "linear-gradient(135deg, #90F7EC 10%, #32CCBC 100%)",
+    "linear-gradient(135deg, #81FBB8 10%, #28C76F 100%)",
+    "linear-gradient(135deg, #E2B0FF 10%, #9F44D3 100%)",
+    "linear-gradient(135deg, #5EFCE8 10%, #736EFE 100%)",
+    "linear-gradient(135deg, #FFD3A5 10%, #FD6585 100%)"
+  ];
+  return items.map(item => {
+    if (!item.thumb) {
+      const index = Math.floor(Math.random() * backgroundColors.length);
+      item.backgroundStyle = `background-image: ${backgroundColors[index]};`;
+    }
+    return item;
+  });
+}
+
+// **格式化时间**
+function formatDateWrapper(time: string) {
+  return formatDate(new Date(time), "yyyy-MM-dd hh:mm");
+}
 </script>
 
 <template>
@@ -24,7 +148,7 @@ setting.value = settingStore.settings
                   <div class="featured-posts mb-6">
                 
                   <div>
-                    <!-- <a :href="'post/'+MatterArticleFirst.id" target="_self" class="post-item post-item--featured"
+                    <a :href="'post/'+MatterArticleFirst.id" target="_self" class="post-item post-item--featured"
                       style="background:linear-gradient(#5aa94580,#59ab4e8f,#58ac569e,#57ad5dad,#57ae65bd,#57af6ccc);background-size:100%;">
                       <img
                         src="../static/picture/jetbrains.svg"
@@ -57,10 +181,10 @@ setting.value = settingStore.settings
                           </p> <button class="share"><i class="icon-share"></i></button>
                         </div>
                       </div>
-                    </a> -->
+                    </a>
                   </div>
                   <div>
-                    <!-- <a :href="'post/'+MatterArticles[0].id" target="_self" class="post-item post-item--featured"
+                    <a :href="'post/'+MatterArticles[0].id" target="_self" class="post-item post-item--featured"
                       style="background:linear-gradient(#c956d880,#d94ec68f,#e547b49e,#ed43a1ad,#f2438fbd,#f3467ecc);">
                       <div class="post-item__content">
                         <h3 :title="MatterArticles[0].title">{{MatterArticles[0].title}}</h3>
@@ -152,7 +276,7 @@ setting.value = settingStore.settings
                           </p> <button class="share"><i class="icon-share"></i></button>
                         </div>
                       </div>
-                    </a> -->
+                    </a>
                   </div>
                 </div>
                   <!-- /** */ -->
@@ -163,7 +287,7 @@ setting.value = settingStore.settings
                           <h5 class="fs-24 fw-600 i-con-h-a">
                             全部文章
                             <span class="text-muted fs-13 v-1 ml-1">
-                              {{ this.articleCount }}
+                              {{ articleCount }}
                             </span>
                           </h5>
                         </div>
@@ -181,7 +305,7 @@ setting.value = settingStore.settings
                                 </el-tab-pane>
                                 
                               </el-tabs>  -->
-                            <div @click="getNewarticleclass(item.id)" v-for="(item, id) in this.classlist" :key="id">
+                            <div @click="getNewarticleclass(item.id)" v-for="(item, id) in classlist" :key="id">
                               <li class="menu__item " :class="{ 'menu__item--current': item.id == clickIndex }">
                                 <a class="menu__link"> {{ item.name }} </a>
                               </li>
@@ -204,7 +328,7 @@ setting.value = settingStore.settings
                         </div>
                       </div>
                       <!---->
-                      <div v-for="(item, id) in this.list" :key="id">
+                      <div v-for="(item, id) in list" :key="id">
                         <div v-if="item.status.includes('published')">
                           <nuxt-link :target="istarget" :to="'/post/' + item.id">
                             <!---->
@@ -278,7 +402,7 @@ setting.value = settingStore.settings
                           <h4 class="fs-24 fw-600 mb-0">最新评论</h4>
                         </div>
                         <!-- --------- -->
-                        <div v-for="item in Newarticlecomment" :key="item.id"
+                        <div v-for="item in NewArticleComment" :key="item.id"
                           class="siderbar-apps__body-item bg bt-1 pt-4 hover-shadow-5"><a target="_blank"
                             :href="item.articleId"
                             class="fs-14 opacity-50 text-truncate mb-3 d-block hover-opacity-normal">{{ item.articleName }}</a>

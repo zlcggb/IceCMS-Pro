@@ -11,6 +11,13 @@ defineProps<{
 }>();
 
 const setting = ref<any>({});
+const dialogFormVisible = ref<boolean>(false);
+const searchshow = ref<boolean>(false);
+const IsRegister = ref<boolean>(false);
+const forgotPassword = ref<boolean>(false);
+const  activeTab = ref<string>("");
+const qrCodeValue = ref<string>("");
+const  seachcontent = ref<string>("");
 
 import { useSettingStore } from '../../stores/setting';
 const settingStore = useSettingStore();
@@ -18,6 +25,75 @@ setting.value = settingStore.settings
 
 // Define a reactive property for dark mode
 const isDark = ref<boolean>(false);
+  function  tohandleLogin() {
+      console.log('打开登录框');
+      IsRegister.value  = true;
+      forgotPassword.value  = false;
+    };
+
+function handleRegister() {
+      console.log('注册');
+      IsRegister.value = false;
+      beforeDestroy(); // 停止轮询
+    };
+
+function setActiveTab(tab: string) {
+  if (tab === 'wechat') {
+    // qrCodeValue = '';
+    // 微信登录
+    // WeChatLogin().then(resp => {
+    //   if (resp.data.code === 200) {
+    //     // 假设后端返回的是 Base64 编码的 QR 码数据
+    //     this.qrCodeValue = 'data:image/png;base64,' + resp.data.data.data.bytes;
+    //     this.accountId = resp.data.data.data.accountId;
+    //     console.log(resp.data.data)
+    //     // 设置轮询，每隔2秒检查一次
+    //     this.beforeDestroy(); // 停止轮询
+    //     console.log("开始轮询")
+    //     // 设置轮询，每隔2秒检查一次状态
+    //     that.startPolling();
+    //   }
+    //   // 清除之前所有多生成的二维码
+    //   // this.$refs.qrCode.innerHTML = '';
+    //   // 清除之前多的轮询事件
+    // })
+  }
+  if (tab === 'phone') {
+    // 手机号登录
+    beforeDestroy(); // 停止轮询
+
+  }
+  if (tab === 'password') {
+    // 密码登录
+    beforeDestroy(); // 停止轮询
+
+
+  }
+  activeTab.value = tab;
+}
+
+function closeDialog() {
+  console.log('关闭对话框');
+  dialogFormVisible.value = false;  // 点击图片关闭对话框
+  beforeDestroy();
+};
+function  beforeDestroy() {
+  // if (intervalId) {
+    // clearInterval(intervalId);
+  // }
+};
+function showlogin() {
+    // setActiveTab("wechat")
+    dialogFormVisible.value = true;
+
+    // 检查accountId是否为空
+    // if (this.accountId.trim() === '') {
+    //   console.warn('accountId为空，无法开始轮询');
+    //   return;
+    // }
+
+    // this.startPolling();
+};
 
 // Function to toggle the dark/light mode
 const toggleMode = () => {
@@ -64,7 +140,7 @@ onMounted(() => {
   <header class="app-header">
     <!-- 登录 -->
     <el-dialog class="dialogdeep" width="30%" top="30px" center title="" @close="closeDialog"
-      :visible.sync="dialogFormVisible">
+       v-model="dialogFormVisible">
       <div v-if="IsRegister && forgotPassword == false" class="box">
         <a> <img class="close-icon"
             src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAHhlWElmTU0AKgAAAAgABAEaAAUAAAABAAAAPgEbAAUAAAABAAAARgEoAAMAAAABAAIAAIdpAAQAAAABAAAATgAAAAAAAACQAAAAAQAAAJAAAAABAAOgAQADAAAAAQABAACgAgAEAAAAAQAAACCgAwAEAAAAAQAAACAAAAAAfgvaUgAAAAlwSFlzAAAWJQAAFiUBSVIk8AAAAalJREFUWAntlr9OwzAQxm2XAV4DIfEQTFHE2p2B5+hSiQ5d+jh0BKlZUJ6i8BxUUBt/up5kOU7iM38W4sWxc3ffz2dfYqWm9t8zoOME7HYv1859Lo3Re6Xspqqq99hGMm6a5lwps7DWXSl1XNV1/Rr6n4UDerYPWus755TS2tz4APNSiLZtLw6Hj0cf69bHVM7NIHEfappwgGfn3BvPwdHTb2kVPJvXw4fF2YOyyiPqOwDG2LWHfWazEohT2rfkS5Eopt1wXO47ZwAvBgKMbofUNwlQCiEVh04vgBSiRHwUIBeiVDwLYAwC71EpiQM3el7gObgFMODWv0qULsqV2um0Z4nDIxsAxikIzHOTisNPBACHPogSccTrfIgw+ZdNlIG+1TNwSRayM9Aj/kSihFDy2c7KQEqcV0vSv1iGQ+L8m86x4W2K+8EMSAJLbEOIXoCSgCU+SYCSQLwqqW8HQBqAhcNeEiNRhmbxnW87QOhw2nlcotaaZQiK5w4A3V7JjEuNT3vsPDROQfiL6WXsk7gVH1e4vf7EtRwQfjt8JuharvVsHQNM4ykDX94FYhBKOJraAAAAAElFTkSuQmCC"
@@ -113,7 +189,7 @@ onMounted(() => {
             </div>
             <div v-if="activeTab === 'phone'">
               <!-- 手机号登录内容 -->
-              <el-form ref="phoneLoginForm" :model="phoneLoginForm" :rules="phoneLoginRules" class="login-form"
+              <!-- <el-form ref="phoneLoginForm" :model="phoneLoginForm" :rules="phoneLoginRules" class="login-form"
                 auto-complete="on" label-position="left">
                 <el-form-item prop="phone">
                   <el-input ref="phone" v-model="phoneLoginForm.phone" placeholder="手机号" name="phone" type="text"
@@ -137,11 +213,11 @@ onMounted(() => {
                     <a target="_blank">隐私条款</a></a>
                 </div>
                 <div class="line"></div>
-              </el-form>
+              </el-form> -->
             </div>
             <div v-if="activeTab === 'password'">
               <!-- 密码登录内容 -->
-              <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on"
+              <!-- <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on"
                 label-position="left">
                 <el-form-item prop="username">
                   <el-input ref="username" v-model="loginForm.username" placeholder="用户名或邮箱" name="username" type="text"
@@ -153,16 +229,15 @@ onMounted(() => {
                     placeholder="密码" name="password" tabindex="2" auto-complete="on"
                     @keyup.enter.native="handleLogin" />
 
-                  <!-- <span class="show-pwd" @click="showPwd">
+                  <span class="show-pwd" @click="showPwd">
           <svg-icon
             :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'"
           />
-         </span> -->
+         </span>
                 </el-form-item>
 
                 <el-button :loading="loading" type="primary" style="width: 100%; margin-bottom: 30px"
                   @click.native.prevent="handleLogin">登录</el-button>
-                <!-- 找回密码链接和提示文字 -->
                 <div class="forgot-password" style="text-align: left">
                   <span style="color: #666; font-size: 12px; margin-right: 5px;">
                     忘记密码？
@@ -178,7 +253,7 @@ onMounted(() => {
                 </div>
                 <div class="line"></div>
 
-              </el-form>
+              </el-form> -->
             </div>
           </div>
         </div>
@@ -234,7 +309,7 @@ onMounted(() => {
         <div class="register-text">
           <span><b>注册</b></span>
         </div>
-        <el-form ref="emailRegisterForm" :model="emailRegisterForm" :rules="emailRegisterRules" class="login-form"
+        <!-- <el-form ref="emailRegisterForm" :model="emailRegisterForm" :rules="emailRegisterRules" class="login-form"
           auto-complete="on" label-position="left">
           <el-form-item prop="email">
             <el-input ref="email" v-model="emailRegisterForm.email" placeholder="邮箱" name="phone" type="text"
@@ -264,7 +339,7 @@ onMounted(() => {
               <a target="_blank">隐私条款</a></a>
           </div>
           <div class="line"></div>
-        </el-form>
+        </el-form> -->
         <div class="footer">
           <p class="text-align-center">
             已有账号？
@@ -301,7 +376,7 @@ onMounted(() => {
         <div class="register-text">
           <span><b>找回密码</b></span>
         </div>
-        <el-form ref="emailRegisterForm" :model="emailRegisterForm" :rules="emailRegisterRules" class="login-form"
+        <!-- <el-form ref="emailRegisterForm" :model="emailRegisterForm" :rules="emailRegisterRules" class="login-form"
           auto-complete="on" label-position="left">
           <el-form-item prop="email">
             <el-input ref="email" v-model="emailRegisterForm.email" placeholder="邮箱" name="phone" type="text"
@@ -336,7 +411,7 @@ onMounted(() => {
               <a target="_blank">隐私条款</a></a>
           </div>
           <div class="line"></div>
-        </el-form>
+        </el-form> -->
         <div class="footer">
           <p class="text-align-center">
             已有账号？
@@ -362,12 +437,12 @@ onMounted(() => {
           <span> </span>
         </div>
       </div>
-      <el-form :model="form"> </el-form>
+      <!-- <el-form :model="form"> </el-form> -->
     </el-dialog>
     <div class="app-header-navbar white shadow-4 border-bottom pc-model">
       <div class="app-header-main">
 
-        <a href="/" class="app-header-logo active" aria-current="page">
+        <nuxt-link to="/" class="app-header-logo active" aria-current="page">
           <div v-if="setting.sitLogo">
             <img :src="setting.sitLogo" />
           </div>
@@ -376,13 +451,13 @@ onMounted(() => {
           </div>
           <span class="ml-4">{{ setting.sitTitle }}</span>
 
-        </a>
+        </nuxt-link>
         <div class="app-header-nav nav">
           <nuxt-link target="_self" class="nav-link" :class="message1" aria-current="page" to="/">首页</nuxt-link>
           <nuxt-link target="_self" class="nav-link" :class="message2" to="/Alllist">资源</nuxt-link>
           <nuxt-link target="_self" class="nav-link" :class="message3" to="/allpost">文章</nuxt-link>
           <nuxt-link target="_self" class="nav-link" :class="message4" to="/class">分类</nuxt-link>
-          <nuxt-link target="_self" class="nav-link" :class="message5" to="/planet">星球</nuxt-link>
+          <nuxt-link target="_self" class="nav-link" :class="message5" to="/planet/1">星球</nuxt-link>
         </div>
         <div class="app-header-search grid-list lazy-transition">
           <div id="autosuggest">
@@ -397,12 +472,12 @@ onMounted(() => {
               <div aria-labelledby="autosuggest" class="autosuggest__results">
                 <div class="overflow-hidden">
                   <div class="d-flex align-items-center px-5">
-                    <a @click="codeshows()" :class="{ 'active search-active': codeshow }"
+                    <!-- <a @click="codeshows()" :class="{ 'active search-active': codeshow }"
                       class="flex flex-grow-1 text-center py-3 fs-16"><span class="fw-400">资源</span>
                       <span class="fs-12">({{ ResourceNumber }})</span></a>
                     <a @click="articleshows()" :class="{ 'active search-active': articleshow }"
                       class="flex flex-grow-1 text-center py-3 fs-16"><span class="">文章</span>
-                      <span class="fs-12">({{ articleCount }})</span></a>
+                      <span class="fs-12">({{ articleCount }})</span></a> -->
                   </div>
                 </div>
                 <ul role="listbox">
@@ -683,14 +758,14 @@ onMounted(() => {
            -->
           <div slot="reference">
             <nuxt-link to="/userinfo">
-              <div v-show="!userJudje" class="avatartext">
-                <!-- <el-avatar :src="user.profile"></el-avatar>
-                <span class="spans">{{ user.name }}</span> -->
-              </div>
+              <!-- <div v-show="!userJudje" class="avatartext">
+               <el-avatar :src="user.profile"></el-avatar>
+                <span class="spans">{{ user.name }}</span> 
+              </div> -->
             </nuxt-link>
           </div>
         </el-popover>
-        <a v-if="userJudje" class="actions" style="cursor: pointer">
+        <a class="actions" style="cursor: pointer">
           <div @click="showlogin()" class="app-header-user">
             <div class="login-button">
               <span class="logintext">登录/注册</span>
@@ -1973,7 +2048,7 @@ export default ({
 <style>
 .el-dialog--center {
   border-radius: 10px;
-  background-color: var(--dialog-bg-color);
+  /* background-color: var(--dialog-bg-color); */
   /* 使用 CSS 变量 */
 }
 

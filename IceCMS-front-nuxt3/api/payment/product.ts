@@ -1,4 +1,4 @@
-import httpRequest from "../service/index";
+import httpRequest from "../../service/index";
 
 // 定义商品列表的响应类型
 interface Product {

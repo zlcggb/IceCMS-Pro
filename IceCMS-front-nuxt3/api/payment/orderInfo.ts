@@ -1,4 +1,4 @@
-import httpRequest from "../service/index";
+import httpRequest from "../../service/index";
 
 // 定义订单信息的类型
 interface Order {

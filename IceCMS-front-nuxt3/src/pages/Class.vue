@@ -1,8 +1,21 @@
 <script setup lang="ts">
+import { getResourceClasslist } from "../../api/webresourceclass";
 
 // 标题栏默认值为 'nav-link active'
 const acticve = ref<string>("nav-link active");
 const setting = ref<any>({});
+const classlist = ref<any[]>([]);
+
+// **获取class数据**
+await getArticleData();
+async function getArticleData() {
+  try {
+    const res = await getResourceClasslist();
+    classlist.value = res.data.value;
+  } catch (error) {
+    console.error("获取class数据出错:", error);
+  }
+}
 
 import { useSettingStore } from '../../stores/setting';
 const settingStore = useSettingStore();
@@ -109,39 +122,18 @@ export default ({
   },
   created() {
     this.getList()
-    
-  },
-  computed: {
-  themeClass() {
-      console.log(this.isDark)
-      return this.isDark ? 'black' : 'light';
-    }
-  },
-  mounted() {
-    // 检查是否在客户端环境
-    if (process.client) {
-      const savedMode = localStorage.getItem('darkMode');
-      if (savedMode === 'true') {
-        this.isDark = true;
-      } else {
-        this.isDark = false;
-      }
-    }
   },
    methods: {
       getList() {
-      
       getResourceClasslist().then(resp => {
         //获取分类
         console.log(resp)
         this.classlist = resp.data
-
       })
     },
    },
   data() {
     return {
-      isDark: false,
       classlist:"",
       acticve:'nav-link active',
     }

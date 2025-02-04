@@ -1,4 +1,4 @@
-import httpRequest from "../service/index";
+import httpRequest from "../../service/index";
 
 // 定义请求的返回类型
 interface ApiResponse {
