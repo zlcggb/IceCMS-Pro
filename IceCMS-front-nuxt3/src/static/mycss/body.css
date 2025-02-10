@@ -5789,7 +5789,7 @@ body {
 .app-header .app-header-navbar {
 	position: relative;
 	height: 60px;
-	z-index: 999
+	z-index: 999;
 }
 
 .app-header .app-header-main {
@@ -5820,7 +5820,7 @@ body {
 }
 
 .app-header .app-header-main .app-header-nav {
-	flex: 1
+	flex: 1;
 }
 
 .app-header .app-header-main .app-header-nav .nav-link {

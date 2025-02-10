@@ -7,9 +7,12 @@ export default defineNuxtConfig({
   alias: {
     '@': path.resolve(__dirname, 'src') // 确保路径正确
   },
+  // ssr: false,  // 确保启用服务端渲染（如果你需要）
+  // pages: true,  // 确保页面功能没有被禁用
   runtimeConfig: {
     public: {
-      API_BASE_DEV: 'http://localhost:8181',
+      apiBaseUrl: process.env.NUXT_PUBLIC_API_BASE_URL,
+      API_BASE_DEV: 'http://127.0.0.1:8181/',
       API_BASE_PROD: 'https://api.example.com/v1'
     }
   },

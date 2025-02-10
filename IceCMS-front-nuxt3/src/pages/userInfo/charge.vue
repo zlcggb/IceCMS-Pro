@@ -165,10 +165,10 @@
   </div>
 </template>
 <script>
-import wxPayApi from '../../api/payment/wxPay'
-import aliPayApi from '../../api/payment/aliPay'
+import wxPayApi from '../../../api/payment/wxPay'
+import aliPayApi from '../../../api/payment/aliPay'
 
-import { UpdateIntegral } from '../../api/user'
+import { UpdateIntegral } from '../../../api/user'
 export default {
   data() {
     return {

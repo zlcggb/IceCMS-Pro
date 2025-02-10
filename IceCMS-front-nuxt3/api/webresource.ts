@@ -1,4 +1,5 @@
 import httpRequest from "../service/index";
+import { useDollarGet } from  "../service/useDollarFetchRequest";
 
 /**
  * @description 获取所有资源
@@ -61,9 +62,10 @@ export const getNewResource = (num: number, filter: string) => {
  * @param num 查找数量
  * @return Promise<any>
  */
-export const FindresourceByNum = (title: string, num: number) => {
-  return httpRequest.get<any>(`/WebResource/findresourcebynum/${title}/${num}`);
-};
+// export const FindresourceByNum = (title: string, num: number) => {
+//   return httpRequest.get<any>(`/WebResource/findresourcebynum/${title}/${num}`);
+// };
+export const FindresourceByNum = (title: string, num: number) => useDollarGet(`/WebResource/findresourcebynum/${title}/${num}`);
 
 /**
  * @description 给资源点赞

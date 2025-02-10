@@ -16,7 +16,7 @@ setting.value = settingStore.settings
           <img :src="setting.sitLogo" />
         </div>
         <div v-else>
-          <img src="../../static/image/logo.svg" />
+          <img src="../static/image/logo.svg" />
         </div>
       </div>
         <span class="ml-4">{{ setting.sitTitle }}</span>

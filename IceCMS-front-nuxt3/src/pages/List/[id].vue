@@ -31,7 +31,7 @@ const carouselNum = ref<number>(0);
 const commentNum = ref<number>(0);
 const MyEmoge = ref('');
 const showDialog = ref(false);
-const myComment = ref(true);
+const mycomment = ref(true);
 const carousel = ref<string[]>([]);
 const className = ref('');
 const sortClasss = ref<number | string>('');
@@ -132,6 +132,18 @@ async function handlegetclassName(id: number) {
     console.error('获取className出错:', error);
   }
 }
+const showemoge = () => {
+  showDialog.value = !showDialog.value;
+};
+
+const sendMsg = () => {
+  mycomment.value = false;
+};
+
+const updateDate = () => {
+  showDialog.value = false;
+  mycomment.value = true;
+};
 
 // 获取资源数据
 // const { data: Resource } = useAsyncData(() => getResourceById({ page: route.params.id || 1 }));
@@ -813,9 +825,11 @@ onMounted(() => {
           </section>
           <!-- </div>
           </div> -->
-          <!-- <comment :articleId="$route.params.id" :theEmoge="MyEmoge" ref="child"
+          <ResComment
+          v-if="!mycomment"
+           :articleId="$route.params.id" :theEmoge="MyEmoge" ref="child"
             @closethecpmmentName="updateDate()" @openthecpmmentName="showemoge()" /> -->
-          <!---->
+          <!--
           <!---->
           <foot />
           <div infos="0">

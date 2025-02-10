@@ -1,7 +1,11 @@
-
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
-
+import { ref, onMounted, reactive } from 'vue';
+import { getAllResource, getAllResourceNumber } from '../../api/webresource'
+import { getAllArticle, getAllArticleNumber } from '../../api/webarticle'
+import { FindarticlesByNum } from '../../api/webarticle'
+import { FindresourceByNum } from '../../api/webresource'
+import { login } from '../../api/webuser'
+import { useUserStore } from "../../stores/useUserStore";
 defineProps<{
   message1?: string;
   message2?: string;
@@ -13,29 +17,338 @@ defineProps<{
 const setting = ref<any>({});
 const dialogFormVisible = ref<boolean>(false);
 const searchshow = ref<boolean>(false);
-const IsRegister = ref<boolean>(false);
+const IsRegister = ref<boolean>(true);
 const forgotPassword = ref<boolean>(false);
-const  activeTab = ref<string>("");
+const activeTab = ref<string>("wechat");
 const qrCodeValue = ref<string>("");
-const  seachcontent = ref<string>("");
+const seachcontent = ref<string>("");
+const codeshow = ref<boolean>(true);
+const articleshow = ref<boolean>(false);
+const userJudje = ref<boolean>(false);
+const tempdata = ref<any>({});
+const fundByresource = ref<boolean>(false);
+const howto = ref<string>("/list/");
+const ResourceNumber = ref<string>("");
+const articleCount = ref<string>("");
+const tempArticlesData = ref<string>("");
+const tempResourceData = ref<string>("");
+const loginForm = reactive({
+  username: '',
+  password: ''
+});
+const phoneLoginForm = reactive({
+  phone: '',
+  code: ''
+});
+const passwordType = ref<string>("password");
+const loading = ref<boolean>(false);
+const user = ref({
+  name: '',
+  profile: ''
+});
+// 表单验证规则
+const phoneLoginRules = reactive({
+  phone: [
+    { required: true, message: '请输入手机号', trigger: 'blur' },
+    { pattern: /^1[34578]\d{9}$/, message: '请输入有效的手机号', trigger: 'blur' }
+  ],
+  code: [
+    { required: true, message: '请输入验证码', trigger: 'blur' },
+    { len: 6, message: '验证码为6位数字', trigger: 'blur' }
+  ]
+});
 
 import { useSettingStore } from '../../stores/setting';
 const settingStore = useSettingStore();
 setting.value = settingStore.settings
 
+function handlePhoneLogin() {
+  // var that = this
+  // this.$refs.phoneLoginForm.validate(valid => {
+  //   if (valid) {
+  //     this.loading = true
+  //     console.log(that.phoneLoginForm)
+  //     MessageloginCheck(that.phoneLoginForm.phone, that.phoneLoginForm.code).then(resp => {
+  //       console.log(resp)
+  //       if (resp.data.code == 402 || resp.data.code == 400) {
+  //         this.$notify({
+  //           title: '失败',
+  //           message: '登录失败',
+  //           type: 'warning',
+  //           offset: 50
+  //         });
+  //       } else if (resp.data.code == 200) {
+  //         console.log(resp.data)
+  //         that.$cookies.set('access-user', resp.data.data)
+
+  //         // 关闭登录框
+  //         that.dialogFormVisible = false
+  //         // 关闭登录按钮
+  //         that.userJudje = false
+  //         //立即获取用户数据
+  //         that.getUserInfo()
+  //         this.$notify({
+  //           title: '成功',
+  //           message: '您已成功登录',
+  //           type: 'success',
+  //           offset: 50
+  //         });
+  //       }
+  //     }).catch((e) => { })
+  //     this.loading = false
+  //   } else {
+  //     console.log('error submit!!')
+  //     return false
+  //   }
+  // })
+};
+function loginout() {
+  //退出登录
+  //清除本地数据
+
+  //关闭用户头像
+  userJudje.value = false;
+  const userStore = useUserStore();  // 获取 Pinia store 实例
+  userStore.clearUserInfo();
+  //显示退出成功
+  // this.$notify({
+  //   title: '成功',
+  //   message: '您已退出登录',
+  //   type: 'success',
+  //   offset: 50
+  // });
+  // 刷新页面
+  //延时刷新页面
+  //延时刷新页面  
+  // setTimeout(() => {
+  //   this.$router.go(0);
+  // }, 900);
+  // this.$router.go(0);
+};
+function handleforgotPassword() {
+  forgotPassword.value = true;
+  // this.IsRegister = false;
+};
+
+function showPwd() {
+  if (passwordType.value === 'password') {
+    passwordType.value = ''
+  } else {
+    passwordType.value = 'password'
+  }
+  // $nextTick(() => {
+  //   $refs.password.focus()
+  // })
+};
+
+const loginbypassword = async (username: any, password: any) => {
+  const userStore = useUserStore();  // 获取 Pinia store 实例
+  try {
+    const result = await login(username, password);
+    if (result.code == "200") {
+      user.value.name = result.data.name;
+      user.value.profile = result.data.profile;
+      // 登录成功，将用户信息存储到 store
+      userStore.setUserInfo(result.data);
+    }
+    // result.data
+    console.log('用户:', result);
+  } catch (error) {
+    console.error('用户出错:', error);
+  }
+};
+
+function handleLogin() {
+  loginbypassword(loginForm.username, loginForm.password)
+  // 关闭登录框
+  dialogFormVisible.value = false;
+  // 关闭登录按钮
+  userJudje.value = true;
+
+
+
+
+  // var that = this
+  // this.$refs.loginForm.validate(valid => {
+  //   if (valid) {
+  //     this.loading = true
+  //     login(that.loginForm).then(resp => {
+  //       console.log(resp)
+  //       if (resp.data.code == 402 || resp.data.code == 400) {
+  //         this.$notify({
+  //           title: '失败',
+  //           message: '登录失败',
+  //           type: 'warning',
+  //           offset: 50
+  //         });
+  //       } else if (resp.data.code == 200) {
+  //         console.log(resp.data)
+  //         that.$cookies.set('access-user', resp.data.data)
+
+  //         // 关闭登录框
+  //         that.dialogFormVisible = false
+  //         // 关闭登录按钮
+  //         that.userJudje = false
+  //         //立即获取用户数据
+  //         that.getUserInfo()
+  //         this.$notify({
+  //           title: '成功',
+  //           message: '您已成功登录',
+  //           type: 'success',
+  //           offset: 50
+  //         });
+  //       }
+  //     }).catch((e) => { })
+  //     this.loading = false
+  //   } else {
+  //     console.log('error submit!!')
+  //     return false
+  //   }
+  // })
+};
+
+//判空
+function judgeNull(str: any) {
+  if (str == "") return true;
+  var regu = "^[ ]+$";
+  var re = new RegExp(regu);
+  return re.test(str);
+};
+
+
+
+const Findarticles = async (seachcontents: any, num: any) => {
+  try {
+    const result = await FindarticlesByNum(seachcontents.value, num);
+    tempArticlesData.value = result
+    console.log('articles列表:', tempArticlesData);
+  } catch (error) {
+    console.error('获取articles列表出错:', error);
+  }
+};
+
+const Findresource = async (seachcontents: any, num: any) => {
+  try {
+    const result = await FindresourceByNum(seachcontents.value, num);
+    tempResourceData.value = result
+    console.log('resource 列表:', tempResourceData);
+  } catch (error) {
+    console.error('获取resource 列表出错:', error);
+  }
+};
+
+//临时查询
+const search = (seachcontents: any) => {
+  console.log("临时查询")
+  //限制查询五个数据
+  if (!judgeNull(seachcontent)) {
+    if (codeshow.value) { Findresource(seachcontents, 5) }
+    else { Findarticles(seachcontents, 5) }
+  }
+};
+
+function queryarticle() {
+  //提交
+  if (judgeNull(seachcontent)) {
+    // $notify({
+    //   title: '提示',
+    //   message: '输入的数据不能为空',
+    //   type: 'warning'
+    // });
+  } else {
+    //   直接调用$router.push 实现携带参数的跳转
+    // $router.push({
+    //   path: `/findpost/${this.seachcontent}`,
+    // })
+  }
+};
+
+await handlegetAllResourceNumber();
+
+async function handlegetAllResourceNumber() {
+  try {
+    const result = await getAllResourceNumber() as { data: { value: any } };
+    ResourceNumber.value = result.data.value
+  } catch (error) {
+    console.error('获取ResourceNumber出错:', error);
+  }
+};
+
+await handlegetAllArticleNumber();
+
+async function handlegetAllArticleNumber() {
+  try {
+    const result = await getAllArticleNumber() as { data: { value: any } };
+    articleCount.value = result.data.value
+  } catch (error) {
+    console.error('获取ArticleNumber出错:', error);
+  }
+};
+
 // Define a reactive property for dark mode
 const isDark = ref<boolean>(false);
-  function  tohandleLogin() {
-      console.log('打开登录框');
-      IsRegister.value  = true;
-      forgotPassword.value  = false;
-    };
 
+function tohandleLogin() {
+  console.log('打开登录框');
+  IsRegister.value = true;
+  forgotPassword.value = false;
+};
+
+function articleshows() {
+  // setTimeout(() => { this.focus() }, 219)
+  // this.searchshow = true
+  codeshow.value = false
+  articleshow.value = true
+  tempdata.value = ""
+  fundByresource.value = false
+  if (seachcontent.value! = "") {
+    Findarticles(seachcontent, 5)
+
+  }
+  howto.value = '/post/'
+};
+
+function codeshows() {
+  // setTimeout(() => { this.focus() }, 219)
+  // this.searchshow = true
+  codeshow.value = true
+  articleshow.value = false
+  tempdata.value = ""
+  fundByresource.value = true
+  if (seachcontent.value! = "") {
+    Findresource(seachcontent, 5)
+
+  }
+  howto.value = '/list/'
+};
+function leave() {
+  setTimeout(() => { searchshow.value = false }, 300)
+};
+function enter() {
+  searchshow.value = true
+};
+function blur() {
+  // setTimeout(() => { this.searchshow = false }, 300)
+  //设置300ms后让下拉框消失
+};
+function focus() {
+  searchshow.value = true
+};
+function keyup() {
+  searchshow.value = true
+  search(seachcontent)
+};
+function handleInput() {
+  searchshow.value = true
+  // 在这里调用你的输入事件逻辑
+  // 比如每次输入都发起搜索请求
+  search(seachcontent);
+};
 function handleRegister() {
-      console.log('注册');
-      IsRegister.value = false;
-      beforeDestroy(); // 停止轮询
-    };
+  console.log('注册');
+  IsRegister.value = false;
+  beforeDestroy(); // 停止轮询
+};
 
 function setActiveTab(tab: string) {
   if (tab === 'wechat') {
@@ -77,22 +390,22 @@ function closeDialog() {
   dialogFormVisible.value = false;  // 点击图片关闭对话框
   beforeDestroy();
 };
-function  beforeDestroy() {
+function beforeDestroy() {
   // if (intervalId) {
-    // clearInterval(intervalId);
+  // clearInterval(intervalId);
   // }
 };
 function showlogin() {
-    // setActiveTab("wechat")
-    dialogFormVisible.value = true;
+  // setActiveTab("wechat")
+  dialogFormVisible.value = true;
 
-    // 检查accountId是否为空
-    // if (this.accountId.trim() === '') {
-    //   console.warn('accountId为空，无法开始轮询');
-    //   return;
-    // }
+  // 检查accountId是否为空
+  // if (this.accountId.trim() === '') {
+  //   console.warn('accountId为空，无法开始轮询');
+  //   return;
+  // }
 
-    // this.startPolling();
+  // this.startPolling();
 };
 
 // Function to toggle the dark/light mode
@@ -134,25 +447,36 @@ onMounted(() => {
   } else {
     setLightMode();
   }
+  const userStore = useUserStore();  // 获取 Pinia store 实例
+  // 判断用户是否已登录
+  if (userStore.userid) {
+    userJudje.value = true;
+    user.value.name = userStore.name;
+    user.value.profile = userStore.profile;
+    console.log("用户已登录:", userStore.name);  // 例如，你可以输出用户名或者做其他处理
+  } else {
+    console.log("用户未登录");
+    // 可以在这里做一些跳转，或者显示登录提示等
+  }
 });
 </script>
 <template>
   <header class="app-header">
     <!-- 登录 -->
-    <el-dialog class="dialogdeep" width="30%" top="30px" center title="" @close="closeDialog"
-       v-model="dialogFormVisible">
+    <el-dialog :style="{ backgroundColor: isDark ? '#202020' : '#ffffff' }" class="dialogdeep" width="30%" top="30px"
+      center title="" @close="closeDialog" v-model="dialogFormVisible">
       <div v-if="IsRegister && forgotPassword == false" class="box">
         <a> <img class="close-icon"
             src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAHhlWElmTU0AKgAAAAgABAEaAAUAAAABAAAAPgEbAAUAAAABAAAARgEoAAMAAAABAAIAAIdpAAQAAAABAAAATgAAAAAAAACQAAAAAQAAAJAAAAABAAOgAQADAAAAAQABAACgAgAEAAAAAQAAACCgAwAEAAAAAQAAACAAAAAAfgvaUgAAAAlwSFlzAAAWJQAAFiUBSVIk8AAAAalJREFUWAntlr9OwzAQxm2XAV4DIfEQTFHE2p2B5+hSiQ5d+jh0BKlZUJ6i8BxUUBt/up5kOU7iM38W4sWxc3ffz2dfYqWm9t8zoOME7HYv1859Lo3Re6Xspqqq99hGMm6a5lwps7DWXSl1XNV1/Rr6n4UDerYPWus755TS2tz4APNSiLZtLw6Hj0cf69bHVM7NIHEfappwgGfn3BvPwdHTb2kVPJvXw4fF2YOyyiPqOwDG2LWHfWazEohT2rfkS5Eopt1wXO47ZwAvBgKMbofUNwlQCiEVh04vgBSiRHwUIBeiVDwLYAwC71EpiQM3el7gObgFMODWv0qULsqV2um0Z4nDIxsAxikIzHOTisNPBACHPogSccTrfIgw+ZdNlIG+1TNwSRayM9Aj/kSihFDy2c7KQEqcV0vSv1iGQ+L8m86x4W2K+8EMSAJLbEOIXoCSgCU+SYCSQLwqqW8HQBqAhcNeEiNRhmbxnW87QOhw2nlcotaaZQiK5w4A3V7JjEuNT3vsPDROQfiL6WXsk7gVH1e4vf7EtRwQfjt8JuharvVsHQNM4ykDX94FYhBKOJraAAAAAElFTkSuQmCC"
             @click="closeDialog"></a>
 
         <div class="login-logo">
-        <div v-if="setting.sitLogo">
-          <img height="40" width="40" :src="setting.sitLogo" />
-        </div>
-        <div v-else>
-          <img height="40" width="40" src="../static/image/logo.svg" />
-        </div>
+          <div v-if="setting.sitLogo">
+            <img height="40" width="40" :src="setting.sitLogo" />
+          </div>
+          <div v-else>
+            <img height="40" width="40" src="../static/image/logo.svg" />
+          </div>
         </div>
         <div class="login-title">
           <!-- <span><b>登录可享更多权益</b></span> -->
@@ -163,12 +487,19 @@ onMounted(() => {
               style="display: block; left: 0px; max-width: 120px; width: 120px;">
               扫码登录更方便
             </span>
-            <span :class="{ 'tabs-item': true, 'tabs-active': activeTab === 'wechat' }"
-              @click="setActiveTab('wechat')">微信登录</span>
-            <span :class="{ 'tabs-item': true, 'tabs-active': activeTab === 'phone' }"
-              @click="setActiveTab('phone')">手机号登录</span>
-            <span :class="{ 'tabs-item': true, 'tabs-active': activeTab === 'password' }"
-              @click="setActiveTab('password')">密码登录</span>
+            <span :class="{ 'tabs-item': true, 'tabs-active': activeTab === 'wechat' }" :style="{
+      color: activeTab === 'wechat' && isDark ? '#50A1FF' : (activeTab === 'wechat' && isDark ? '#50A1FF' : ''),
+      '--after-color': activeTab === 'wechat' && isDark ? '#50A1FF' : (activeTab === 'wechat' && isDark ? '#50A1FF' : '')
+    }" @click="setActiveTab('wechat')">微信登录</span>
+            <span :class="{ 'tabs-item': true, 'tabs-active': activeTab === 'phone' }" :style="{
+      color: activeTab === 'phone' && isDark ? '#50A1FF' : (activeTab === 'phone' && isDark ? '#50A1FF' : ''),
+      '--after-color': activeTab === 'phone' && isDark ? '#50A1FF' : (activeTab === 'phone' && isDark ? '#50A1FF' : '')
+    }" @click="setActiveTab('phone')">手机号登录</span>
+            <span :class="{ 'tabs-item': true, 'tabs-active': activeTab === 'password' }" :style="{
+      color: activeTab === 'password' && isDark ? '#50A1FF' : (activeTab === 'password' && isDark ? '#50A1FF' : ''),
+      '--after-color': activeTab === 'password' && isDark ? '#50A1FF' : (activeTab === 'password' && isDark ? '#50A1FF' : '')
+    }"
+            @click="setActiveTab('password')">密码登录</span>
           </div>
           <div class="login-box-tabs-main">
             <div v-if="activeTab === 'wechat'" style="display: flex;
@@ -189,22 +520,22 @@ onMounted(() => {
             </div>
             <div v-if="activeTab === 'phone'">
               <!-- 手机号登录内容 -->
-              <!-- <el-form ref="phoneLoginForm" :model="phoneLoginForm" :rules="phoneLoginRules" class="login-form"
-                auto-complete="on" label-position="left">
+              <el-form ref="phoneLoginForm" :model="phoneLoginForm" :rules="phoneLoginRules" class="login-form"
+                label-position="left">
                 <el-form-item prop="phone">
                   <el-input ref="phone" v-model="phoneLoginForm.phone" placeholder="手机号" name="phone" type="text"
-                    tabindex="1" auto-complete="on" />
+                    tabindex="1" />
                 </el-form-item>
                 <el-form-item prop="code">
                   <el-input class="check-code-box" v-model="phoneLoginForm.code" placeholder="请输入验证码" name="code"
-                    type="text" tabindex="2" auto-complete="on">
-                    <el-button :disabled="codeButtonDisabled" size="small" slot="append" @click="sendCode">获取验证码
+                    type="text" tabindex="2">
+                    <!-- <el-button :disabled="codeButtonDisabled" size="small" slot="append" @click="sendCode">获取验证码
                       <span v-if="codeCd">({{ long }})</span>
-                    </el-button>
+                    </el-button> -->
                   </el-input>
                 </el-form-item>
-                <el-button :loading="loading" type="primary" style="width: 100%; margin-bottom: 30px"
-                  @click.native.prevent="handlePhoneLogin">登录</el-button>
+                <el-button class="custom-button" :loading="loading" type="primary"
+                  style="width: 100%; margin-bottom: 30px" @click.native.prevent="handlePhoneLogin">登录</el-button>
                 <div class="ss-login_statement">
                   <span>登录注册即代表同意</span>
                   <a href="/Protocol">
@@ -213,31 +544,24 @@ onMounted(() => {
                     <a target="_blank">隐私条款</a></a>
                 </div>
                 <div class="line"></div>
-              </el-form> -->
+              </el-form>
             </div>
             <div v-if="activeTab === 'password'">
               <!-- 密码登录内容 -->
-              <!-- <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on"
-                label-position="left">
-                <el-form-item prop="username">
-                  <el-input ref="username" v-model="loginForm.username" placeholder="用户名或邮箱" name="username" type="text"
-                    tabindex="1" auto-complete="on" />
+              <el-form :model="loginForm" status-icon label-width="auto" class="login-form" label-position="left">
+                <el-form-item>
+                  <el-input class="custom-input" v-model="loginForm.username" placeholder="用户名或邮箱" type="text"
+                    tabindex="1" />
                 </el-form-item>
-
-                <el-form-item prop="password">
-                  <el-input :key="passwordType" ref="password" v-model="loginForm.password" :type="passwordType"
-                    placeholder="密码" name="password" tabindex="2" auto-complete="on"
-                    @keyup.enter.native="handleLogin" />
-
-                  <span class="show-pwd" @click="showPwd">
-          <svg-icon
-            :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'"
-          />
-         </span>
+                <el-form-item>
+                  <el-input class="custom-input" v-model="loginForm.password" type="password" placeholder="密码"
+                    tabindex="2" @keyup.enter.native="handleLogin" />
+                  <!-- <span class="show-pwd" @click="showPwd">
+                    <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
+                  </span> -->
                 </el-form-item>
-
-                <el-button :loading="loading" type="primary" style="width: 100%; margin-bottom: 30px"
-                  @click.native.prevent="handleLogin">登录</el-button>
+                <el-button class="custom-button" :loading="loading" type="primary"
+                  style="width: 100%; margin-bottom: 30px" @click.native.prevent="handleLogin">登录</el-button>
                 <div class="forgot-password" style="text-align: left">
                   <span style="color: #666; font-size: 12px; margin-right: 5px;">
                     忘记密码？
@@ -253,7 +577,7 @@ onMounted(() => {
                 </div>
                 <div class="line"></div>
 
-              </el-form> -->
+              </el-form>
             </div>
           </div>
         </div>
@@ -287,7 +611,6 @@ onMounted(() => {
             </button>
           </div>
         </div>
-
         <div class="tips">
           <span style="margin-right: 20px"></span>
           <span> </span>
@@ -299,29 +622,29 @@ onMounted(() => {
             @click="closeDialog"></a>
 
         <div class="login-logo">
-        <div v-if="setting.sitLogo">
-          <img height="40" width="40" :src="setting.sitLogo" />
-        </div>
-        <div v-else>
-          <img height="40" width="40" src="../static/image/logo.svg" />
-        </div>          
+          <div v-if="setting.sitLogo">
+            <img height="40" width="40" :src="setting.sitLogo" />
+          </div>
+          <div v-else>
+            <img height="40" width="40" src="../static/image/logo.svg" />
+          </div>
         </div>
         <div class="register-text">
           <span><b>注册</b></span>
         </div>
         <!-- <el-form ref="emailRegisterForm" :model="emailRegisterForm" :rules="emailRegisterRules" class="login-form"
-          auto-complete="on" label-position="left">
+           label-position="left">
           <el-form-item prop="email">
             <el-input ref="email" v-model="emailRegisterForm.email" placeholder="邮箱" name="phone" type="text"
-              tabindex="1" auto-complete="on" />
+              tabindex="1"  />
           </el-form-item>
           <el-form-item prop="password">
             <el-input ref="password" v-model="emailRegisterForm.password" placeholder="密码" name="phone" type="password"
-              tabindex="1" auto-complete="on" />
+              tabindex="1"  />
           </el-form-item>
           <el-form-item prop="code">
             <el-input class="check-code-box" v-model="emailRegisterForm.code" placeholder="请输入验证码" name="code"
-              type="text" tabindex="2" auto-complete="on">
+              type="text" tabindex="2" >
               <el-button :disabled="codeButtonDisabled" size="small" slot="append" @click="RegistersendCode">获取验证码
                 <span v-if="RegistercodeCd">({{ long }})</span>
               </el-button>
@@ -369,7 +692,6 @@ onMounted(() => {
         <a> <img class="close-icon"
             src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAHhlWElmTU0AKgAAAAgABAEaAAUAAAABAAAAPgEbAAUAAAABAAAARgEoAAMAAAABAAIAAIdpAAQAAAABAAAATgAAAAAAAACQAAAAAQAAAJAAAAABAAOgAQADAAAAAQABAACgAgAEAAAAAQAAACCgAwAEAAAAAQAAACAAAAAAfgvaUgAAAAlwSFlzAAAWJQAAFiUBSVIk8AAAAalJREFUWAntlr9OwzAQxm2XAV4DIfEQTFHE2p2B5+hSiQ5d+jh0BKlZUJ6i8BxUUBt/up5kOU7iM38W4sWxc3ffz2dfYqWm9t8zoOME7HYv1859Lo3Re6Xspqqq99hGMm6a5lwps7DWXSl1XNV1/Rr6n4UDerYPWus755TS2tz4APNSiLZtLw6Hj0cf69bHVM7NIHEfappwgGfn3BvPwdHTb2kVPJvXw4fF2YOyyiPqOwDG2LWHfWazEohT2rfkS5Eopt1wXO47ZwAvBgKMbofUNwlQCiEVh04vgBSiRHwUIBeiVDwLYAwC71EpiQM3el7gObgFMODWv0qULsqV2um0Z4nDIxsAxikIzHOTisNPBACHPogSccTrfIgw+ZdNlIG+1TNwSRayM9Aj/kSihFDy2c7KQEqcV0vSv1iGQ+L8m86x4W2K+8EMSAJLbEOIXoCSgCU+SYCSQLwqqW8HQBqAhcNeEiNRhmbxnW87QOhw2nlcotaaZQiK5w4A3V7JjEuNT3vsPDROQfiL6WXsk7gVH1e4vf7EtRwQfjt8JuharvVsHQNM4ykDX94FYhBKOJraAAAAAElFTkSuQmCC"
             @click="closeDialog"></a>
-
         <div class="login-logo">
           <img height="40" width="40" src="../static/image/logo.svg" />
         </div>
@@ -377,14 +699,14 @@ onMounted(() => {
           <span><b>找回密码</b></span>
         </div>
         <!-- <el-form ref="emailRegisterForm" :model="emailRegisterForm" :rules="emailRegisterRules" class="login-form"
-          auto-complete="on" label-position="left">
+           label-position="left">
           <el-form-item prop="email">
             <el-input ref="email" v-model="emailRegisterForm.email" placeholder="邮箱" name="phone" type="text"
-              tabindex="1" auto-complete="on" />
+              tabindex="1"  />
           </el-form-item>
           <el-form-item prop="code">
             <el-input class="check-code-box" v-model="emailRegisterForm.code" placeholder="请输入验证码" name="code"
-              type="text" tabindex="2" auto-complete="on">
+              type="text" tabindex="2" >
               <el-button :disabled="codeButtonDisabled" size="small" slot="append" @click="RegistersendCode">获取验证码
                 <span v-if="RegistercodeCd">({{ long }})</span>
               </el-button>
@@ -392,15 +714,12 @@ onMounted(() => {
           </el-form-item>
           <el-form-item prop="password">
             <el-input ref="password" v-model="emailRegisterForm.password" placeholder="密码" name="phone" type="password"
-              tabindex="1" auto-complete="on" />
+              tabindex="1"  />
           </el-form-item>
           <el-form-item prop="password">
             <el-input ref="password" v-model="emailRegisterForm.password" placeholder="确认密码" name="phone"
-              type="password" tabindex="1" auto-complete="on" />
+              type="password" tabindex="1"  />
           </el-form-item>
-
-
-
           <el-button :loading="loading" type="primary" style="width: 100%; margin-bottom: 30px"
             @click.native.prevent="handleEmailLogin">提交</el-button>
           <div class="ss-login_statement">
@@ -441,18 +760,17 @@ onMounted(() => {
     </el-dialog>
     <div class="app-header-navbar white shadow-4 border-bottom pc-model">
       <div class="app-header-main">
-
         <nuxt-link to="/" class="app-header-logo active" aria-current="page">
           <div v-if="setting.sitLogo">
             <img :src="setting.sitLogo" />
           </div>
-          <div v-else> 
+          <div v-else>
             <img src="../static/image/logo.svg" />
           </div>
           <span class="ml-4">{{ setting.sitTitle }}</span>
 
         </nuxt-link>
-        <div class="app-header-nav nav">
+        <div class="app-header-nav nav" style="	overflow: hidden; max-height: 60px;">
           <nuxt-link target="_self" class="nav-link" :class="message1" aria-current="page" to="/">首页</nuxt-link>
           <nuxt-link target="_self" class="nav-link" :class="message2" to="/Alllist">资源</nuxt-link>
           <nuxt-link target="_self" class="nav-link" :class="message3" to="/allpost">文章</nuxt-link>
@@ -463,8 +781,8 @@ onMounted(() => {
           <div id="autosuggest">
             <div role="combobox" aria-expanded="false" aria-haspopup="listbox"
               aria-owns="autosuggest-autosuggest__results">
-              <el-input @keyup.native="keyup()" @focus="focus()" @blur="blur()" v-model="seachcontent" type="text"
-                autocomplete="off" aria-autocomplete="list" aria-activedescendant=""
+              <el-input @input="handleInput" @keyup.native="keyup()" @focus="focus()" @blur="blur()"
+                v-model="seachcontent" type="text" autocomplete="off" aria-autocomplete="list" aria-activedescendant=""
                 aria-controls="autosuggest-autosuggest__results" id="autosuggest__input" placeholder="输入关键词搜索软件或文章…"
                 value="" class="inputDeep large-serach-input" />
             </div>
@@ -472,34 +790,37 @@ onMounted(() => {
               <div aria-labelledby="autosuggest" class="autosuggest__results">
                 <div class="overflow-hidden">
                   <div class="d-flex align-items-center px-5">
-                    <!-- <a @click="codeshows()" :class="{ 'active search-active': codeshow }"
+                    <a @click="codeshows()" :class="{ 'active search-active': codeshow }"
                       class="flex flex-grow-1 text-center py-3 fs-16"><span class="fw-400">资源</span>
                       <span class="fs-12">({{ ResourceNumber }})</span></a>
                     <a @click="articleshows()" :class="{ 'active search-active': articleshow }"
                       class="flex flex-grow-1 text-center py-3 fs-16"><span class="">文章</span>
-                      <span class="fs-12">({{ articleCount }})</span></a> -->
+                      <span class="fs-12">({{ articleCount }})</span></a>
                   </div>
                 </div>
                 <ul role="listbox">
-                  <!-- <div v-for="(item, id) in this.tempdata" :key="id">
-                    <div v-if="item.status.includes('published')">
-                      <a :to="howto + item.id">
-                        <li role="option" data-suggestion-index="0" data-section-name="default"
-                          id="autosuggest__results-item--0" class="autosuggest__results-item">
-                          <a class="macwk-app white border-top"><span class="snow-dot"></span>
-                            <span class="snow-dot"></span>
-                            <span class="snow-dot"></span>
-                            <span class="snow-dot"></span>
-                            <span class="snow-dot"></span>
-                            <span class="snow-dot"></span>
-                            <span class="snow-dot"></span>
-                            <div class="macwk-app__hover--content"></div>
-                            <div class="macwk-app__header--icon">
-                              <div class="macwk-app__header--icon--content"></div>
-                              <img :src="item.thumb" lazy="loaded" />
-                            </div>
-                            <div class="macwk-app__body py-1">
-                              <h5 class="macwk-app__body--title fs-14" style="
+                  <div v-show="codeshow">
+                    <div v-for="(item, id) in tempResourceData" :key="id">
+                      <!-- <div v-if="item.status.includes('published')"> -->
+                      <div>
+
+                        <a :to="howto + item.id">
+                          <li role="option" data-suggestion-index="0" data-section-name="default"
+                            id="autosuggest__results-item--0" class="autosuggest__results-item">
+                            <a class="macwk-app white border-top"><span class="snow-dot"></span>
+                              <span class="snow-dot"></span>
+                              <span class="snow-dot"></span>
+                              <span class="snow-dot"></span>
+                              <span class="snow-dot"></span>
+                              <span class="snow-dot"></span>
+                              <span class="snow-dot"></span>
+                              <div class="macwk-app__hover--content"></div>
+                              <div class="macwk-app__header--icon">
+                                <div class="macwk-app__header--icon--content"></div>
+                                <img :src="item.thumb" lazy="loaded" />
+                              </div>
+                              <div class="macwk-app__body py-1">
+                                <h5 class="macwk-app__body--title fs-14" style="
                                   display: -webkit-box;
                                   -webkit-box-orient: vertical;
                                   overflow: hidden;
@@ -507,10 +828,10 @@ onMounted(() => {
                                   text-overflow: ellipsis;
                                   -webkit-line-clamp: 1;
                                 ">
-                                <span>{{ item.title }}</span>
-                           
-                              </h5>
-                              <p class="macwk-app__body--info" style="
+                                  <span>{{ item.title }}</span>
+
+                                </h5>
+                                <p class="macwk-app__body--info" style="
                                   display: -webkit-box;
                                   -webkit-box-orient: vertical;
                                   overflow: hidden;
@@ -518,17 +839,70 @@ onMounted(() => {
                                   text-overflow: ellipsis;
                                   -webkit-line-clamp: 1;
                                 ">
-                                <span>{{ item.intro }}</span>
-                              </p>
-                            </div>
-                            <div class="macwk-box__more fs-24">
-                              <i class="light-icon-more icon-next-arrow"></i>
-                            </div>
-                          </a>
-                        </li>
-                      </a>
+                                  <span>{{ item.intro }}</span>
+                                </p>
+                              </div>
+                              <div class="macwk-box__more fs-24">
+                                <i class="light-icon-more icon-next-arrow"></i>
+                              </div>
+                            </a>
+                          </li>
+                        </a>
+                      </div>
                     </div>
-                  </div> -->
+                  </div>
+                  <div v-show="!codeshow">
+                    <div v-for="(item, id) in tempArticlesData" :key="id">
+                      <!-- <div v-if="item.status.includes('published')"> -->
+                      <div>
+
+                        <a :to="howto + item.id">
+                          <li role="option" data-suggestion-index="0" data-section-name="default"
+                            id="autosuggest__results-item--0" class="autosuggest__results-item">
+                            <a class="macwk-app white border-top"><span class="snow-dot"></span>
+                              <span class="snow-dot"></span>
+                              <span class="snow-dot"></span>
+                              <span class="snow-dot"></span>
+                              <span class="snow-dot"></span>
+                              <span class="snow-dot"></span>
+                              <span class="snow-dot"></span>
+                              <div class="macwk-app__hover--content"></div>
+                              <div class="macwk-app__header--icon">
+                                <div class="macwk-app__header--icon--content"></div>
+                                <img :src="item.thumb" lazy="loaded" />
+                              </div>
+                              <div class="macwk-app__body py-1">
+                                <h5 class="macwk-app__body--title fs-14" style="
+                                  display: -webkit-box;
+                                  -webkit-box-orient: vertical;
+                                  overflow: hidden;
+                                  word-break: break-all;
+                                  text-overflow: ellipsis;
+                                  -webkit-line-clamp: 1;
+                                ">
+                                  <span>{{ item.title }}</span>
+
+                                </h5>
+                                <p class="macwk-app__body--info" style="
+                                  display: -webkit-box;
+                                  -webkit-box-orient: vertical;
+                                  overflow: hidden;
+                                  word-break: break-all;
+                                  text-overflow: ellipsis;
+                                  -webkit-line-clamp: 1;
+                                ">
+                                  <span>{{ item.intro }}</span>
+                                </p>
+                              </div>
+                              <div class="macwk-box__more fs-24">
+                                <i class="light-icon-more icon-next-arrow"></i>
+                              </div>
+                            </a>
+                          </li>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
                 </ul>
                 <div>
                   <button class="
@@ -557,23 +931,24 @@ onMounted(() => {
             </div>
           </div>
         </div>
-        <el-popover placement="top-start" width="" trigger="hover">
+        <el-popover placement="bottom" :width="300" trigger="hover"
+          content="this is content, this is content, this is content" width="">
           <div class="">
             <div class="flex-col self-start group">
               <div class="self-start" style="display: flex; align-items: center; justify-content: center;">
                 <div class="topic-avatars" style="margin-right: 8px;">
-                  <!-- <el-avatar :src="user.profile"></el-avatar> -->
+                  <el-avatar :src="user.profile"></el-avatar>
                 </div>
-                <!-- <span class="font-username text">{{ user.name }}</span> -->
+                <span class="font-username text">{{ user.name }}</span>
               </div>
               <div class="flex-row self-stretch group_2">
                 <div class="flex-row">
-                  <span class="font_2">硬币：</span>
+                  <span class="font_2">积分：</span>
                   <span class="font_3">882</span>
                 </div>
               </div>
             </div>
-          
+
             <div class="flex-col self-stretch group_3">
               <div class="flex-col items-start self-stretch group_4">
                 <span class="text_4"></span>
@@ -596,23 +971,19 @@ onMounted(() => {
           </div>
           <div class="flex-col-bar self-start group_5">
             <div class="flex-row-bar items-center group_6 view-bar">
-              <img class="image_4"
-                src="../static/image/top/top-user.png" />
+              <img class="image_4" src="../static/image/top/top-user.png" />
               <span class="ml-20 font_3">个人中心</span>
             </div>
             <div class="flex-row-bar group_6 view-bar">
-              <img class="image_5"
-              src="../static/image/top/top-start.png" />
+              <img class="image_5" src="../static/image/top/top-start.png" />
               <span class="ml-20 font_3">资源管理</span>
             </div>
             <div class="flex-row-bar view-bar">
-              <img class="image_6"
-              src="../static/image/top/top-star.png" />
+              <img class="image_6" src="../static/image/top/top-star.png" />
               <span class="ml-18 font_3">个人收藏</span>
             </div>
             <div @click="loginout()" class="flex-row-bar items-center group_6 view-bar-2">
-              <img class="image_7"
-              src="../static/image/top/top-out.png" />
+              <img class="image_7" src="../static/image/top/top-out.png" />
               <span class="ml-18 font_3">退出登录</span>
             </div>
           </div>
@@ -756,23 +1127,24 @@ onMounted(() => {
               <li></li>
             </ul>
            -->
-          <div slot="reference">
+          <template #reference>
             <nuxt-link to="/userinfo">
-              <!-- <div v-show="!userJudje" class="avatartext">
-               <el-avatar :src="user.profile"></el-avatar>
-                <span class="spans">{{ user.name }}</span> 
-              </div> -->
+              <div v-show="userJudje" class="avatartext">
+                <el-avatar :src="user.profile"></el-avatar>
+                <span class="spans">{{ user.name }}</span>
+              </div>
             </nuxt-link>
-          </div>
+          </template>
         </el-popover>
-        <a class="actions" style="cursor: pointer">
+        <a v-if="!userJudje" class="actions" style="cursor: pointer">
+          <!-- <a class="actions" style="cursor: pointer"> -->
+
           <div @click="showlogin()" class="app-header-user">
             <div class="login-button">
               <span class="logintext">登录/注册</span>
             </div>
           </div>
         </a>
-
         <div style="margin-left: 30px;">
           <div style="margin-left: 30px;">
             <div class="view-bar-black toggle-button" @click="toggleMode"
@@ -1434,23 +1806,42 @@ export default ({
 <style scoped>
 @import "../static/mycss/margin_top.css";
 
-.large-serach-input{
+.large-serach-input {
   width: 380px;
   height: 40px;
   font-size: 16px;
 }
+
 :deep(.el-input__wrapper) {
-    box-shadow: 0 0 0 0px var(--el-input-border-color, var(--el-border-color)) inset;
-    cursor: default;
-    .el-input__inner {
-        cursor: default !important;
-    }
+  box-shadow: 0 0 0 0px var(--el-input-border-color, var(--el-border-color)) inset;
+  cursor: default;
+
+  .el-input__inner {
+    cursor: default !important;
+  }
 }
+
+:deep(.custom-input .el-input__wrapper) {
+  box-shadow: 0 0 0 0px var(--el-input-border-color, var(--el-border-color)) inset;
+  cursor: default;
+  background-color: #F5F6F7;
+  height: 39px;
+
+  .el-input__inner {
+    cursor: default !important;
+  }
+}
+
+:deep(.el-button) {
+  border-radius: 30px;
+  height: 39px;
+}
+
 :deep(.el-textarea__inner) {
-    outline: none;
-    border: none;
-    resize: none;
-    box-shadow: none;
+  outline: none;
+  border: none;
+  resize: none;
+  box-shadow: none;
 }
 
 .navbar .navbar-button,
@@ -2159,7 +2550,7 @@ span.last-login-way:after {
   display: block;
   width: 24px;
   height: 2px;
-  background: #222226;
+  background-color: var(--after-color, #222226); /* 默认值透明 */
   position: absolute;
   bottom: -8px;
   left: 50%;
@@ -2320,7 +2711,7 @@ span.last-login-way:after {
   /* 鼠标悬停时改变背景颜色 */
   border-radius: 8px;
   /* 圆角效果 */
-  padding: 8px;
+  /* padding: 8px; */
   /* 增加内边距，使悬停效果更明显 */
   /* 鼠标悬停时改变字体颜色 */
 }

@@ -241,8 +241,8 @@ ol,ul {
 
 .van-popup--bottom {
 	bottom: 0;
-	left: 0;
-	width: 100%
+	/* left: 0; */
+	width: 30%
 }
 
 .van-popup--bottom.van-popup--round {

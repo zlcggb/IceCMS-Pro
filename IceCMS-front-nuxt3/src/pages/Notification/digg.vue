@@ -71,10 +71,7 @@
   </div>
 </template>
 <script>
-import wxPayApi from '../../api/payment/wxPay'
-import aliPayApi from '../../api/payment/aliPay'
 
-import { CreateVip } from '../../api/user'
 export default {
   data() {
     return {

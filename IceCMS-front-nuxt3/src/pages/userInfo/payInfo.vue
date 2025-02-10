@@ -64,7 +64,7 @@
 </template>
 
 <script>
-import orderInfoApi from "../../api/payment/orderInfo"
+import orderInfoApi from "../../../api/payment/orderInfo"
 // import wxPayApi from "../api/wxPay"
 
 export default {

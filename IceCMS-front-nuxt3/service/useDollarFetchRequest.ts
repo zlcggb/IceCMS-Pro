@@ -1,15 +1,16 @@
-import { $fetch } from 'ofetch';
-import { useRuntimeConfig } from '#app';
+import { useFetch, useRuntimeConfig } from '#app';
+import type { UseFetchOptions } from 'nuxt/app';
  
-interface RequestOptions {
+interface RequestOptions extends UseFetchOptions<any> {
   customBaseURL?: string;
-  [key: string]: any;
 }
  
 type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
+type HandleRequestOptions = { request: Request; options: RequestOptions };
+type HandleResponseOptions = { response: any };
  
 // 请求拦截器
-function handleRequest(options: RequestOptions) {
+function handleRequest({ options }: HandleRequestOptions) {
   options.headers = {
     ...options.headers,
     'Content-Type': 'application/json',
@@ -17,18 +18,18 @@ function handleRequest(options: RequestOptions) {
 }
  
 // 响应拦截器
-function handleResponse(response: any) {
-  if (response.error) {
-    throw new Error(response.error.message || '响应错误');
+function handleResponse({ response }: HandleResponseOptions) {
+  if (response._data.error) {
+    throw new Error(response._data.error.message || '响应错误');
   }
-  return response;
+  return response._data;
 }
  
 /**
  * 创建请求方法
  * @param method
  */
-function createDollarFetchRequest(method: HttpMethod) {
+function createUseFetchRequest(method: HttpMethod) {
   return async function (
     url: string,
     data?: any,
@@ -41,32 +42,29 @@ function createDollarFetchRequest(method: HttpMethod) {
       }
     } = useRuntimeConfig();
  
-    const baseURL = process.env.NODE_ENV === 'production'
-      ? API_BASE_PROD
-      : API_BASE_DEV;
- 
+    // const baseURL = process.env.NODE_ENV === 'production'
+    //   ? API_BASE_PROD
+    //   : API_BASE_DEV;
+    const baseURL  = "http://127.0.0.1:8181/";
     const requestUrl = new URL(
       url,
       options.customBaseURL || baseURL
     ).toString();
  
-    try {
-      handleRequest(options);
-      const response = await $fetch(requestUrl, {
-        method,
-        body: data,
-        ...options,
-      });
-      return handleResponse(response);
-    } catch (error) {
-      console.error('请求错误:', error);
-      throw error;
-    }
+    return await $fetch(requestUrl, {
+      ...options,
+      method,
+      body: data,
+      onRequest: handleRequest,
+      onResponse: handleResponse
+    });
   };
 }
  
-// 提供 $fetch & HTTP 方法 - 统一管理请求 - 再到组件中使用
-export const useDollarGet = createDollarFetchRequest('GET');
-export const useDollarPost = createDollarFetchRequest('POST');
-export const useDollarPut = createDollarFetchRequest('PUT');
-export const useDollarDelete = createDollarFetchRequest('DELETE');
+// 提供 useFetch & HTTP 方法 - 统一管理请求 - 再到组件中使用
+export const useFetchGet = createUseFetchRequest('GET');
+export const useFetchPost = createUseFetchRequest('POST');
+export const useFetchPut = createUseFetchRequest('PUT');
+export const useFetchDelete = createUseFetchRequest('DELETE');
+
+export const useDollarGet = createUseFetchRequest('GET');

@@ -1,4 +1,5 @@
 import httpRequest from "../service/index";
+import { useDollarGet } from  "../service/useDollarFetchRequest";
 
 /**
  * @description 获取所有文章
@@ -61,9 +62,12 @@ export const Findarticles = (title: string) => {
  * @param num 获取的数量
  * @return Promise<any>
  */
-export const FindarticlesByNum = (title: string, num: number) => {
-  return httpRequest.get<any>(`/WebArticle/findarticlesbynum/${title}/${num}`);
-};
+// export const FindarticlesByNum = (title: string, num: number) => {
+//   return httpRequest.get<any>(`/WebArticle/findarticlesbynum/${title}/${num}`);
+// };
+
+export const FindarticlesByNum = (title: string, num: number) => useDollarGet(`/WebArticle/findarticlesbynum/${title}/${num}`);
+
 
 /**
  * @description 查找所有文章

@@ -194,7 +194,7 @@
   </div>
 </template>
 <script>
-import { GetUserInfoByid, ChangeUser } from '@/api/user'
+import { GetUserInfoByid, ChangeUser } from '../../../api/user'
 
 export default {
   data() {

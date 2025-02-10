@@ -58,7 +58,7 @@
   </div>
 </template>
 <script>
-import { getAnnouncementslist } from "@/api/webannouncements";
+import { getAnnouncementslist } from "../../../api/webannouncements";
 
 export default {
   data() {

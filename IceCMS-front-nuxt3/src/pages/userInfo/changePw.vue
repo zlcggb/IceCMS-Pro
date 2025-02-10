@@ -65,7 +65,7 @@
   </div>
 </template>
 <script>
-import { GetUserInfoByid, ChangePassword } from '@/api/user'
+import { GetUserInfoByid, ChangePassword } from '../../../api/user'
 
 export default {
   data() {

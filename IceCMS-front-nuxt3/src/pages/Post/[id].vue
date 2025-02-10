@@ -99,7 +99,6 @@ await handlegetArticleCommentnum();
 async function handlegetArticleCommentnum() {
   try {
     const result = await getArticleCommentnum(articleId as string);
-    console.log(result)
    commentnum.value = result.data.value;
 } catch (error) {
     console.error('获取文章评论数量出错:', error);
@@ -150,7 +149,6 @@ const showemoge = () => {
 };
 
 const sendMsg = () => {
-  // $refs.child.getMsg("true");
   mycomment.value = false;
 };
 
@@ -535,6 +533,7 @@ const updateDate = () => {
                 </div>
               </div>
               <comment
+              v-if="!mycomment"
                 :articleId="articleId"
                 :theEmoge="MyEmoge"
                 ref="child"
