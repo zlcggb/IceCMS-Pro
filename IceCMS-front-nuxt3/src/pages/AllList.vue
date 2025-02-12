@@ -416,11 +416,10 @@ function formatDate(time: string) {
                                       <div class="margin-top2 text-B6BABF flex-row size-12"
                                         style="display: flex; flex-wrap: wrap; justify-content: space-between; width: 100%;">
                                         <div style="margin-left: 0px; display: flex; align-items: center;">
-                                          <i class="el-icon-view"></i>
+                                          <img class="view-icon--right" src="../static/image/con-view.svg" />
                                           <span>{{ item.hits || 0 }}</span>
                                         </div>
                                         <div style="margin: auto; display: flex; align-items: center;">
-                                          <i class="el-icon-user"></i>
                                           <span>{{ item.author }}</span>
                                         </div>
                                         <div
@@ -980,5 +979,11 @@ export default ({
 :deep(.el-skeleton) {
   display: flex;
   flex-wrap: wrap;
+}
+.view-icon--right {
+  margin-right: 5px;
+  width: 20px;
+  height: 20px;
+  transform: rotate(180deg);
 }
 </style>

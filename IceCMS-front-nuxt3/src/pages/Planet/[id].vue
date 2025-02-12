@@ -40,6 +40,7 @@ const showDialog = ref(false);
 const planetInfo = ref({});
 const classlist = ref([]);
 const squaredata = ref([]);
+const isClient = ref(false); // 判断是否为客户端渲染
 const postForm = reactive({
   image: [],
   isLock: false,
@@ -101,7 +102,7 @@ const {
   moveCursorToEnd // 移动光标至最后
 } = useInput()
 
-
+await handlegetAnnouncementslistByNum();
 async function handlegetAnnouncementslistByNum() {
   try {
     const result = await getAnnouncementslistByNum(2) as { data: { value: any } };
@@ -207,9 +208,8 @@ setting.value = settingStore.settings
 const fetchData = async () => {
   squaredata.value = [];
   await handlegetSquare();
-  await handlegetAnnouncementslistByNum();
-  await handlgetSquareClasslist();
 };
+
 async function handlegetSquare() {
   if (squaredata.value.length !== pagetotal.value) {
     isLoading.value = true;
@@ -223,7 +223,7 @@ async function handlegetSquare() {
     }));
 
     const response = await getArticleClassByotherName(route.params.id);
-    planetInfo.value = response.data.value;
+    planetInfo.value = response;
 
   } catch (error) {
     console.error(error);
@@ -232,6 +232,7 @@ async function handlegetSquare() {
   }
 }
 
+await handlgetSquareClasslist();
 async function handlgetSquareClasslist() {
   try {
     const response = await getSquareClasslist();
@@ -361,6 +362,7 @@ const getNextUser = () => {
 };
 
 onMounted(() => {
+  isClient.value = true; // 客户端渲染时更新
   fetchData();
   getUserInfo();
   getNextUser();
@@ -449,9 +451,9 @@ onMounted(() => {
                         </div>
                         <div class="b2-widget-box">
                           <div class="about-widget">
-                            <div class="PlanetListCare">
+                            <div v-if="isClient"class="PlanetListCare">
                               <div v-for="item in classlist" :key="item.id" class="PlanetListItem">
-                                <a :href="'/planet/' + item.id">
+                                <NuxtLink :href="'/planet/' + item.id">
                                   <div style="margin-left: 10px" class="PlanetListItems">
                                     <div class="PlanetListItem-img">
                                       <el-avatar shape="square" :size="38" :src="item.imgclass"></el-avatar>
@@ -464,13 +466,13 @@ onMounted(() => {
                                       </div>
                                     </div>
                                   </div>
-                                </a>
+                                </NuxtLink>
                               </div>
                             </div>
                           </div>
                         </div>
                         <div class="widget-mission-footer">
-                          <a class="allad" target="_blank">全部圈子</a>
+                          <NuxtLink to="/AllPlanet" class="allad">全部圈子</NuxtLink>
                         </div>
                       </section>
                     </div>
@@ -793,20 +795,27 @@ onMounted(() => {
                               }}</span><b></b>
                           </button>
                           <button v-if="!item.isLose" class="planettext" @click="LoseClickMains(item)">
-                            <i class="el-icon-caret-bottom"></i>
+                            <img  class="link-icon--right" src="../../static/image/right.svg" />
                           </button>
                           <button v-else class="planettext active" @click="LoseClickMains(item)">
-                            <i class="el-icon-caret-bottom"></i>
+                            <img  class="link-icon--right" src="../../static/image/right.svg" />
                           </button>
                           <span class="topic-date"><b><time class="b2timeago" datetime="2021-12-27 21:58:17"
                                 itemprop="datePublished"><span v-text="getTime(item.addTime)">
                                 </span> </time></b></span>
                           <!---->
                           <div class="topic-meta-more-box">
-                            <el-popover placement="bottom" title="更多" width="200" trigger="hover" content="更多信息">
-                              <button slot="reference" class="topic-date topic-meta-more">
-                                <i class="el-icon-more-outline"></i>
-                              </button>
+                            <el-popover
+                              placement="bottom"
+                              title="更多"
+                              :width="200"
+                              trigger="hover"
+                              content="更多信息"
+                            >
+                              <template #reference>
+                                <button slot="reference" class="topic-date topic-meta-more">
+                                <!-- <i class="el-icon-more-outline"></i> --><div>更多</div>
+                              </button>                              </template>
                             </el-popover>
                           </div>
                         </div>
@@ -2288,5 +2297,8 @@ button:hover {
 
 .circle-top {
   height: 296px;
+}
+.link-icon--right {
+  transform: rotate(360deg);
 }
 </style>

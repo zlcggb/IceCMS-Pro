@@ -67,7 +67,7 @@ import { getNewArticle } from '../../api/webarticle';
 await handlegetNewResource();
 await handlegetNewArticle();
 
-async function handlegetNewResource  ()  {
+async function handlegetNewResource() {
   try {
     const result = await getNewResource(10, 'new') as { data: { value: any } };
     rlist.value = result.data.value
@@ -75,7 +75,7 @@ async function handlegetNewResource  ()  {
     console.error('获取NewResource出错:', error);
   }
 };
-async function handlegetNewArticle  ()  {
+async function handlegetNewArticle() {
   try {
     const result = await getNewArticle(6, 'new') as { data: { value: any } };
     list.value = result.data.value
@@ -89,7 +89,7 @@ import { getCarousel, getFourKingKong } from '../../api/websetting';
 
 await handlegetCarousel();
 
-async function handlegetCarousel  ()  {
+async function handlegetCarousel() {
   try {
     const result = await getCarousel("") as { data: { value: any } };
     Carousel.value = result.data.value
@@ -100,7 +100,7 @@ async function handlegetCarousel  ()  {
 
 await handlegetFourKingKong();
 
-async function handlegetFourKingKong  ()  {
+async function handlegetFourKingKong() {
   try {
     const result = await getFourKingKong("") as { data: { value: any } };
     FourKingKong.value = result.data.value
@@ -201,33 +201,33 @@ async function getList() {
               <div class="container">
                 <div class="index-special row mb-6">
                   <div v-for="item, index in FourKingKong" :key="item.id" class="col-3">
-                    <router-link :to="'/'+item.featureSrc" class="allad" target="_blank">
-                   
-                    <div class="
+                    <router-link :to="'/' + item.featureSrc" class="allad" target="_blank">
+
+                      <div class="
                           macwk-card
                           hover-shadow-6
                           py-3
                           text-center
                         " :style="{
-    backgroundImage: `linear-gradient(45deg, ${item.colorLeft}, ${item.colorRight})`,
-    willChange: 'transform',
-    transform: 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)'
-  }">
-                      <!---->
-                      <div class="
+                          backgroundImage: `linear-gradient(45deg, ${item.colorLeft}, ${item.colorRight})`,
+                          willChange: 'transform',
+                          transform: 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)'
+                        }">
+                        <!---->
+                        <div class="
                             macwk-card__collapsible-content
                             vs-con-loading__container
                           ">
-                        <div class="macwk-card__body">
-                          <h6 class="mb-0 text-white">
-                            <i class="icon-office fs-22 mr-3 v-m-3"></i>
-                            <span>{{ item.featureTitle }}</span>
-                          </h6>
+                          <div class="macwk-card__body">
+                            <h6 class="mb-0 text-white">
+                              <i class="icon-office fs-22 mr-3 v-m-3"></i>
+                              <span>{{ item.featureTitle }}</span>
+                            </h6>
+                          </div>
+                          <!---->
                         </div>
-                        <!---->
                       </div>
-                    </div>
-                  </router-link>
+                    </router-link>
                   </div>
                 </div>
               </div>
@@ -248,7 +248,7 @@ async function getList() {
                   <div class="more-action">
                     <nuxt-link to="/alllist" class="btn btn-more active">
 
-                      更多资源 <i class="icon-arrow-right fw-600 fs-12 v-2"></i></nuxt-link>                   
+                      更多资源 <i class="icon-arrow-right fw-600 fs-12 v-2"></i></nuxt-link>
                   </div>
                 </div>
                 <div id="listAppContainer" class="app-content-body listAppContainer">
@@ -331,11 +331,10 @@ async function getList() {
                                 <div class="margin-top2 text-B6BABF flex-row size-12"
                                   style="display: flex; flex-wrap: wrap; justify-content: space-between; width: 100%;">
                                   <div style="margin-left: 0px; display: flex; align-items: center;">
-                                    <i class="el-icon-view"></i>
+                                    <img class="view-icon--right" src="../static/image/con-view.svg" />
                                     <span>{{ item.hits || 0 }}</span>
                                   </div>
                                   <div style="margin: auto; display: flex; align-items: center;">
-                                    <i class="el-icon-user"></i>
                                     <span>{{ item.author }}</span>
                                   </div>
                                   <div style="position: relative; right: 0px; display: flex; align-items: center;">
@@ -367,10 +366,10 @@ async function getList() {
                       <a class="nav-link">最多评论</a>
                     </nav>
                     <div class="more-action">
- 
-                        <nuxt-link to="/allpost" class="btn btn-more active">
 
-                          更多文章 <i class="icon-arrow-right fw-600 fs-12 v-2"></i></nuxt-link>
+                      <nuxt-link to="/allpost" class="btn btn-more active">
+
+                        更多文章 <i class="icon-arrow-right fw-600 fs-12 v-2"></i></nuxt-link>
 
                     </div>
                   </div>
@@ -438,7 +437,6 @@ async function getList() {
                         </div>
                       </a>
                     </div>
-
                     <div class="com-md-12 col-lg-6">
                       <a v-for="(item, id) in rightArr" :key="id" class="
                           feature-block-three
@@ -506,7 +504,7 @@ async function getList() {
                 </div>
               </div>
             </section>
-            <mobile/>
+            <mobile />
           </div>
           <foot />
           <div infos="0">
@@ -526,7 +524,6 @@ async function getList() {
 
 
 <style scoped>
-
 .delayImg {
   height: 100px;
   width: 145px;
@@ -976,5 +973,11 @@ async function getList() {
 .margin-top2 {
   margin-top: 20px;
 }
-</style>
 
+.view-icon--right {
+  margin-right: 5px;
+  width: 20px;
+  height: 20px;
+  transform: rotate(180deg);
+}
+</style>

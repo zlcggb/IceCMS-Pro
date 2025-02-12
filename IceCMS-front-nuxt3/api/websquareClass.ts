@@ -1,5 +1,6 @@
 import type internal from "stream";
 import httpRequest from "../service/index";
+import { useDollarGet } from  "../service/useDollarFetchRequest";
 
 /**
  * @description 获取广场分类列表
@@ -14,6 +15,5 @@ export const getSquareClasslist = () => {
  * @param otherName 其他名称
  * @return Promise<any>
  */
-export const getArticleClassByotherName = (otherName: internal) => {
-  return httpRequest.get<any>(`/WebaSquareClass/getArticleClassByotherName/${otherName}`);
-};
+export const getArticleClassByotherName = (otherName: internal) => useDollarGet(`/WebaSquareClass/getArticleClassByotherName/${otherName}`);
+
