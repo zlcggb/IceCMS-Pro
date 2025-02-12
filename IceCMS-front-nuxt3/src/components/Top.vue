@@ -542,10 +542,12 @@ onMounted(() => {
                   style="width: 100%; margin-bottom: 30px" @click.native.prevent="handlePhoneLogin">登录</el-button>
                 <div class="ss-login_statement">
                   <span>登录注册即代表同意</span>
-                  <a href="/Protocol">
-                    <a target="_blank">用户协议</a></a><span>及</span>
-                  <a href="/Privacy">
-                    <a target="_blank">隐私条款</a></a>
+             
+                    <NuxtLink to="/Protocol" target="_blank">
+                      用户协议</NuxtLink>
+                    <span>及</span>
+                  <NuxtLink to="/Privacy" target="_blank">
+                   隐私条款</NuxtLink>
                 </div>
                 <div class="line"></div>
               </el-form>
@@ -574,10 +576,11 @@ onMounted(() => {
                 </div>
                 <div class="ss-login_statement">
                   <span>登录注册即代表同意</span>
-                  <a href="/Protocol">
-                    <a target="_blank">用户协议</a></a><span>及</span>
-                  <a href="/Privacy">
-                    <a target="_blank">隐私条款</a></a>
+                  <NuxtLink to="/Protocol" target="_blank">
+                    用户协议</NuxtLink>
+                    <span>及</span>
+                    <NuxtLink to="/Privacy" target="_blank">
+                      隐私条款</NuxtLink>
                 </div>
                 <div class="line"></div>
 
@@ -600,8 +603,8 @@ onMounted(() => {
           <p class="text-align-center">
             其他登录方式
             <a style="text-decoration: none">或</a>
-            <a @click="handleRegister">
-              <a class="text-align-center">立即注册</a></a>
+            <a @click="handleRegister" class="text-align-center">
+            立即注册</a>
           </p>
           <div class="other-login">
             <button class="btn-login circle weixin">
@@ -671,8 +674,8 @@ onMounted(() => {
           <p class="text-align-center">
             已有账号？
             <a style="text-decoration: none"></a>
-            <a @click="tohandleLogin">
-              <a class="text-align-center">立即登录</a></a>
+            <a @click="tohandleLogin" class="text-align-center">
+              立即登录</a>
           </p>
           <div class="other-login">
             <button class="btn-login circle weixin">
@@ -739,8 +742,8 @@ onMounted(() => {
           <p class="text-align-center">
             已有账号？
             <a style="text-decoration: none"></a>
-            <a @click="tohandleLogin">
-              <a class="text-align-center">立即登录</a></a>
+            <a @click="tohandleLogin" class="text-align-center">
+              立即登录</a>
           </p>
           <div class="other-login">
             <button class="btn-login circle weixin">
@@ -1192,7 +1195,7 @@ onMounted(() => {
             </ul>
            -->
           <template #reference>
-            <nuxt-link to="/MyUserInfo">
+            <nuxt-link to="/userInfo">
               <div v-show="userJudje" class="avatartext">
                 <el-avatar :src="user.profile"></el-avatar>
                 <span class="spans">{{ user.name }}</span>

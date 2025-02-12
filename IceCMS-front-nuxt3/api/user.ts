@@ -1,4 +1,5 @@
 import httpRequest from "../service/index";
+import { useDollarGet } from  "../service/useDollarFetchRequest";
 
 /**
  * @description 获取所有用户名
@@ -21,9 +22,7 @@ export const getAllUserRole = () => {
  * @param id 用户ID
  * @return Promise<any>
  */
-export const GetUserInfoByid = (id: string | number) => {
-  return httpRequest.get<any>(`/User/GetUserInfoByid/${id}`);
-};
+export const GetUserInfoByid = (id: string | number) => useDollarGet(`/Websuser/getUserInfobyid/${id}`);
 
 /**
  * @description 修改用户信息

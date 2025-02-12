@@ -141,6 +141,8 @@ export default {
   margin-top: 40px;
 }
 .home {
+  padding: 22px;
+  width: 100%;
   background-color: #ffffff;
   border-radius: 13px;
 }

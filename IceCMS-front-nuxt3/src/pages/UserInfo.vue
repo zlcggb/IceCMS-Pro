@@ -1,5 +1,157 @@
-<script lang="ts">
+<script setup lang="ts">
+import { defineComponent, ref, onMounted, reactive } from 'vue'
+import { addwatermarkimageUpload, updateImage } from '../../api/updateImage'
+import { ChangeUser } from '../../api/webuser'
+import { useUserStore } from "../../stores/useUserStore";
+import { useRouter } from "vue-router";
+import { watch } from "vue";
 
+const userJudje = ref<boolean>(false);
+const user = ref({
+  name: '',
+  profile: '',
+  intro: ''
+});
+const form = reactive({
+  userId: '',
+  profile: '',
+})
+
+const router = useRouter();
+
+// 监听路由变化，防止滚动回顶部
+onMounted(() => {
+  router.options.scrollBehavior = (to, from, savedPosition) => {
+    return savedPosition || false;
+  };
+});
+
+// 监听 `$route` 变化，并恢复滚动位置
+watch(
+  () => router.currentRoute.value,
+  () => {
+    // 这里可以记录并恢复滚动位置
+    requestAnimationFrame(() => {
+      window.scrollTo({ top: window.scrollY, behavior: "smooth" });
+    });
+  }
+);
+
+// 当前激活的项
+if (process.client) {
+
+  const activeItem = ref(localStorage.getItem("activeItem") || "Gai");
+}
+const activeItem = ref("Gai");
+import { useRoute } from "vue-router";
+
+const route = useRoute();
+
+// **更新 activeItem 并存入 localStorage**
+const setActiveItem = () => {
+  if (process.client) {
+
+    activeItem.value = menuItems.find(item => item.link === route.path)?.key || "Gai";
+    if (process.client) {
+
+      localStorage.setItem("activeItem", activeItem.value);
+    }
+  }
+};
+
+// 菜单项数据
+const menuItems = [
+  { key: "Gai", label: "概览", link: "/userInfo", icon: "b2font b2-user-heart-line b2-light b2-color" },
+  { key: "Fa", label: "作品查看", link: "/userInfo/post", icon: "b2font b2-quill-pen-line b2-light b2-color" },
+  { key: "Hui", label: "关注列表", link: "/userInfo/follow", icon: "b2font b2-hand-heart-line b2-light b2-color" },
+  { key: "Ding", label: "订单", link: "/userInfo/payInfo", icon: "b2font b2-file-list-2-line b2-light b2-color" },
+  { key: "Yuan", label: "会员中心", link: "/userInfo/vip", icon: "b2font b2-hands-heart-line b2-light b2-color", },
+  { key: "Chong", label: "充值中心", link: "/userInfo/charge", icon: "b2font b2-heart-add-line b2-light b2-color" },
+  { key: "Xiu", label: "修改密码", link: "/userInfo/changePw", icon: "b2font b2-hearts-line b2-light b2-color" },
+  { key: "Si", label: "私信", link: "/userInfo/chat/1", icon: "b2font b2-hearts-line b2-light b2-color" },
+  { key: "Shou", label: "发布作品", link: "/userInfo/star", icon: "b2font b2-star-line b2-light b2-color" },
+  // 这里可以继续添加其他菜单项
+];
+
+// 设置选中的项
+const setActive = (key: string) => {
+  activeItem.value = key;
+};
+
+// 图片和文件上传
+const image = ref<string>("https://img.tukuppt.com/bg_grid/00/14/86/WvJAithG7a.jpg!/fh/350");
+
+// 文件上传处理
+const uploadFile = async () => {
+  // const file = $refs.fileInput.files[0]
+  // const formData = new FormData()
+  // formData.append('editormd-image-file', file)
+
+  // try {
+  //   const resp = await updateImage(formData)
+  //   // $message({
+  //   //   message: '上传成功',
+  //   //   type: 'success',
+  //   //   showClose: true,
+  //   //   duration: 1000,
+  //   // })
+
+  //   const imgUrl = resp.data.url
+  //   user.value.profile = imgUrl
+
+  //   const userData = useCookie('access-user').value
+  //   form.userId = userData.userid
+  //   form.profile = imgUrl
+
+  //   const changeResp = await ChangeUser(form)
+  //   if (changeResp.data.code === 200) {
+  //     $notify({
+  //       title: '成功',
+  //       message: '修改成功',
+  //       type: 'success',
+  //       offset: 50,
+  //     })
+
+  //     // 更新 Cookie
+  //     user.value.profile = imgUrl
+  //     useCookie('access-user').value = user.value
+  //   } else {
+  //     $notify({
+  //       title: '失败',
+  //       message: '修改失败',
+  //       type: 'warning',
+  //       offset: 50,
+  //     })
+  //   }
+  // } catch (e) {
+  //   $message.error('上传失败，请检查网络或图片大小')
+  //   console.error(e)
+  // }
+}
+
+// 格式化日期
+const formatDate = (time: string) => {
+  const date = new Date(time)
+  return formatDate(date, 'yyyy-MM-dd hh:mm ')
+}
+
+// 在组件挂载时获取用户信息
+// Check for saved dark mode preference on mount
+onMounted(() => {
+  setActiveItem()
+  const userStore = useUserStore();  // 获取 Pinia store 实例
+  // 判断用户是否已登录
+  if (userStore.userid) {
+    userJudje.value = true;
+    user.value.name = userStore.name;
+    user.value.profile = userStore.profile;
+    user.value.intro = userStore.intro;
+    console.log("用户已登录:", userStore.name);  // 例如，你可以输出用户名或者做其他处理
+  } else {
+    console.log("用户未登录");
+    // 可以在这里做一些跳转，或者显示登录提示等
+  }
+});
 </script>
 <template>
   <div class="home">
@@ -7,27 +159,26 @@
       <!---->
       <div id="__layout">
         <div data-fetch-key="0" class="app macwk-animation">
-          <top :message1="acticve" />
+          <top />
           <div>
-            <section class="layout-index pc-model mt-5">
+            <section style="margin-bottom: 100px;" class="layout-index pc-model mt-5">
               <!-- class="banner-index mb-6" -->
-
               <div id="content" class="site-content">
                 <div id="author" class="author wrapper">
                   <div class="box b2-radius author-header">
-                   <!-- <div class="mask-wrapper" v-bind:style="{ backgroundImage: 'url(' + image + ')' }">-->
-                      <div class="mask-wrapper">
-                      <!-- <img src="https://i.328888.xyz/2023/05/05/iTmBvE.jpeg"> -->
-                      <!--<div class="user-cover-button">
-                        <label class="empty button" for="cover-input"><i
-                            class="b2font b2-image-fill"></i><span>上传封面图片</span></label>
-                        <input id="cover-input" type="file" class="b2-hidden-always" ref="fileInput"
-                          accept="image/jpg,image/jpeg,image/png,image/gif" />
-                      </div>-->
+                    <div class="mask-wrapper" v-bind:style="{ backgroundImage: 'url(' + image + ')' }">
+                      <div>
+                        <div class="user-cover-button">
+                          <label class="empty button" for="cover-input"><i
+                              class="b2font b2-image-fill"></i><span>上传封面图片</span></label>
+                          <input id="cover-input" type="file" class="b2-hidden-always" ref="fileInput"
+                            accept="image/jpg,image/jpeg,image/png,image/gif" />
+                        </div>
+                      </div>
                     </div>
                     <div class="user-panel">
                       <div class="avatar">
-                        <!-- <el-avatar shape="square" :size="150" :src="user.profile"></el-avatar> -->
+                        <el-avatar shape="square" :size="150" :src="user.profile"></el-avatar>
                         <label class="editor-avatar" for="avatar-input"><i
                             class="b2font b2-image-fill"></i><span>修改我的头像</span></label>
                         <input id="avatar-input" type="file" class="b2-hidden-always" ref="fileInput"
@@ -35,14 +186,14 @@
                       </div>
                       <div class="user-panel-info">
                         <div class="">
-                          <h1>
-                            <!-- <span id="userDisplayName" class="usertopName">{{
+                          <h1 style="display: flex;">
+                            <span id="userDisplayName" class="usertopName">{{
                               user.name
-                            }}</span> -->
+                              }}</span>
                             <span class="user-page-lv"><span class="lv-icon user-lv b2-lv0"><b>Lv0
                                   新手上路</b><i>lv0</i></span></span>
                           </h1>
-                          <!-- <p>{{user.intro}}</p> -->
+                          <p>{{ user.intro }}</p>
                         </div>
                         <div class="user-panel-editor-button">
                           <div class="user-follow">
@@ -57,79 +208,9 @@
                   <div class="author-table mg-t">
                     <div class="author-page-right">
                       <div class="author-page-right-in box b2-radius">
-                      <router-link to="/userinfo/index">
-                          <div @click="ChanceGai()" class="user-sidebar">
-                            <div :class="acticveChanceGai">
-                              <a class="link-block"></a>
-                              <p>
-                                <i class="
-                                      b2font
-                                      b2-user-heart-line b2-light b2-color
-                                    "></i>概览
-                              </p>
-                              <div class="author-sidebar-down">
-                                <i class="b2font b2-arrow-right-s-line"></i>
-                              </div>
-                            </div>
-                          </div>
-                        </router-link>
-                        <router-link to="/userinfo/post">
-                        <div @click="ChanceFa()" class="user-sidebar">
-                              <div :class="acticveChanceFa">
-                              <a class="link-block"></a>
-                              <p>
-                                <i class="
-                                      b2font
-                                      b2-quill-pen-line b2-light b2-color
-                                    "></i>作品查看
-                              </p>
-                              <div class="author-sidebar-down">
-                                <i class="b2font b2-arrow-right-s-line"></i>
-                              </div>
-                            </div>
-
-                        </div>
-                      </router-link>
-
-                        <div @click="ChanceHui()">
-                          <router-link to="/userinfo/follow">
-                            <div :class="acticveChanceHui">
-                              <a class="link-block"></a>
-                              <p>
-                                <i class="
-                                      b2font
-                                      b2-hand-heart-line b2-light b2-color
-                                    "></i>关注列表
-                              </p>
-                              <div class="author-sidebar-down">
-                                <i class="b2font b2-arrow-right-s-line"></i>
-                              </div>
-                            </div>
-                          </router-link>
-                        </div>
                         <!--订单-->
-                        <div @click="ChanceDing()">
-                          <router-link to="/userinfo/payInfo">
-                            <div :class="acticveChanceDing">
-                              <a class="link-block"></a>
-                              <p>
-                                <i
-                                  class="
-                                    b2font
-                                    b2-file-list-2-line b2-light b2-color
-                                  "
-                                ></i
-                                >订单
-                              </p>
-                              <div class="author-sidebar-down">
-                                <i class="b2font b2-arrow-right-s-line"></i>
-                              </div>
-                            </div>
-                          </router-link>
-                        </div>
-                        <!--订单-->
-                       <!-- <div @click="ChanceDing()">
-                          <router-link to="/userinfo/payInfo">
+                        <!-- <div @click="ChanceDing()">
+                          <NuxtLink to="/userInfo/payInfo">
                             <div :class="acticveChanceDing">
                               <a class="link-block"></a>
                               <p>
@@ -145,108 +226,21 @@
                                 <i class="b2font b2-arrow-right-s-line"></i>
                               </div>
                             </div>
-                          </router-link>
+                          </NuxtLink>
                         </div>-->
-                        <!--会员中心-->
-                        <div @click="ChanceYuan()">
-                          <router-link to="/userinfo/vip">
-                            <div :class="acticveChanceYuan">
-                              <a class="link-block"></a>
+                        <div v-for="item in menuItems" :key="item.key" @click="setActive(item.key)">
+                          <NuxtLink :to="item.link">
+                            <div :class="['user-sidebar-info', { active: activeItem === item.key }]">
                               <p>
-                                <i
-                                  class="
-                                    b2font
-                                    b2-hands-heart-line b2-light b2-color
-                                  "
-                                ></i
-                                >会员中心
+                                <i :class="item.icon"></i>
+                                {{ item.label }}
                               </p>
                               <div class="author-sidebar-down">
                                 <i class="b2font b2-arrow-right-s-line"></i>
                               </div>
                             </div>
-                          </router-link>
+                          </NuxtLink>
                         </div>
-
-
-
-                        <div @click="ChanceChong()" class="user-sidebar">
-                          <router-link to="/userinfo/charge">
-                            <div :class="acticveChanceChong">
-                              <a class="link-block"></a>
-                              <p>
-                                <i class="
-                                      b2font
-                                      b2-heart-add-line b2-light b2-color
-                                    "></i>充值中心
-                              </p>
-                              <div class="author-sidebar-down">
-                                <i class="b2font b2-arrow-right-s-line"></i>
-                              </div>
-                            </div>
-                          </router-link>
-                        </div>
-                        <div @click="hanceXiu()" class="user-sidebar">
-                          <router-link to="/userinfo/changePw">
-                            <div :class="acticveChanceXiu">
-                              <a class="link-block"></a>
-                              <p>
-                                <i class="
-                                      b2font
-                                      b2-hearts-line b2-light b2-color
-                                    "></i>修改密码
-                              </p>
-                              <div class="author-sidebar-down">
-                                <i class="b2font b2-arrow-right-s-line"></i>
-                              </div>
-                            </div>
-                          </router-link>
-                        </div>
-                        <div @click="hanceSi()" class="user-sidebar">
-                          <router-link to="/userinfo/chat/1">
-                            <div :class="acticveChanceSi">
-                              <a class="link-block"></a>
-                              <p>
-                                <i class="
-                                      b2font
-                                      b2-hearts-line b2-light b2-color
-                                    "></i>私信
-                              </p>
-                              <div class="author-sidebar-down">
-                                <i class="b2font b2-arrow-right-s-line"></i>
-                              </div>
-                            </div>
-                          </router-link>
-                        </div>
-                        <div @click="ChanceShou()" class="user-sidebar">
-                          <router-link to="/userinfo/star">
-                            <div :class="acticveChanceShou">
-                              <a class="link-block"></a>
-                              <p>
-                                <i class="b2font b2-star-line b2-light b2-color"></i>发布作品
-                              </p>
-                              <div class="author-sidebar-down">
-                                <i class="b2font b2-arrow-right-s-line"></i>
-                              </div>
-                            </div>
-                          </router-link>
-                        </div>
-                        <!--<router-link to="/userinfo/index">
-                          <div @click="ChanceGai()" class="user-sidebar">
-                            <div :class="acticveChanceGai">
-                              <a class="link-block"></a>
-                              <p>
-                                <i class="
-                                      b2font
-                                      b2-user-heart-line b2-light b2-color
-                                    "></i>修改个人信息
-                              </p>
-                              <div class="author-sidebar-down">
-                                <i class="b2font b2-arrow-right-s-line"></i>
-                              </div>
-                            </div>
-                          </div>
-                        </router-link>-->
                         <!-- <div class="user-sidebar h0">
                           <div class="user-sidebar-info">
                             <a class="link-block"></a>
@@ -267,8 +261,9 @@
                       </div>
                     </div>
                     <!--路由占位符-->
-
-                    <router-view class="author-page-left"></router-view>
+                    <keep-alive>
+                      <NuxtPage />
+                    </keep-alive>
                   </div>
                 </div>
               </div>
@@ -302,234 +297,6 @@
     </div>
   </div>
 </template>
-
-<!-- <script>
-// import { getNewResource } from '@/api/webresource'
-// import { formatDate } from '@/utils/date.js'
-
-import { addwatermarkimageUpload, updateImage } from '@/api/updateImage'
-import {  ChangeUser } from '@/api/webuser'
-
-
-export default ({
-  name: 'Home',
-  mounted() {
-    // 检查是否在客户端环境
-    if (process.client) {
-      const savedMode = localStorage.getItem('darkMode');
-      if (savedMode === 'true') {
-        isDark = true;
-      } else {
-        isDark = false;
-      }
-    }
-  },
-  data() {
-    return {
-      isDark: false,
-      form: {
-        userId: '',
-        profile: '',
-      },
-      acticveChanceGai: "user-sidebar-info active",
-      acticveChanceFa: "user-sidebar-info",
-      acticveChanceHui: "user-sidebar-info",
-      acticveChanceDing: "user-sidebar-info",
-      acticveChanceYuan: "user-sidebar-info",
-      acticveChanceChong: "user-sidebar-info",
-      acticveChanceXiu: "user-sidebar-info",
-      acticveChanceSi: "user-sidebar-info",
-      acticveChanceShou: "user-sidebar-info",
-      image: "",
-      acticve: 'nav-link active',
-      user: "",
-    }
-  },
-  created() {
-    if (image == "") {
-      image = ""}
-    getUserInfo()
-    ChanceGai()
-
-  },
-
-  methods: {
-    async uploadFile() {
-      const file = $refs.fileInput.files[0]
-      const formData = new FormData()
-      formData.append('editormd-image-file', file)
-
-
-      // var form = new FormData();
-      // form.append('editormd-image-file', file.file, file.file.name)
-      try {
-
-        updateImage(formData).then(resp => {
-          $message({
-            message: '上传成功',
-            type: 'success',
-            showClose: true,
-            duration: 1000
-          })
-          percentage = 100
-          theprogress = false
-          var imgUrl = resp.data.url;//根据返回值得不同这里要自己定义
-          user.profile = imgUrl
-          console.log(imgUrl)
-
-          const user = $cookies.get('access-user')
-          console.log("1123",user)
-          form.userId = user.userid
-          form.name = user.name
-          form.profile = imgUrl
-          console.log(form)
-          ChangeUser(form).then(resp => {
-            if (resp.data.code == 402 || resp.data.code == 400) {
-              $notify({
-                title: '失败',
-                message: '修改失败',
-                type: 'warning',
-                offset: 50
-              });
-            } else if (resp.data.code == 200) {
-              //显示成功
-              $notify({
-                title: '成功',
-                message: '修改成功',
-                type: 'success',
-                offset: 50
-              });
-              const user = $cookies.get('access-user')
-              user.profile = imgUrl
-              $cookies.set('access-user', user, 60 * 60 * 24 * 7)
-              user = user
-            }
-          })
-
-        }).catch((e) => {
-          $message.error('抱歉,上传失败,请检查网络环境或图片大小');
-          theprogress = false
-          console.log("上传失败")
-        })
-        // const response = await axios.post('/api/upload', formData, {
-        //   headers: {
-        //     'Content-Type': 'multipart/form-data'
-        //   }
-        // })
-      } catch (e) {
-        console.error(e)
-      }
-    },
-    hanceSi() {
-      acticveChanceGai = "user-sidebar-info"
-      acticveChanceFa = "user-sidebar-info"
-      acticveChanceDing = "user-sidebar-info"
-      acticveChanceYuan = "user-sidebar-info"
-      acticveChanceHui = "user-sidebar-info"
-      acticveChanceChong = "user-sidebar-info"
-      acticveChanceXiu = "user-sidebar-info"
-      acticveChanceSi = "user-sidebar-info active"
-      acticveChanceShou = "user-sidebar-info"
-    },
-    ChanceGai() {
-      acticveChanceGai = "user-sidebar-info active"
-      acticveChanceFa = "user-sidebar-info"
-      acticveChanceDing = "user-sidebar-info"
-      acticveChanceYuan = "user-sidebar-info "
-      acticveChanceHui = "user-sidebar-info"
-      acticveChanceChong = "user-sidebar-info"
-      acticveChanceXiu = "user-sidebar-info"
-      acticveChanceSi = "user-sidebar-info"
-      acticveChanceShou = "user-sidebar-info"
-    },
-    ChanceFa() {
-      acticveChanceGai = "user-sidebar-info "
-      acticveChanceFa = "user-sidebar-info active"
-      acticveChanceDing = "user-sidebar-info"
-      acticveChanceYuan = "user-sidebar-info "
-      acticveChanceHui = "user-sidebar-info"
-      acticveChanceChong = "user-sidebar-info"
-      acticveChanceXiu = "user-sidebar-info"
-      acticveChanceSi = "user-sidebar-info"
-      acticveChanceShou = "user-sidebar-info"
-    },
-    ChanceDing() {
-      acticveChanceGai = "user-sidebar-info "
-      acticveChanceFa = "user-sidebar-info"
-      acticveChanceDing = "user-sidebar-info active"
-      acticveChanceYuan = "user-sidebar-info "
-      acticveChanceHui = "user-sidebar-info"
-      acticveChanceChong = "user-sidebar-info"
-      acticveChanceXiu = "user-sidebar-info"
-      acticveChanceSi = "user-sidebar-info"
-      acticveChanceShou = "user-sidebar-info"
-    },
-    ChanceYuan() {
-      acticveChanceGai = "user-sidebar-info "
-      acticveChanceFa = "user-sidebar-info"
-      acticveChanceDing = "user-sidebar-info"
-      acticveChanceYuan = "user-sidebar-info active"
-      acticveChanceHui = "user-sidebar-info "
-      acticveChanceChong = "user-sidebar-info"
-      acticveChanceXiu = "user-sidebar-info"
-      acticveChanceSi = "user-sidebar-info"
-      acticveChanceShou = "user-sidebar-info"
-    },
-    ChanceHui() {
-      acticveChanceGai = "user-sidebar-info "
-      acticveChanceFa = "user-sidebar-info"
-      acticveChanceDing = "user-sidebar-info"
-      acticveChanceYuan = "user-sidebar-info "
-      acticveChanceHui = "user-sidebar-info active"
-      acticveChanceChong = "user-sidebar-info"
-      acticveChanceXiu = "user-sidebar-info"
-      acticveChanceSi = "user-sidebar-info"
-      acticveChanceShou = "user-sidebar-info"
-    },
-    ChanceChong() {
-      acticveChanceGai = "user-sidebar-info "
-      acticveChanceFa = "user-sidebar-info"
-      acticveChanceDing = "user-sidebar-info"
-      acticveChanceYuan = "user-sidebar-info "
-      acticveChanceHui = "user-sidebar-info"
-      acticveChanceChong = "user-sidebar-info active"
-      acticveChanceXiu = "user-sidebar-info"
-      acticveChanceSi = "user-sidebar-info"
-      acticveChanceShou = "user-sidebar-info"
-    },
-    hanceXiu() {
-      acticveChanceGai = "user-sidebar-info "
-      acticveChanceFa = "user-sidebar-info"
-      acticveChanceDing = "user-sidebar-info"
-      acticveChanceYuan = "user-sidebar-info "
-      acticveChanceHui = "user-sidebar-info"
-      acticveChanceChong = "user-sidebar-info"
-      acticveChanceXiu = "user-sidebar-info active"
-      acticveChanceSi = "user-sidebar-info"
-      acticveChanceShou = "user-sidebar-info"
-    },
-    ChanceShou() {
-      acticveChanceGai = "user-sidebar-info "
-      acticveChanceFa = "user-sidebar-info"
-      acticveChanceDing = "user-sidebar-info"
-      acticveChanceYuan = "user-sidebar-info "
-      acticveChanceHui = "user-sidebar-info"
-      acticveChanceChong = "user-sidebar-info"
-      acticveChanceXiu = "user-sidebar-info"
-      acticveChanceSi = "user-sidebar-info"
-      acticveChanceShou = "user-sidebar-info active"
-    },
-    getUserInfo() {
-      const user = $cookies.get('access-user')
-      user = user
-    },
-    formatDate(time) {
-      let data = new Date(time)
-      return formatDate(data, 'yyyy-MM-dd hh:mm ')
-    },
-  }
-})
-</script> -->
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
@@ -695,6 +462,12 @@ button.b2-loading:after {
 .entry-content blockquote,
 .content-excerpt {
   border-radius: 10px;
+}
+
+.user-sidebar-info {
+  padding: 10px;
+  cursor: pointer;
+  transition: background 0.3s;
 }
 
 .user-sidebar-info.active {

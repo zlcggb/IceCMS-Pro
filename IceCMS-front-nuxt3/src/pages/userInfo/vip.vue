@@ -118,7 +118,7 @@
     </div>
   </div>
 </template>
-<script>
+<!-- <script>
 import wxPayApi from '../../../api/payment/wxPay'
 import aliPayApi from '../../../api/payment/aliPay'
 
@@ -279,11 +279,13 @@ export default {
     }
   }
 }
-</script>
+</script> -->
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .home {
+  padding: 22px;
+  width: 100%;
   background-color: #ffffff;
   border-radius: 13px;
 }

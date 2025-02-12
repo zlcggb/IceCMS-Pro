@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, defineProps } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { formatDate } from '../utils/date.js'
 
 // Props

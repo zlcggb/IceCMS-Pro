@@ -1,18 +1,29 @@
 <template>
-  <div class="error">
-    <div class="error-box">
-      <h1 :data-t="error.statusCode " class="h1">{{ error.statusCode }}</h1>
+    <div class="error">
+      <div class="error-box">
+        <h1 :data-t="error.statusCode " class="h1">{{ error.statusCode }}</h1>
+      </div>
     </div>
-  </div>
-</template>
+  </template>
+  
+  <script>
+  export default {
+    name: 'error',
+    layout: "error", // you can set a custom layout for the error page
 
-<script>
-export default {
-  props: ["error"],
-  layout: "error", // you can set a custom layout for the error page
-};
-</script>
-
+    props: {
+     // 接受错误页面传递的错误信息
+      error: {
+        type: Object,
+        required: true
+      }
+    },
+    mounted () {
+      console.log(this.error)
+    },
+  }
+  </script>
+  
 <style lang="scss" scoped>
 .error {
   width: 100%;
