@@ -16,6 +16,14 @@ export default defineNuxtConfig({
       API_BASE_PROD: 'https://api.example.com/v1'
     }
   },
+  // mermaid fix
+  vite: {
+    optimizeDeps: {
+      include: [
+        'vue3-emoji-picker'
+      ]
+    }
+  },
   app: {
     head: {
       title: 'IceCMS',

@@ -46,6 +46,11 @@ const user = ref({
   name: '',
   profile: ''
 });
+const hover = ref<boolean>(false);
+
+function setHover(state: boolean) {
+  hover.value = state;
+};
 // 表单验证规则
 const phoneLoginRules = reactive({
   phone: [
@@ -488,18 +493,17 @@ onMounted(() => {
               扫码登录更方便
             </span>
             <span :class="{ 'tabs-item': true, 'tabs-active': activeTab === 'wechat' }" :style="{
-      color: activeTab === 'wechat' && isDark ? '#50A1FF' : (activeTab === 'wechat' && isDark ? '#50A1FF' : ''),
-      '--after-color': activeTab === 'wechat' && isDark ? '#50A1FF' : (activeTab === 'wechat' && isDark ? '#50A1FF' : '')
-    }" @click="setActiveTab('wechat')">微信登录</span>
+              color: activeTab === 'wechat' && isDark ? '#50A1FF' : (activeTab === 'wechat' && isDark ? '#50A1FF' : ''),
+              '--after-color': activeTab === 'wechat' && isDark ? '#50A1FF' : (activeTab === 'wechat' && isDark ? '#50A1FF' : '')
+            }" @click="setActiveTab('wechat')">微信登录</span>
             <span :class="{ 'tabs-item': true, 'tabs-active': activeTab === 'phone' }" :style="{
-      color: activeTab === 'phone' && isDark ? '#50A1FF' : (activeTab === 'phone' && isDark ? '#50A1FF' : ''),
-      '--after-color': activeTab === 'phone' && isDark ? '#50A1FF' : (activeTab === 'phone' && isDark ? '#50A1FF' : '')
-    }" @click="setActiveTab('phone')">手机号登录</span>
+              color: activeTab === 'phone' && isDark ? '#50A1FF' : (activeTab === 'phone' && isDark ? '#50A1FF' : ''),
+              '--after-color': activeTab === 'phone' && isDark ? '#50A1FF' : (activeTab === 'phone' && isDark ? '#50A1FF' : '')
+            }" @click="setActiveTab('phone')">手机号登录</span>
             <span :class="{ 'tabs-item': true, 'tabs-active': activeTab === 'password' }" :style="{
-      color: activeTab === 'password' && isDark ? '#50A1FF' : (activeTab === 'password' && isDark ? '#50A1FF' : ''),
-      '--after-color': activeTab === 'password' && isDark ? '#50A1FF' : (activeTab === 'password' && isDark ? '#50A1FF' : '')
-    }"
-            @click="setActiveTab('password')">密码登录</span>
+              color: activeTab === 'password' && isDark ? '#50A1FF' : (activeTab === 'password' && isDark ? '#50A1FF' : ''),
+              '--after-color': activeTab === 'password' && isDark ? '#50A1FF' : (activeTab === 'password' && isDark ? '#50A1FF' : '')
+            }" @click="setActiveTab('password')">密码登录</span>
           </div>
           <div class="login-box-tabs-main">
             <div v-if="activeTab === 'wechat'" style="display: flex;
@@ -931,20 +935,20 @@ onMounted(() => {
             </div>
           </div>
         </div>
-        <el-popover placement="bottom" :width="300" trigger="hover"
-          content="this is content, this is content, this is content" width="">
-          <div class="">
+        <el-popover placement="bottom" :width="270" trigger="hover"
+          content="this is content, this is content, this is content">
+          <div class="self-info-list">
             <div class="flex-col self-start group">
               <div class="self-start" style="display: flex; align-items: center; justify-content: center;">
                 <div class="topic-avatars" style="margin-right: 8px;">
                   <el-avatar :src="user.profile"></el-avatar>
                 </div>
-                <span class="font-username text">{{ user.name }}</span>
+                <span class="font-username text info-spans">{{ user.name }}</span>
               </div>
-              <div class="flex-row self-stretch group_2">
+              <div style="margin-top: 16px;" class="flex-row self-stretch group_2">
                 <div class="flex-row">
-                  <span class="font_2">积分：</span>
-                  <span class="font_3">882</span>
+                  <span class="font_2 info-spans">积分：</span>
+                  <span class="font_3 info-spans">882</span>
                 </div>
               </div>
             </div>
@@ -954,37 +958,97 @@ onMounted(() => {
                 <span class="text_4"></span>
                 <div class="flex-row justify-between equal-division mt-15">
                   <div class="flex-col items-center equal-division-item">
-                    <span class="font">119</span>
-                    <span class="font_3">关注</span>
+                    <span class="font info-spans">119</span>
+                    <span class="font_3 info-spans">关注</span>
                   </div>
                   <div class="flex-col items-center equal-division-item">
-                    <span class="font">119</span>
-                    <span class="font_3">粉丝</span>
+                    <span class="font info-spans">119</span>
+                    <span class="font_3 info-spans">粉丝</span>
                   </div>
                   <div class="flex-col items-center equal-division-item">
-                    <span class="font">119</span>
-                    <span class="font_3">动态</span>
+                    <span class="font info-spans">119</span>
+                    <span class="font_3 info-spans">动态</span>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <div class="flex-col-bar self-start group_5">
-            <div class="flex-row-bar items-center group_6 view-bar">
-              <img class="image_4" src="../static/image/top/top-user.png" />
-              <span class="ml-20 font_3">个人中心</span>
+          <div class="accordion-container">
+            <div class="accordion-item" @mouseenter="setHover(true)" @mouseleave="setHover(false)">
+              <div class="flex-row-bar items-center">
+                <div>
+                  <img class="image_4" src="../static/image/top/top-user.png" />
+                  <span class="ml-20 font_3 info-spans">个人中心</span>
+                </div>
+                <svg width="12" height="12" viewBox="0 0 9 9" fill="none" xmlns="http://www.w3.org/2000/svg"
+                  class="link-icon--right">
+                  <path fill-rule="evenodd" clip-rule="evenodd"
+                    d="M7.50588 3.40623C7.40825 3.3086 7.24996 3.3086 7.15232 3.40623L4.41244 6.14612L1.67255 3.40623C1.57491 3.3086 1.41662 3.3086 1.31899 3.40623C1.22136 3.50386 1.22136 3.66215 1.31899 3.75978L4.11781 6.5586C4.28053 6.72132 4.54434 6.72132 4.70706 6.5586L7.50588 3.75978C7.60351 3.66215 7.60351 3.50386 7.50588 3.40623Z"
+                    fill="currentColor"></path>
+                  <path
+                    d="M7.15232 3.40623L7.50588 3.75978L7.50588 3.75978L7.15232 3.40623ZM7.50588 3.40623L7.15232 3.75978L7.15233 3.75978L7.50588 3.40623ZM4.41244 6.14612L4.05888 6.49967C4.15265 6.59344 4.27983 6.64612 4.41244 6.64612C4.54504 6.64612 4.67222 6.59344 4.76599 6.49967L4.41244 6.14612ZM1.67255 3.40623L2.0261 3.05268L2.0261 3.05268L1.67255 3.40623ZM1.31899 3.40623L0.965439 3.05268L0.965439 3.05268L1.31899 3.40623ZM1.31899 3.75978L1.67255 3.40623V3.40623L1.31899 3.75978ZM4.11781 6.5586L3.76425 6.91215L4.11781 6.5586ZM4.70706 6.5586L4.35351 6.20505L4.70706 6.5586ZM7.50588 3.75978L7.15233 3.40623L7.15232 3.40623L7.50588 3.75978ZM7.50588 3.75978C7.40825 3.85742 7.24996 3.85742 7.15232 3.75978L7.85943 3.05268C7.56654 2.75978 7.09166 2.75978 6.79877 3.05268L7.50588 3.75978ZM4.76599 6.49967L7.50588 3.75978L6.79877 3.05268L4.05888 5.79257L4.76599 6.49967ZM1.31899 3.75978L4.05888 6.49967L4.76599 5.79257L2.0261 3.05268L1.31899 3.75978ZM1.67254 3.75979C1.57491 3.85742 1.41662 3.85742 1.31899 3.75979L2.0261 3.05268C1.73321 2.75978 1.25833 2.75978 0.965439 3.05268L1.67254 3.75979ZM1.67255 3.40623C1.77018 3.50386 1.77018 3.66215 1.67255 3.75978L0.965439 3.05268C0.672546 3.34557 0.672546 3.82044 0.965439 4.11334L1.67255 3.40623ZM4.47136 6.20505L1.67255 3.40623L0.965439 4.11334L3.76425 6.91215L4.47136 6.20505ZM4.35351 6.20505C4.38605 6.1725 4.43882 6.1725 4.47136 6.20505L3.76425 6.91215C4.12223 7.27013 4.70264 7.27013 5.06062 6.91215L4.35351 6.20505ZM7.15232 3.40623L4.35351 6.20505L5.06062 6.91215L7.85943 4.11334L7.15232 3.40623ZM7.15233 3.75978C7.05469 3.66215 7.05469 3.50386 7.15233 3.40623L7.85943 4.11334C8.15233 3.82045 8.15233 3.34557 7.85943 3.05268L7.15233 3.75978Z"
+                    fill="currentColor"></path>
+                </svg>
+              </div>
             </div>
-            <div class="flex-row-bar group_6 view-bar">
-              <img class="image_5" src="../static/image/top/top-start.png" />
-              <span class="ml-20 font_3">资源管理</span>
+
+            <div class="accordion-item" @mouseenter="setHover(true)" @mouseleave="setHover(false)">
+              <div class="flex-row-bar items-center">
+                <div>
+                  <img class="image_5" src="../static/image/top/top-start.png" />
+                  <span class="ml-20 font_3 info-spans">资源管理</span>
+                </div>
+                <svg width="12" height="12" viewBox="0 0 9 9" fill="none" xmlns="http://www.w3.org/2000/svg"
+                  class="link-icon--right">
+                  <path fill-rule="evenodd" clip-rule="evenodd"
+                    d="M7.50588 3.40623C7.40825 3.3086 7.24996 3.3086 7.15232 3.40623L4.41244 6.14612L1.67255 3.40623C1.57491 3.3086 1.41662 3.3086 1.31899 3.40623C1.22136 3.50386 1.22136 3.66215 1.31899 3.75978L4.11781 6.5586C4.28053 6.72132 4.54434 6.72132 4.70706 6.5586L7.50588 3.75978C7.60351 3.66215 7.60351 3.50386 7.50588 3.40623Z"
+                    fill="currentColor"></path>
+                  <path
+                    d="M7.15232 3.40623L7.50588 3.75978L7.50588 3.75978L7.15232 3.40623ZM7.50588 3.40623L7.15232 3.75978L7.15233 3.75978L7.50588 3.40623ZM4.41244 6.14612L4.05888 6.49967C4.15265 6.59344 4.27983 6.64612 4.41244 6.64612C4.54504 6.64612 4.67222 6.59344 4.76599 6.49967L4.41244 6.14612ZM1.67255 3.40623L2.0261 3.05268L2.0261 3.05268L1.67255 3.40623ZM1.31899 3.40623L0.965439 3.05268L0.965439 3.05268L1.31899 3.40623ZM1.31899 3.75978L1.67255 3.40623V3.40623L1.31899 3.75978ZM4.11781 6.5586L3.76425 6.91215L4.11781 6.5586ZM4.70706 6.5586L4.35351 6.20505L4.70706 6.5586ZM7.50588 3.75978L7.15233 3.40623L7.15232 3.40623L7.50588 3.75978ZM7.50588 3.75978C7.40825 3.85742 7.24996 3.85742 7.15232 3.75978L7.85943 3.05268C7.56654 2.75978 7.09166 2.75978 6.79877 3.05268L7.50588 3.75978ZM4.76599 6.49967L7.50588 3.75978L6.79877 3.05268L4.05888 5.79257L4.76599 6.49967ZM1.31899 3.75978L4.05888 6.49967L4.76599 5.79257L2.0261 3.05268L1.31899 3.75978ZM1.67254 3.75979C1.57491 3.85742 1.41662 3.85742 1.31899 3.75979L2.0261 3.05268C1.73321 2.75978 1.25833 2.75978 0.965439 3.05268L1.67254 3.75979ZM1.67255 3.40623C1.77018 3.50386 1.77018 3.66215 1.67255 3.75978L0.965439 3.05268C0.672546 3.34557 0.672546 3.82044 0.965439 4.11334L1.67255 3.40623ZM4.47136 6.20505L1.67255 3.40623L0.965439 4.11334L3.76425 6.91215L4.47136 6.20505ZM4.35351 6.20505C4.38605 6.1725 4.43882 6.1725 4.47136 6.20505L3.76425 6.91215C4.12223 7.27013 4.70264 7.27013 5.06062 6.91215L4.35351 6.20505ZM7.15232 3.40623L4.35351 6.20505L5.06062 6.91215L7.85943 4.11334L7.15232 3.40623ZM7.15233 3.75978C7.05469 3.66215 7.05469 3.50386 7.15233 3.40623L7.85943 4.11334C8.15233 3.82045 8.15233 3.34557 7.85943 3.05268L7.15233 3.75978Z"
+                    fill="currentColor"></path>
+                </svg>
+
+              </div>
             </div>
-            <div class="flex-row-bar view-bar">
-              <img class="image_6" src="../static/image/top/top-star.png" />
-              <span class="ml-18 font_3">个人收藏</span>
+
+            <div class="accordion-item" @mouseenter="setHover(true)" @mouseleave="setHover(false)">
+              <div class="flex-row-bar items-center">
+                <div>
+
+
+                  <img class="image_6" src="../static/image/top/top-star.png" />
+                  <span class="ml-18 font_3 info-spans">个人收藏</span>
+                </div>
+                <svg width="12" height="12" viewBox="0 0 9 9" fill="none" xmlns="http://www.w3.org/2000/svg"
+                  class="link-icon--right">
+                  <path fill-rule="evenodd" clip-rule="evenodd"
+                    d="M7.50588 3.40623C7.40825 3.3086 7.24996 3.3086 7.15232 3.40623L4.41244 6.14612L1.67255 3.40623C1.57491 3.3086 1.41662 3.3086 1.31899 3.40623C1.22136 3.50386 1.22136 3.66215 1.31899 3.75978L4.11781 6.5586C4.28053 6.72132 4.54434 6.72132 4.70706 6.5586L7.50588 3.75978C7.60351 3.66215 7.60351 3.50386 7.50588 3.40623Z"
+                    fill="currentColor"></path>
+                  <path
+                    d="M7.15232 3.40623L7.50588 3.75978L7.50588 3.75978L7.15232 3.40623ZM7.50588 3.40623L7.15232 3.75978L7.15233 3.75978L7.50588 3.40623ZM4.41244 6.14612L4.05888 6.49967C4.15265 6.59344 4.27983 6.64612 4.41244 6.64612C4.54504 6.64612 4.67222 6.59344 4.76599 6.49967L4.41244 6.14612ZM1.67255 3.40623L2.0261 3.05268L2.0261 3.05268L1.67255 3.40623ZM1.31899 3.40623L0.965439 3.05268L0.965439 3.05268L1.31899 3.40623ZM1.31899 3.75978L1.67255 3.40623V3.40623L1.31899 3.75978ZM4.11781 6.5586L3.76425 6.91215L4.11781 6.5586ZM4.70706 6.5586L4.35351 6.20505L4.70706 6.5586ZM7.50588 3.75978L7.15233 3.40623L7.15232 3.40623L7.50588 3.75978ZM7.50588 3.75978C7.40825 3.85742 7.24996 3.85742 7.15232 3.75978L7.85943 3.05268C7.56654 2.75978 7.09166 2.75978 6.79877 3.05268L7.50588 3.75978ZM4.76599 6.49967L7.50588 3.75978L6.79877 3.05268L4.05888 5.79257L4.76599 6.49967ZM1.31899 3.75978L4.05888 6.49967L4.76599 5.79257L2.0261 3.05268L1.31899 3.75978ZM1.67254 3.75979C1.57491 3.85742 1.41662 3.85742 1.31899 3.75979L2.0261 3.05268C1.73321 2.75978 1.25833 2.75978 0.965439 3.05268L1.67254 3.75979ZM1.67255 3.40623C1.77018 3.50386 1.77018 3.66215 1.67255 3.75978L0.965439 3.05268C0.672546 3.34557 0.672546 3.82044 0.965439 4.11334L1.67255 3.40623ZM4.47136 6.20505L1.67255 3.40623L0.965439 4.11334L3.76425 6.91215L4.47136 6.20505ZM4.35351 6.20505C4.38605 6.1725 4.43882 6.1725 4.47136 6.20505L3.76425 6.91215C4.12223 7.27013 4.70264 7.27013 5.06062 6.91215L4.35351 6.20505ZM7.15232 3.40623L4.35351 6.20505L5.06062 6.91215L7.85943 4.11334L7.15232 3.40623ZM7.15233 3.75978C7.05469 3.66215 7.05469 3.50386 7.15233 3.40623L7.85943 4.11334C8.15233 3.82045 8.15233 3.34557 7.85943 3.05268L7.15233 3.75978Z"
+                    fill="currentColor"></path>
+                </svg>
+
+              </div>
             </div>
-            <div @click="loginout()" class="flex-row-bar items-center group_6 view-bar-2">
-              <img class="image_7" src="../static/image/top/top-out.png" />
-              <span class="ml-18 font_3">退出登录</span>
+
+            <div class="accordion-item" @click="loginout()" @mouseenter="setHover(true)" @mouseleave="setHover(false)">
+              <div class="flex-row-bar items-center">
+                <div>
+                  <img class="image_7" src="../static/image/top/top-out.png" />
+                  <span class="ml-18 font_3 info-spans">退出登录</span>
+                </div>
+                <svg width="12" height="12" viewBox="0 0 9 9" fill="none" xmlns="http://www.w3.org/2000/svg"
+                  class="link-icon--right">
+                  <path fill-rule="evenodd" clip-rule="evenodd"
+                    d="M7.50588 3.40623C7.40825 3.3086 7.24996 3.3086 7.15232 3.40623L4.41244 6.14612L1.67255 3.40623C1.57491 3.3086 1.41662 3.3086 1.31899 3.40623C1.22136 3.50386 1.22136 3.66215 1.31899 3.75978L4.11781 6.5586C4.28053 6.72132 4.54434 6.72132 4.70706 6.5586L7.50588 3.75978C7.60351 3.66215 7.60351 3.50386 7.50588 3.40623Z"
+                    fill="currentColor"></path>
+                  <path
+                    d="M7.15232 3.40623L7.50588 3.75978L7.50588 3.75978L7.15232 3.40623ZM7.50588 3.40623L7.15232 3.75978L7.15233 3.75978L7.50588 3.40623ZM4.41244 6.14612L4.05888 6.49967C4.15265 6.59344 4.27983 6.64612 4.41244 6.64612C4.54504 6.64612 4.67222 6.59344 4.76599 6.49967L4.41244 6.14612ZM1.67255 3.40623L2.0261 3.05268L2.0261 3.05268L1.67255 3.40623ZM1.31899 3.40623L0.965439 3.05268L0.965439 3.05268L1.31899 3.40623ZM1.31899 3.75978L1.67255 3.40623V3.40623L1.31899 3.75978ZM4.11781 6.5586L3.76425 6.91215L4.11781 6.5586ZM4.70706 6.5586L4.35351 6.20505L4.70706 6.5586ZM7.50588 3.75978L7.15233 3.40623L7.15232 3.40623L7.50588 3.75978ZM7.50588 3.75978C7.40825 3.85742 7.24996 3.85742 7.15232 3.75978L7.85943 3.05268C7.56654 2.75978 7.09166 2.75978 6.79877 3.05268L7.50588 3.75978ZM4.76599 6.49967L7.50588 3.75978L6.79877 3.05268L4.05888 5.79257L4.76599 6.49967ZM1.31899 3.75978L4.05888 6.49967L4.76599 5.79257L2.0261 3.05268L1.31899 3.75978ZM1.67254 3.75979C1.57491 3.85742 1.41662 3.85742 1.31899 3.75979L2.0261 3.05268C1.73321 2.75978 1.25833 2.75978 0.965439 3.05268L1.67254 3.75979ZM1.67255 3.40623C1.77018 3.50386 1.77018 3.66215 1.67255 3.75978L0.965439 3.05268C0.672546 3.34557 0.672546 3.82044 0.965439 4.11334L1.67255 3.40623ZM4.47136 6.20505L1.67255 3.40623L0.965439 4.11334L3.76425 6.91215L4.47136 6.20505ZM4.35351 6.20505C4.38605 6.1725 4.43882 6.1725 4.47136 6.20505L3.76425 6.91215C4.12223 7.27013 4.70264 7.27013 5.06062 6.91215L4.35351 6.20505ZM7.15232 3.40623L4.35351 6.20505L5.06062 6.91215L7.85943 4.11334L7.15232 3.40623ZM7.15233 3.75978C7.05469 3.66215 7.05469 3.50386 7.15233 3.40623L7.85943 4.11334C8.15233 3.82045 8.15233 3.34557 7.85943 3.05268L7.15233 3.75978Z"
+                    fill="currentColor"></path>
+                </svg>
+
+              </div>
             </div>
           </div>
           <div class="top-user-info-box-names">
@@ -1128,7 +1192,7 @@ onMounted(() => {
             </ul>
            -->
           <template #reference>
-            <nuxt-link to="/userinfo">
+            <nuxt-link to="/MyUserInfo">
               <div v-show="userJudje" class="avatartext">
                 <el-avatar :src="user.profile"></el-avatar>
                 <span class="spans">{{ user.name }}</span>
@@ -2430,6 +2494,14 @@ export default ({
   margin-left: 5px;
   font-weight: bold;
 }
+.self-info-list{
+  margin-bottom: 20px;
+  margin-top: 10px;
+}
+.info-spans {
+  color: #757575;
+  font-weight: bold;
+}
 
 .qqloginsvg {
   display: flex;
@@ -2550,7 +2622,8 @@ span.last-login-way:after {
   display: block;
   width: 24px;
   height: 2px;
-  background-color: var(--after-color, #222226); /* 默认值透明 */
+  background-color: var(--after-color, #222226);
+  /* 默认值透明 */
   position: absolute;
   bottom: -8px;
   left: 50%;
@@ -2637,19 +2710,20 @@ span.last-login-way:after {
 }
 
 .equal-division-item {
-  flex: 1;
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  /* 让内容垂直居中 */
+  align-items: center;
+  /* 水平居中 */
+  width: 33%;
+  /* 让每个项占据三分之一宽度 */
 }
 
 .mt-15 {
   margin-top: 15px;
 }
 
-.flex-col {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
 
 .flex-col-bar {
   display: flex;
@@ -2661,14 +2735,14 @@ span.last-login-way:after {
 .flex-row-bar {
   display: flex;
   align-items: center;
-  margin-bottom: 15px;
+  margin-bottom: 20px;
   /* 设置下方间距，保持各项之间的间隔 */
 }
 
 .font_3 {
   font-size: 16px;
   /* 调整字体大小 */
-  color: #333;
+  color: #666;
   /* 优化字体颜色 */
 }
 
@@ -2680,41 +2754,12 @@ span.last-login-way:after {
   margin-left: 20px;
 }
 
-.image_4,
-.image_5,
-.image_6,
-.image_7 {
-  width: 24px;
-  /* 优化图片大小 */
-  height: 24px;
-}
 
 .group_5 {
   padding: 20px;
   /* 添加一些内边距 */
 }
 
-.view-bar {
-  cursor: pointer;
-  /* 增加鼠标指针样式 */
-}
-
-.font_3:hover {
-  color: #007bff;
-
-  /* 鼠标悬停时改变字体颜色 */
-}
-
-.view-bar:hover {
-  color: #007bff;
-  background-color: #f0f0f0;
-  /* 鼠标悬停时改变背景颜色 */
-  border-radius: 8px;
-  /* 圆角效果 */
-  /* padding: 8px; */
-  /* 增加内边距，使悬停效果更明显 */
-  /* 鼠标悬停时改变字体颜色 */
-}
 
 .view-bar-2:hover .font_3,
 .view-bar-2:hover .font_3 {
@@ -2780,5 +2825,89 @@ span.last-login-way:after {
 .forgot-password a {
   color: #409EFF;
   margin-left: 5px;
+}
+
+.accordion-container {
+  display: flex;
+  flex-direction: column;
+  /* 垂直排列 */
+  gap: 10px;
+  /* 每个项之间的间隙 */
+  width: 245px;
+  /* 设置宽度 */
+}
+
+.accordion-item {
+  display: flex;
+  align-items: center;
+  height: 45px;
+  /* 垂直居中内容 */
+  padding: 8px;
+  border-radius: 5px;
+  /* 圆角 */
+  cursor: pointer;
+  /* 鼠标悬停时显示为点击状态 */
+  transition: background-color 0.3s ease;
+  /* 背景色变化的平滑过渡 */
+}
+
+.accordion-item:hover {
+  background-color: #f0f0f0;
+  /* 鼠标悬停时的背景色 */
+}
+
+.flex-row-bar {
+  display: flex;
+  justify-content: space-between;
+  /* 让内容两边对齐 */
+  align-items: center;
+  /* 垂直居中 */
+  width: 100%;
+  /* 让这个容器占满整个宽度 */
+}
+
+.ml-20 {
+  margin-left: 20px;
+  /* 给图片和文字之间添加间距 */
+}
+
+.font_3 {
+  font-size: 14px;
+  /* 设置字体大小 */
+}
+
+.image_4,
+.image_5,
+.image_6,
+.image_7 {
+  width: 19px;
+  /* 设置图片宽度 */
+  height: 19px;
+  /* 设置图片高度 */
+}
+
+.link-icon--right {
+  margin-left: 10px;
+  /* 让图标和文字之间留出一点空间 */
+  width: 12px;
+  height: 12px;
+  fill: #333;
+  /* 设置默认图标颜色 */
+}
+
+/* 响应式样式 */
+@media (max-width: 600px) {
+  .accordion-container {
+    width: 100%;
+  }
+
+  .link-icon--right {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.link-icon--right {
+  transform: rotate(270deg);
 }
 </style>

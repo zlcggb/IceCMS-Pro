@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, reactive, computed, watch, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { useUserStore } from "../../../stores/useUserStore";
 // import { useCookies } from 'vue3-cookies';
 import { createSquare, getAllSquare, likeClickComments } from "../../../api/websquare";
 // import { formatDate } from "../../utils/date.js";
@@ -8,6 +9,14 @@ import { getPlanetIdComment, addPlanetComment, likeClickComment } from "../../..
 import { getSquareClasslist, getArticleClassByotherName } from "../../../api/websquareClass";
 import { getAnnouncementslistByNum } from "../../../api/webannouncements";
 import { updateImage } from '../../../api/updateImage';
+import EmojiPicker from '../../components/emoji/index.vue'
+// import UploadPicker from './component/upload/picker.vue'
+// import UploadView from './component/upload/view.vue'
+
+// import { ElButton } from 'element-plus'
+import { useInput } from '../../hooks/useInput'
+import { useEmoji } from '../../hooks/useEmoji'
+import { useUpload } from '../../hooks/useUpload'
 
 const route = useRoute();
 const router = useRouter();
@@ -19,8 +28,9 @@ const isDark = ref(false);
 const pagetotal = ref(0);
 const isLoading = ref(false);
 const dialogImageUrl = ref('');
+const userJudje = ref<boolean>(false);
 const dialogVisible = ref(false);
-const fileList = ref([]);
+// const fileList = ref([]);
 const imageList = ref([]);
 const newFile = ref(new FormData());
 const sentence = ref('');
@@ -58,60 +68,174 @@ const postReplysToUserForm = reactive({
 });
 const shownologin = ref(false);
 const comment = ref([]);
-let userJudje = ref(false);
-
 // 标题栏默认值为 'nav-link active'
 const acticve = ref<string>("nav-link active");
 const setting = ref<any>({});
+
+const emit = defineEmits<{
+  (e: 'blur'): void
+  (e: 'submit', value?: any): void
+}>()
+
+const props = withDefaults(
+  defineProps<{
+    pid?: string
+    reply_id?: string
+  }>(),
+  {
+    pid: '',
+    reply_id: ''
+  }
+)
+
+// 输入框
+const {
+  commenterRef, // 根元素实力
+  richInputRef, // 输入框实力
+  inputFocus, // 输入框聚焦
+  placeholder, // 描述
+  inputLength, // 输入长度
+  onRichFocus, // 事件-聚焦输入框
+  onInputText, // 事件-输入文字
+  clearInputText, // 事件-清空输入框文字
+  moveCursorToEnd // 移动光标至最后
+} = useInput()
+
+
+async function handlegetAnnouncementslistByNum() {
+  try {
+    const result = await getAnnouncementslistByNum(2) as { data: { value: any } };
+    announcementsList.value = result.data.value
+  } catch (error) {
+    console.error('获取Announcementslist出错:', error);
+  }
+};
+
+// 表情
+const { appendEmoji } = useEmoji()
+// 照片
+const { fileList, onUpload, removeFile } = useUpload()
+
+watch(
+  inputFocus,
+  (value) => {
+    if (value == true) return
+    setTimeout(() => {
+      emit('blur')
+    }, 300)
+  },
+  { immediate: false }
+)
+
+// 发送
+const onSend = () => {
+  if (inputLength.value >= 1000) {
+    // feedback.msgError('字数超过限制，请删减后发送')
+    return
+  }
+  const content = (richInputRef.value as HTMLInputElement).innerHTML
+  const regex = /<img src="\/emoji\/(.+?)".*?>/g
+
+  let replacedStr = content
+  let match
+  const emojis = []
+
+  while ((match = regex.exec(content)) !== null) {
+    const emojiUrl: any = match[1]
+    const emojiText = `[${emojiUrl.split('/').pop().split('.')[0]}]`
+    emojis.push(emojiText)
+    replacedStr = replacedStr.replace(match[0], emojiText)
+  }
+
+  emit('submit', {
+    content: replacedStr,
+    pid: props.pid || 0,
+    reply_id: props.reply_id || 0,
+    images: fileList.value
+  })
+
+  // if ($route.params.square) {
+  //       var images = JSON.stringify(imageList);
+  //       console.log(images);
+
+  //       postForm.image = images
+  //       createSquare(postForm, $route.params.square).then((response) => {
+  //         fetchData();
+  //         postForm.content = null;
+  //       });
+
+  //     } else {
+  //       // console.log("circle");
+  //       var images = JSON.stringify(imageList);
+  //       console.log(images);
+
+  //       postForm.image = images
+  //       createSquare(postForm, "circle").then((response) => {
+  //         fetchData();
+  //         postForm.content = null;
+  //       });
+  //     }
+  //     // $message.success("发表成功");
+  //     // 刷新页面
+}
+
+// 粘贴
+const onPasteContent = async (event: any) => {
+  event.preventDefault()
+  const text = (event.originalEvent || event).clipboardData.getData(
+    'text/plain'
+  )
+  document.execCommand('insertText', false, text)
+}
+
+// 清空评论内容
+const clearInputContent = () => {
+  clearInputText()
+  fileList.value = []
+}
+
+defineExpose({ onRichFocus, clearInputContent })
 
 import { useSettingStore } from '../../../stores/setting';
 const settingStore = useSettingStore();
 setting.value = settingStore.settings
 
 // watch
-watch(() => route.params.id, () => fetchData());
+// watch(() => route.params.id, () => fetchData());
 
 // Methods
 const fetchData = async () => {
   squaredata.value = [];
-  await getSquare();
-  await getAnnouncements();
+  await handlegetSquare();
+  await handlegetAnnouncementslistByNum();
   await handlgetSquareClasslist();
 };
-
-const getSquare = async () => {
+async function handlegetSquare() {
   if (squaredata.value.length !== pagetotal.value) {
     isLoading.value = true;
   }
   try {
-    const response = await getArticleClassByotherName(route.params.id);
-    planetInfo.value = response.data;
     const squareResponse = await getAllSquare(route.params.id, page.value, 6);
-    pagetotal.value = squareResponse.data.total;
-    squaredata.value = squaredata.value.concat(squareResponse.data.data.map((item: any) => {
+    pagetotal.value = squareResponse.total;
+    squaredata.value = squaredata.value.concat(squareResponse.data.map((item: any) => {
       item.image = JSON.parse(item.image);
       return item;
     }));
+
+    const response = await getArticleClassByotherName(route.params.id);
+    planetInfo.value = response.data.value;
+
   } catch (error) {
     console.error(error);
   } finally {
     isLoading.value = false;
   }
-};
+}
 
-const getAnnouncements = async () => {
-  try {
-    const response = await getAnnouncementslistByNum(2);
-    announcementsList.value = response.data;
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-const handlgetSquareClasslist = async () => {
+async function handlgetSquareClasslist() {
   try {
     const response = await getSquareClasslist();
-    classlist.value = response.data;
+    classlist.value = response.data.value;
     if (!route.params.id && classlist.value.length > 0) {
       router.push({ path: `/planet/${classlist.value[0].id}` });
     }
@@ -228,7 +352,7 @@ const getNextUser = () => {
     const bottomOfWindow = (scrollTop + windowHeight) - scrollHeight;
     if (bottomOfWindow === 0.5 || bottomOfWindow === 0) {
       page.value++;
-      getSquare();
+      handlegetSquare();
     }
     if (squaredata.value.length === pagetotal.value) {
       isLoading.value = false;
@@ -240,6 +364,17 @@ onMounted(() => {
   fetchData();
   getUserInfo();
   getNextUser();
+  const userStore = useUserStore();  // 获取 Pinia store 实例
+  // 判断用户是否已登录
+  if (userStore.userid) {
+    userJudje.value = true;
+    // user.value.name = userStore.name;
+    // user.value.profile = userStore.profile;
+    // console.log("用户已登录:", userStore.name);  // 例如，你可以输出用户名或者做其他处理
+  } else {
+    console.log("用户未登录");
+    // 可以在这里做一些跳转，或者显示登录提示等
+  }
 });
 </script>
 <template>
@@ -351,7 +486,9 @@ onMounted(() => {
                                   class="topimg" />
                                 <h1 class="planeth1">
                                   <p>
-                                    <b>{{ planetInfo.name }}</b><span class="mobile-show"><i class="
+                                    <b>{{ planetInfo.name }}</b>
+                                    <span class="mobile-show">
+                                      <i class="
                                                   b2font
                                                   b2-arrow-right-s-line
                                                   picked
@@ -389,7 +526,7 @@ onMounted(() => {
                             <p class="circle-desc tip-radius">
                               公共区域，请文明发言!
                             </p>
-                            <div v-if="shownologin" class="nologin">
+                            <div v-if="!userJudje" class="nologin">
                               <div class="nologintext">
                                 <h5>您还未登录</h5>
                               </div>
@@ -400,33 +537,81 @@ onMounted(() => {
                               </div>
                             </div>
                             <div v-else>
-                              <!-- <Tinymce
-                                  ref="editor"
-                                  v-model="postForm.content"
-                                  :height="200"
-                                /> -->
-                              <div class="postFormDiv" style="padding: 14px">
+                              <!-- <div class="postFormDiv" style="padding: 14px">
                                 <nuxt-link to='/userinfo/index/'>
-
                                   <div class="avatar">
-                                    <!-- <el-avatar :size="58" :src="user.profile"></el-avatar> -->
+                                    <el-avatar :size="58" :src="user.profile"></el-avatar>
                                   </div>
-                                </nuxt-link>
+                                </nuxt-link>   
+                              </div> -->
+                              <div class="commenter-container" ref="commenterRef">
+                                <div class="commenter-wrapper" :class="{ 'commenter-focused': inputFocus }"
+                                  @click="onRichFocus">
+                                  <!--内容输入-->
+                                  <div id="rich-input" ref="richInputRef" class="rich-input" tabindex="-3"
+                                    contenteditable="true" :data-placeholder="placeholder" @focus="inputFocus = true"
+                                    @blur="inputFocus ? onRichFocus() : ''" @input="onInputText"
+                                    @paste="onPasteContent"></div>
+                                  <!--@keyup="onInputText"-->
 
-                                <el-input type="textarea" :autosize="{ minRows: 5, maxRows: 12 }" :rows="5"
-                                  placeholder="发表你的看法" v-model="postForm.content">
-                                </el-input>
+                                  <!--图片上传-->
+                                  <div class="commenter-upload">
+                                    <!-- <UploadView
+                                      :fileList="fileList"
+                                      @remove="removeFile"
+                                  ></UploadView> -->
+                                  </div>
+
+                                  <!--底部-->
+                                  <div style="display: flex;
+                                      flex-direction: row;
+                                      flex-wrap: wrap;
+                                      align-content: flex-start;
+                                      justify-content: center;
+                                      align-items: flex-start;
+                                  " class="commenter-footer flex items-center justify-between px-3 pb-3 pt-2"
+                                    @click="moveCursorToEnd">
+                                    <div class="flex items-center gap-x-5" @click.stop>
+                                      <!--表情选择组件-->
+                                      <EmojiPicker @show="moveCursorToEnd" @append="
+                                        appendEmoji($event);
+                                      inputLength += 1
+                                        "></EmojiPicker>
+
+                                      <!--图片选择组件-->
+                                      <!-- <UploadPicker @upload="onUpload"></UploadPicker> -->
+                                    </div>
+                                    <div style="
+                                        display: flex;
+                                        justify-content: flex-start;
+                                        align-content: center;
+                                        flex-wrap: wrap;
+                                        flex-direction: row-reverse;
+                                    " class="flex items-center gap-x-5">
+                                      <ElButton class="!text-base" type="primary" @click="onSend">
+                                        发送
+                                      </ElButton>
+                                      <div class="text-xs" style="    padding: 6px;"
+                                        :class="[inputLength >= 1000 ? 'text-error' : 'text-[#666]']">
+                                        {{ inputLength }} / 1000
+                                      </div>
+
+                                    </div>
+                                  </div>
+                                </div>
                               </div>
+
                               <div class="PutContent">
-                                <div class="leftMenu">
+                                <div class="leftMenu"></div>
+                                <!-- <div class="leftMenu">
 
                                   <a class="nav-link p-0 cursor-pointer">
                                     <i @click="showemoge()" class="icon-smile fs-18" />
                                     <div class="myVEmojiPicker">
 
                                       <el-popover placement="left" trigger="manual" v-model="showDialog">
-                                        <!-- <VEmojiPicker :style="{ width: '340px', height: '200' }" labelSearch="Search"
-                                            lang="pt-BR" @select="onSelectEmoji" /> -->
+                                        <VEmojiPicker :style="{ width: '340px', height: '200' }" labelSearch="Search"
+                                            lang="pt-BR" @select="onSelectEmoji" />
                                       </el-popover>
 
                                     </div>
@@ -455,16 +640,16 @@ onMounted(() => {
                                       <i slot="reference" @click="MainLock()" class="el-icon-unlock" />
                                     </el-popover>
                                   </a>
-                                </div>
-                                <el-button @click="sitmap()" class="PutContentBut" type="success" round>发布</el-button>
+                                </div> -->
+                                <!-- <el-button @click="sitmap()" class="PutContentBut" type="success" round>发布</el-button> -->
                               </div>
                               <div style="    padding: 30px;;margin-left: 56px;">
-                                <el-upload class="upload-demo" action="" :on-preview="handlePreview"
+                                <!-- <el-upload class="upload-demo" action="" :on-preview="handlePreview"
                                   :on-remove="handleRemove" :file-list="fileList" :before-upload="BeforeUpload"
                                   :http-request="Upload" list-type="picture-card">
                                   <el-button size="small" type="primary">点击上传</el-button>
                                   <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过2mb</div>
-                                </el-upload>
+                                </el-upload> -->
                                 <!-- <el-upload action="#" list-type="picture-card" :auto-upload="false">
                                     <i slot="default" class="el-icon-plus"></i>
                                     <div slot="file" slot-scope="{file}">
@@ -599,12 +784,12 @@ onMounted(() => {
                         <div class="topic-footer-left">
                           <button v-if="!item.isLike" @click="likeClickMains(item)" class="planettext ">
                             <i class="el-icon-caret-top"></i><span class="el-icon-caret-planettext">{{ item.loveNum > 0
-            ? '\xa0' + item.loveNum + '\xa0\xa0赞' : '赞'
+                              ? '\xa0' + item.loveNum + '\xa0\xa0赞' : '赞'
                               }}</span><b></b>
                           </button>
                           <button v-else @click="likeClickMains(item)" class="planettext active">
                             <i class="el-icon-caret-top"></i><span class="el-icon-caret-planettext">{{ item.loveNum > 0
-            ? item.loveNum + '赞' : '赞'
+                              ? item.loveNum + '赞' : '赞'
                               }}</span><b></b>
                           </button>
                           <button v-if="!item.isLose" class="planettext" @click="LoseClickMains(item)">
@@ -627,11 +812,11 @@ onMounted(() => {
                         </div>
                         <div class="topic-footer-right">
                           <el-button v-if="!item.isShow" icon="el-icon-caret-bottom" @click="setPullDown(item)"
-                            size="small" type="success" plain>
+                            size="small" plain>
                             <span><b>{{ item.commentNum }}</b>条讨论</span>
                           </el-button>
                           <el-button v-if="item.isShow" icon="el-icon-caret-top" @click="setPullDown(item)" size="small"
-                            type="success" plain>
+                            plain>
                             <span>收起评论</span>
                           </el-button>
                         </div>
@@ -641,7 +826,7 @@ onMounted(() => {
                           <el-input type="textarea" :rows="2" placeholder="写评论" v-model="postReplyForm.content">
                           </el-input>
                           <div class="form-group-button">
-                            <el-button size="mini" class="replyBut" type="success" round
+                            <el-button size="small" class="replyBut" type="success" round
                               @click="setUpPostReply(item)">发布</el-button>
                           </div>
                         </div>
@@ -670,8 +855,8 @@ onMounted(() => {
                                           <div>
                                             <div class="topic-name-data" v-once>
                                               <a target="_blank"><b>{{
-            item.reviewers
-          }}</b></a>
+                                                item.reviewers
+                                                  }}</b></a>
                                               <!---->
                                               <!---->
                                             </div>
@@ -736,13 +921,13 @@ onMounted(() => {
                                         <span @click="likeClick(item)" v-if="!item.isLike" class="like">
                                           <i class="iconfont icon-like"></i>
                                           <span class="like-num">{{ item.loveNum > 0 ? item.loveNum + '人赞' :
-            '赞'
+                                            '赞'
                                             }}</span>
                                         </span>
                                         <span @click="likeClick(item)" v-else class="like active">
                                           <i class="iconfont icon-like"></i>
                                           <span class="like-num">{{ item.loveNum > 0 ? item.loveNum + '人赞' :
-            '赞'
+                                            '赞'
                                             }}</span>
                                         </span>
                                       </div>
@@ -752,13 +937,13 @@ onMounted(() => {
                                     <el-input type="textarea" :rows="2" placeholder="请输入内容"
                                       v-model="postReplysForm.content">
                                     </el-input>
-                                    <el-button size="mini" class="replyBut" type="success" round @click="
-            setUpPostReplys(
-              item.responderId,
-              item.id,
-              item.postId
-            )
-            ">发布</el-button>
+                                    <el-button size="small" class="replyBut" type="success" round @click="
+                                      setUpPostReplys(
+                                        item.responderId,
+                                        item.id,
+                                        item.postId
+                                      )
+                                      ">发布</el-button>
                                   </div>
                                   <div class="comments" v-if="item.reply.length > 0">
                                     <div class="reply" v-for="reply in item.reply" :key="reply.id">
@@ -771,7 +956,7 @@ onMounted(() => {
                                             <div class="topic-name">
                                               <div>
                                                 <div v-if="reply.responder != null && reply.responder != item.reviewers
-            " class="topic-name-data">
+                                                " class="topic-name-data">
                                                   <a target="_blank"><b>{{ reply.reviewers }}{{ "\xa0" }} <i class="
                                                                   el-icon-caret-right " style="
                                                                   font-size: 12px;
@@ -782,8 +967,8 @@ onMounted(() => {
                                                 </div>
                                                 <div v-else class="topic-name-data">
                                                   <a target="_blank"><b>{{
-            reply.reviewers
-          }}</b></a>
+                                                    reply.reviewers
+                                                      }}</b></a>
                                                   <!---->
                                                   <!---->
                                                 </div>
@@ -817,7 +1002,7 @@ onMounted(() => {
                                         <div class="topic-footer-left">
                                           <span class="topic-date"><b><time class="b2timeago"
                                                 datetime="2021-12-27 21:58:17" itemprop="datePublished"><span v-text="getTime(reply.addTime)
-            ">
+                                                  ">
                                                 </span> </time></b></span>
                                           <!---->
                                           <!-- <div class="topic-meta-more-box">
@@ -850,13 +1035,13 @@ onMounted(() => {
                                             <span @click="likeClicks(reply)" v-if="!reply.isLike" class="like">
                                               <i class="iconfont icon-like"></i>
                                               <span class="like-num">{{ reply.loveNum > 0 ? reply.loveNum + '人赞' :
-            '赞'
+                                                '赞'
                                                 }}</span>
                                             </span>
                                             <span @click="likeClicks(reply)" v-else class="like active">
                                               <i class="iconfont icon-like"></i>
                                               <span class="like-num">{{ reply.loveNum > 0 ? reply.loveNum + '人赞' :
-            '赞'
+                                                '赞'
                                                 }}</span>
                                             </span>
                                           </div>
@@ -864,16 +1049,16 @@ onMounted(() => {
                                       </div>
                                       <div v-show="reply.isShow" class="reply-box">
                                         <el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="postReplysToUserForm.content
-            ">
+                                          ">
                                         </el-input>
-                                        <el-button size="mini" class="replyBut" type="success" round @click="
-            setUpPostReplysTouser(
-              reply.responderId,
-              item.id,
-              reply.postId,
-              reply.userId
-            )
-            ">发布</el-button>
+                                        <el-button size="small" class="replyBut" type="success" round @click="
+                                          setUpPostReplysTouser(
+                                            reply.responderId,
+                                            item.id,
+                                            reply.postId,
+                                            reply.userId
+                                          )
+                                          ">发布</el-button>
                                       </div>
                                     </div>
                                   </div>
@@ -892,7 +1077,7 @@ onMounted(() => {
                               widget
                               b2-widget-user
                               mg-b
-                              box
+                              
                               b2-radius b2-radius-aside-right
                             ">
 
@@ -925,29 +1110,28 @@ onMounted(() => {
                                 <div>
                                   <div class="oauth-login-button">
                                     <a href="" class="login-weixin">微信登录</a>
-                                    <a
-                                      href=""
-                                      class="login-weibo">Github登录</a>
-                                      <!-- <a href="https://graph.qq.com/oauth2.0/authorize?client_id=101057247&amp;state=6b96c86f14fab2f3ce7af8fc5d72c943&amp;response_type=code&amp;redirect_uri=https%3A%2F%2F7b2.com%2Fopen%3Ftype%3Dqq"
-                                      class="login-qq">QQ</a> -->
+                                    <a href="" class="login-weibo">Github登录</a>
+                                    <a href="https://graph.qq.com/oauth2.0/authorize?client_id=101057247&amp;state=6b96c86f14fab2f3ce7af8fc5d72c943&amp;response_type=code&amp;redirect_uri=https%3A%2F%2F7b2.com%2Fopen%3Ftype%3Dqq"
+                                      class="login-qq">qq登录</a>
                                   </div>
                                 </div>
                               </div>
                               <div class="user-w-announcement">
                                 <div>
                                   <ul class="planet-aside-ul">
-                                    <div  v-for="item in announcementsList" :key="item.id" >
+                                    <div v-for="item in announcementsList" :key="item.id">
                                       <li class="planet-aside-li-ad">
-                                      <b>{{ item.title }}:</b>
-                                      <span href="#">{{ item.content }}</span>
-                                    </li>
+                                        <b>{{ item.title }}:</b>
+                                        <span href="#">{{ item.content }}</span>
+                                      </li>
                                     </div>
                                   </ul>
                                 </div>
                               </div>
                             </div>
                             <div class="widget-mission-footer">
-                              <router-link to="/Notification/system" class="allad" target="_blank">全部公告</router-link>                            </div>
+                              <router-link to="/Notification/system" class="allad" target="_blank">全部公告</router-link>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -1506,6 +1690,74 @@ export default {
 @import "../../static/mycss/user_info.css";
 </style>
 
+<style lang="scss">
+.em {
+  display: inline-block;
+  height: 1em;
+  width: 1em;
+  overflow: hidden;
+  font-size: 20px;
+  line-height: 20px;
+  vertical-align: middle;
+  margin-top: -4px;
+  color: transparent !important;
+  background-size: 4100%;
+}
+
+.commenter-container {
+  .commenter-focused {
+    background: #ffffff !important;
+    border: 1px solid var(--el-color-primary) !important;
+  }
+
+  .commenter-wrapper {
+    overflow: hidden;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    background-color: #f5f5f5;
+    transition: all 0.3s;
+
+    .commenter-upload {
+      background: inherit;
+      transition: all 0.3s;
+    }
+
+    .rich-input {
+      min-height: 60px;
+      width: 100%;
+      border-radius: 4px;
+      padding: 10px 10px;
+      background: inherit;
+      transition: all 0.3s;
+
+      //&:empty:before {
+      //    content: '请输入';
+      //    white-space: pre;
+      //    color: red;
+      //}
+      &::after {
+        content: attr(data-placeholder);
+        color: #cccaca;
+        cursor: text;
+      }
+
+      &:focus-visible {
+        outline: none;
+      }
+
+      img {
+        display: inline-block;
+      }
+    }
+
+    .commenter-footer {
+      background: inherit;
+      transition: all 0.3s;
+    }
+  }
+}
+</style>
+
 <style scoped>
 .loading-indicator {
   display: flex;
@@ -2032,5 +2284,9 @@ button:hover {
   to {
     background-position: var(--width);
   }
+}
+
+.circle-top {
+  height: 296px;
 }
 </style>

@@ -1,3 +1,4 @@
+import type internal from "stream";
 import httpRequest from "../service/index";
 
 /**
@@ -13,6 +14,6 @@ export const getSquareClasslist = () => {
  * @param otherName 其他名称
  * @return Promise<any>
  */
-export const getArticleClassByotherName = (otherName: string) => {
+export const getArticleClassByotherName = (otherName: internal) => {
   return httpRequest.get<any>(`/WebaSquareClass/getArticleClassByotherName/${otherName}`);
 };

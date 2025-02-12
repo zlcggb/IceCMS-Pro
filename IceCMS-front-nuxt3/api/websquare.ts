@@ -1,4 +1,5 @@
 import httpRequest from "../service/index";
+import { useDollarGet } from  "../service/useDollarFetchRequest";
 
 /**
  * @description 创建广场
@@ -27,9 +28,10 @@ export const createSquare = (data: any, SortName: string) => {
  * @param limit 每页数量
  * @return Promise<any>
  */
-export const getAllSquare = (otherName: string, page: number, limit: number) => {
-  return httpRequest.get<any>(`/Websquare/getAllSquare/${otherName}/${page}/${limit}`);
-};
+// export const getAllSquare = (otherName: string, page: number, limit: number) => {
+//   return httpRequest.get<any>(`/Websquare/getAllSquare/${otherName}/${page}/${limit}`);
+// };
+export const getAllSquare = (otherName: string, page: number, limit: number) => useDollarGet(`/Websquare/getAllSquare/${otherName}/${page}/${limit}`);
 
 /**
  * @description 点赞评论
