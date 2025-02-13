@@ -2101,10 +2101,6 @@ body>.el-container {
 }
 </style>
 <style lang="scss">
-.active {
-  color: #409EFF;
-}
-
 .chat-dot-round {
 
   display: flex;

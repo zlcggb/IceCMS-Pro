@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
 
-import { getResourceClasslist } from '../../api/webresourceclass';
-import { getAllResource, getAllResourceNumber } from '../../api/webresource';
+import { getResourceClasslist } from '../../../api/webresourceclass';
+import { getAllResource, getAllResourceNumber } from '../../../api/webresource';
 
 // Reactive state
 const setting = ref<any>({});
@@ -39,7 +39,7 @@ const listQueryClass = ref({
   class: ""
 });
 
-import { useSettingStore } from '../../stores/setting';
+import { useSettingStore } from '../../../stores/setting';
 const settingStore = useSettingStore();
 setting.value = settingStore.settings
 
@@ -416,7 +416,7 @@ function formatDate(time: string) {
                                       <div class="margin-top2 text-B6BABF flex-row size-12"
                                         style="display: flex; flex-wrap: wrap; justify-content: space-between; width: 100%;">
                                         <div style="margin-left: 0px; display: flex; align-items: center;">
-                                          <img class="view-icon--right" src="../static/image/con-view.svg" />
+                                          <img class="view-icon--right" src="../../static/image/con-view.svg" />
                                           <span>{{ item.hits || 0 }}</span>
                                         </div>
                                         <div style="margin: auto; display: flex; align-items: center;">

@@ -22,6 +22,7 @@ class HttpRequest {
         
         baseURL: BASE_URL,
         method: method,
+        server: true,
         ...options,
       };
 

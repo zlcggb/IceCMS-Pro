@@ -1,6 +1,12 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
 import { formatDate } from '../utils/date.js'
+import { useContentStore } from '../../stores/HomeResContent';
+import { useResourceStore } from '../../stores/HomePostContent.js';
+
+import { getNewResource } from '../../api/webresource';
+import { getNewArticle } from '../../api/webarticle';
+import { storeToRefs } from 'pinia';
 
 // Props
 const props = defineProps({
@@ -13,16 +19,6 @@ const props = defineProps({
 // Reactive state with types
 const FourKingKong = ref<any>(""); // Could define a more specific type for the API response
 const isAcitive = ref<number | null>(null);
-const r_sortOrder = ref<string>("new");
-const r_news = ref<string>("new");
-const r_download = ref<string>("download");
-const r_discuss = ref<string>("discuss");
-const r_recommend = ref<string>("recommend");
-const a_sortOrder = ref<string>("new");
-const a_news = ref<string>("new");
-const a_download = ref<string>("download");
-const a_discuss = ref<string>("discuss");
-const a_recommend = ref<string>("recommend");
 const rlist = ref<any[]>([]); // Define proper types for API response (if possible)
 const acticve = ref<string>("nav-link active");
 const Carousel = ref<any>({}); // Define proper types for API response (if possible)
@@ -30,6 +26,25 @@ const list = ref<any | null>(null); // `any` or a specific type depending on the
 const leftArr = ref<any[]>([]);
 const rightArr = ref<any[]>([]);
 const setting = ref<any>({});
+
+const contentStore = useContentStore();
+const { activeTab, contentList } = storeToRefs(contentStore);
+
+const resourceStore = useResourceStore();
+
+// 监听 `activeTab` 变化，自动获取数据
+watchEffect(() => {
+  if (!resourceStore.rlist[resourceStore.activeTab] || resourceStore.rlist[resourceStore.activeTab].length === 0) {
+    resourceStore.fetchResources(resourceStore.activeTab);
+  }
+});
+
+// 监听 activeTab 变化，并自动请求数据
+watchEffect(() => {
+  if (!rlist.value[activeTab.value] || rlist.value[activeTab.value].length === 0) {
+    handlegetNewResource(activeTab.value);
+  }
+});
 
 // 鼠标移入赋值index 
 async function dowmloadover(index: number) {
@@ -40,49 +55,18 @@ async function downloadleave() {
   isAcitive.value = null;
 }
 
-// Utility function to add background styles
-const addBackgroundStyles = (items: any[]): any[] => {
-  const backgroundColors = [
-    "linear-gradient( 135deg, #ABDCFF 10%, #0396FF 100%)",
-    "linear-gradient( 135deg, #FEB692 10%, #EA5455 100%)",
-    "linear-gradient( 135deg, #CE9FFC 10%, #7367F0 100%)",
-    "linear-gradient( 135deg, #90F7EC 10%, #32CCBC 100%)",
-    "linear-gradient( 135deg, #81FBB8 10%, #28C76F 100%)",
-    "linear-gradient( 135deg, #E2B0FF 10%, #9F44D3 100%)",
-    "linear-gradient( 135deg, #5EFCE8 10%, #736EFE 100%)",
-    "linear-gradient( 135deg, #FFD3A5 10%, #FD6585 100%)"
-  ];
-  return items.map(item => {
-    if (!item.thumb) {
-      const index = Math.floor(Math.random() * backgroundColors.length);
-      item.backgroundStyle = `background-image: ${backgroundColors[index]};`;
-    }
-    return item;
-  });
-};
+await handlegetNewResource(activeTab.value); // 传入 activeTab 的值
 
-import { getNewResource } from '../../api/webresource';
-import { getNewArticle } from '../../api/webarticle';
-
-await handlegetNewResource();
-await handlegetNewArticle();
-
-async function handlegetNewResource() {
+// 获取不同类别的数据
+async function handlegetNewResource(tab: string) {
   try {
-    const result = await getNewResource(10, 'new') as { data: { value: any } };
-    rlist.value = result.data.value
+    const result = await getNewResource(10, tab) as { data: { value: any[] } };
+    rlist.value[tab] = result.data.value;
   } catch (error) {
-    console.error('获取NewResource出错:', error);
+    console.error(`获取 ${tab} 数据出错:`, error);
   }
-};
-async function handlegetNewArticle() {
-  try {
-    const result = await getNewArticle(6, 'new') as { data: { value: any } };
-    list.value = result.data.value
-  } catch (error) {
-    console.error('获取NewArticle出错:', error);
-  }
-};
+}
+
 
 // Get the settings
 import { getCarousel, getFourKingKong } from '../../api/websetting';
@@ -115,15 +99,35 @@ setting.value = settingStore.settings
 
 // Mounted lifecycle hook
 onMounted(() => {
-  getList()
+  // getList()
 });
 
-async function getList() {
-  leftArr.value = list.value.filter((_item: any, index: number) => index % 2 === 0);
-  rightArr.value = list.value.filter((_item: any, index: number) => index % 2 !== 0);
-  leftArr.value = addBackgroundStyles(leftArr.value);
-  rightArr.value = addBackgroundStyles(rightArr.value);
-};
+// Utility function to add background styles
+// const addBackgroundStyles = (items: any[]): any[] => {
+//   const backgroundColors = [
+//     "linear-gradient( 135deg, #ABDCFF 10%, #0396FF 100%)",
+//     "linear-gradient( 135deg, #FEB692 10%, #EA5455 100%)",
+//     "linear-gradient( 135deg, #CE9FFC 10%, #7367F0 100%)",
+//     "linear-gradient( 135deg, #90F7EC 10%, #32CCBC 100%)",
+//     "linear-gradient( 135deg, #81FBB8 10%, #28C76F 100%)",
+//     "linear-gradient( 135deg, #E2B0FF 10%, #9F44D3 100%)",
+//     "linear-gradient( 135deg, #5EFCE8 10%, #736EFE 100%)",
+//     "linear-gradient( 135deg, #FFD3A5 10%, #FD6585 100%)"
+//   ];
+//   return items.map(item => {
+//     if (!item.thumb) {
+//       const index = Math.floor(Math.random() * backgroundColors.length);
+//       item.backgroundStyle = `background-image: ${backgroundColors[index]};`;
+//     }
+//     return item;
+//   });
+// };
+// async function getList() {
+//   leftArr.value = list.value.filter((_item: any, index: number) => index % 2 === 0);
+//   rightArr.value = list.value.filter((_item: any, index: number) => index % 2 !== 0);
+//   leftArr.value = addBackgroundStyles(leftArr.value);
+//   rightArr.value = addBackgroundStyles(rightArr.value);
+// };
 </script>
 
 <template>
@@ -239,12 +243,18 @@ async function getList() {
                       <span>精品资源</span>
                     </h4>
                   </div>
-                  <nav class="nav nav-title flex-grow-1">
-                    <a class="nav-link active">新鲜发布</a>
-                    <a class="nav-link">热门下载</a>
-                    <a class="nav-link">站长推荐</a>
-                    <a class="nav-link">最多评论</a>
+                   <!-- 选项卡 -->
+                   <nav class="nav nav-title flex-grow-1">
+                    <button 
+                      v-for="tab in ['new', 'hot', 'recommend', 'comments']" 
+                      :key="tab" 
+                      :class="{ active: activeTab === tab }"
+                      @click="contentStore.setActiveTab(tab)"
+                    >
+                      {{ tab === 'new' ? '新鲜发布' : tab === 'hot' ? '热门下载' : tab === 'recommend' ? '站长推荐' : '最多评论' }}
+                    </button>
                   </nav>
+                  
                   <div class="more-action">
                     <nuxt-link to="/alllist" class="btn btn-more active">
 
@@ -254,9 +264,8 @@ async function getList() {
                 <div id="listAppContainer" class="app-content-body listAppContainer">
 
                   <div class="mw-row">
-                    <div v-for="item, index in rlist" :key="item.id" class="mw-col list-animation-leftIn delay-3">
+                    <div v-for="item, index in rlist[activeTab]" :key="item.id" class="mw-col list-animation-leftIn delay-3">
                       <nuxt-link :to="'/List/' + item.id">
-
                         <div v-if="!setting.imageFormat">
                           <div>
                             <div class="macwk-app border white cursor-pointer">
@@ -360,11 +369,18 @@ async function getList() {
                         <span>教程文章</span>
                       </h4>
                     </div>
-                    <nav class="nav nav-title flex-grow-1">
-                      <a class="nav-link active">新鲜发布</a>
-                      <a class="nav-link">站长推荐</a>
-                      <a class="nav-link">最多评论</a>
-                    </nav>
+                   <!-- 选项卡 -->
+    <nav class="nav nav-title flex-grow-1">
+      <a
+        v-for="tab in ['new', 'recommend', 'comment']"
+        :key="tab"
+        class="nav-link"
+        :class="{ active: resourceStore.activeTab === tab }"
+        @click="resourceStore.activeTab = tab"
+      >
+        {{ tab === 'new' ? '新鲜发布' : tab === 'recommend' ? '站长推荐' : '最多评论' }}
+      </a>
+    </nav>
                     <div class="more-action">
 
                       <nuxt-link to="/allpost" class="btn btn-more active">
@@ -374,132 +390,76 @@ async function getList() {
                     </div>
                   </div>
                   <div class="row gap-a">
-                    <div class="com-md-12 col-lg-6">
-                      <a v-for="(item, id) in leftArr" :key="id" class="
-                          feature-block-three
-                          border
-                          white
-                          dk
-                          hover-shadow-6
-                          delay-0
-                          list-animation-leftIn
-                        ">
-                        <div>
-                          <nuxt-link :to="'/post/' + item.id">
-                            <div class="d-flex align-items-center">
-                              <div class="icon-box icon-one">
-                                <el-image v-if="item.thumb != null" class="delayImg" :src="item.thumb" lazy>
-                                  <div slot="placeholder" class="image-slot">
-                                    <img style="width:100%; height:100%; object-fit:cover;"
-                                      src="../static/image/loding.gif" />
-                                  </div>
-                                </el-image>
-                                <div v-else class="delayImg" :style="item.backgroundStyle">
-                                  <h3 class="
-                                      flex
-                                      text-center text-white
-                                      opacity-50
-                                    ">
-                                    NOPIC
-                                  </h3>
-                                </div>
-                              </div>
-                              <div class="text">
-                                <h5 style="
-                                    display: -webkit-box;
-                                    -webkit-box-orient: vertical;
-                                    overflow: hidden;
-                                    word-break: break-word; /* 更广泛的兼容性 */
-                                    text-overflow: ellipsis;
-                                    -webkit-line-clamp: 2; /* WebKit 专用 */
-                                    line-clamp: 2; /* 标准属性（未来兼容性） */
-                                  ">
-                                  {{ item.title }}
-                                </h5>
-                                <div class="text-muted fs-16 mr-3">
-                                  <span v-show="item.createTime != null" v-text="item.createTime">
-                                  </span>
-                                  <span v-show="item.createTime = null" v-text="item.addTime">
-                                  </span>
-                                </div>
-                              </div>
-                              <div class="
-                                  read-more
-                                  d-flex
-                                  justify-content-end
-                                  w-80
-                                  pr-3
-                                ">
-                                <i class="light-icon-more icon-next-arrow"></i>
-                              </div>
-                            </div>
-                          </nuxt-link>
-                        </div>
-                      </a>
-                    </div>
-                    <div class="com-md-12 col-lg-6">
-                      <a v-for="(item, id) in rightArr" :key="id" class="
-                          feature-block-three
-                          border
-                          white
-                          dk
-                          hover-shadow-6
-                          delay-5
-                          list-animation-leftIn
-                        ">
-                        <div>
-                          <nuxt-link :to="'/post/' + item.id">
-                            <div class="d-flex align-items-center">
-                              <div class="icon-box icon-one">
-                                <el-image v-if="item.thumb != null" class="delayImg" :src="item.thumb" lazy>
-                                  <div slot="placeholder" class="image-slot">
-                                    <img style="width:100%; height:100%; object-fit:cover;"
-                                      src="../static/image/loding.gif" />
-                                  </div>
-                                </el-image>
-                                <div v-else class="delayImg" :style="item.backgroundStyle">
-                                  <h3 class="
-                                      flex
-                                      text-center text-white
-                                      opacity-50
-                                    ">
-                                    NOPIC
-                                  </h3>
-                                </div>
-                              </div>
-                              <div class="text">
-                                <h5 style="
-                               display: -webkit-box;
-                              -webkit-box-orient: vertical;
-                              overflow: hidden;
-                              word-break: break-word; /* 更广泛的兼容性 */
-                              text-overflow: ellipsis;
-                              -webkit-line-clamp: 2; /* WebKit 专用 */
-                              line-clamp: 2; /* 标准属性（未来兼容性） */
-                                  ">
-                                  {{ item.title }}
-                                </h5>
-                                <div class="text-muted fs-16 mr-3">
-                                  <span v-show="item.createTime != null" v-text="item.createTime">
-                                  </span>
-                                  <span v-show="item.createTime = null" v-text="item.addTime">
-                                  </span>
-                                </div>
-                              </div>
-                              <div class="
-                                  read-more
-                                  d-flex
-                                  justify-content-end
-                                  w-80
-                                  pr-3
-                                ">
-                                <i class="light-icon-more icon-next-arrow"></i>
-                              </div>
-                            </div>
-                          </nuxt-link>
-                        </div>
-                      </a>
-                    </div>
+                  
+  <div class="com-md-12 col-lg-6">
+    <nuxt-link
+      :to="'/post/' + item.id"
+      v-for="(item, index) in resourceStore.rlist[resourceStore.activeTab]"
+      :key="item.id"
+      v-show="index % 2 === 0"
+      class="feature-block-three border white dk hover-shadow-6 delay-0 list-animation-leftIn"
+    >
+      <div class="d-flex align-items-center">
+        <div class="icon-box icon-one">
+          <el-image v-if="item.thumb" class="delayImg" :src="item.thumb" lazy>
+            <div slot="placeholder" class="image-slot">
+              <img style="width:100%; height:100%; object-fit:cover;" src="../static/image/loding.gif" />
+            </div>
+          </el-image>
+          <div v-else class="delayImg" :style="item.backgroundStyle">
+            <h3 class="flex text-center text-white opacity-50">NOPIC</h3>
+          </div>
+        </div>
+        <div class="text">
+          <h5 class="ellipsis-text">
+            {{ item.title }}
+          </h5>
+          <div class="text-muted fs-16 mr-3">
+            <span v-if="item.createTime">{{ item.createTime }}</span>
+            <span v-else>{{ item.addTime }}</span>
+          </div>
+        </div>
+        <div class="read-more d-flex justify-content-end w-80 pr-3">
+          <i class="light-icon-more icon-next-arrow"></i>
+        </div>
+      </div>
+    </nuxt-link>
+  </div>
+
+  <div class="com-md-12 col-lg-6">
+    <nuxt-link
+      :to="'/post/' + item.id"
+      v-for="(item, index) in resourceStore.rlist[resourceStore.activeTab]"
+      :key="item.id"
+      v-show="index % 2 !== 0"
+      class="feature-block-three border white dk hover-shadow-6 delay-5 list-animation-leftIn"
+    >
+      <div class="d-flex align-items-center">
+        <div class="icon-box icon-one">
+          <el-image v-if="item.thumb" class="delayImg" :src="item.thumb" lazy>
+            <div slot="placeholder" class="image-slot">
+              <img style="width:100%; height:100%; object-fit:cover;" src="../static/image/loding.gif" />
+            </div>
+          </el-image>
+          <div v-else class="delayImg" :style="item.backgroundStyle">
+            <h3 class="flex text-center text-white opacity-50">NOPIC</h3>
+          </div>
+        </div>
+        <div class="text">
+          <h5 class="ellipsis-text">
+            {{ item.title }}
+          </h5>
+          <div class="text-muted fs-16 mr-3">
+            <span v-if="item.createTime">{{ item.createTime }}</span>
+            <span v-else>{{ item.addTime }}</span>
+          </div>
+        </div>
+        <div class="read-more d-flex justify-content-end w-80 pr-3">
+          <i class="light-icon-more icon-next-arrow"></i>
+        </div>
+      </div>
+    </nuxt-link>
+  </div>
                   </div>
                 </div>
               </div>
@@ -979,5 +939,8 @@ async function getList() {
   width: 20px;
   height: 20px;
   transform: rotate(180deg);
+}
+.active {
+  color: #3E9EFF;
 }
 </style>

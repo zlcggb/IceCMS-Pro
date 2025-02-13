@@ -1,9 +1,67 @@
+
+<script setup lang="ts">
+import { ref, onMounted } from 'vue';
+import { useRoute } from 'vue-router';
+import { getResourceByClass } from '../../../api/webresource';
+import { formatDate } from '@/utils/date';
+import { getResourceClassNameByid } from '../../../api/webresourceclass';
+
+const route = useRoute();
+const moreIndex = ref(false);
+const className = ref<string>('');
+const rlist = ref<any[]>([]);
+  const  acticve = ref<string>('nav-link active');
+const moreaction = () => {
+  moreIndex.value = !moreIndex.value;
+};
+
+const formatDateString = (time: string | number | Date) => {
+  return formatDate(new Date(time), 'yyyy-MM-dd ');
+};
+
+const getStyles = (): string => {
+  const colors = [
+    "linear-gradient(135deg, #ABDCFF 10%, #0396FF 100%)",
+    "linear-gradient(135deg, #FEB692 10%, #EA5455 100%)",
+    "linear-gradient(135deg, #CE9FFC 10%, #7367F0 100%)",
+    "linear-gradient(135deg, #90F7EC 10%, #32CCBC 100%)",
+    "linear-gradient(135deg, #81FBB8 10%, #28C76F 100%)",
+    "linear-gradient(135deg, #E2B0FF 10%, #9F44D3 100%)",
+    "linear-gradient(135deg, #5EFCE8 10%, #736EFE 100%)",
+    "linear-gradient(135deg, #FFD3A5 10%, #FD6585 100%)",
+  ];
+  return `background-image: ${colors[Math.floor(Math.random() * colors.length)]};`;
+};
+
+await getClassName();
+async function getClassName() {
+  try {
+    const resp = await getResourceClassNameByid(route.params.id as string);
+    className.value = resp.data.value;
+  } catch (error) {
+    console.error("获取分类名称失败", error);
+  }
+};
+
+await getList();
+async function getList() {
+  try {
+    const resp = await getResourceByClass(route.params.id);
+    rlist.value = resp.data.value;
+    console.log(rlist)
+  } catch (error) {
+    console.error("获取资源列表失败", error);
+  }
+};
+
+</script>
+
 <template>
   <div class="home">
     <div data-server-rendered="true" id="__nuxt">
       <!---->
       <div id="__layout">
-        <div data-fetch-key="0" :class="[themeClass]" class="app macwk-animation">
+        <div data-fetch-key="0" class="app macwk-animation">
           <div class="layout-min-full-height overflow-hidden special-content pb-8">
             <top :message4="acticve" />
             <div class="container">
@@ -86,17 +144,17 @@
                           </div>
                           <div class="macwk-app__extend">
                             <div class="macwk-app__extend--download">
-                              <i class="icon-download2"></i> <span>18002</span>
+                              <i class="icon-download2"></i> <span>{{ item.hits ?? 0 }}</span>
                             </div>
                             <div class="macwk-app__extend--comment">
-                              <i class="icon-bubble"></i> <span>39</span>
+                              <i class="icon-bubble"></i> <span>0</span>
                             </div>
                             <div class="macwk-app__extend--like">
-                              <i class="icon-heart"></i> <span>144</span>
+                              <i class="icon-heart"></i> <span>0</span>
                             </div>
                             <div class="macwk-app__extend--os">
                               <i class="icon-disc fw-600"></i>
-                              <span>&gt;= 10.12</span>
+                              <span>&gt;= 0</span>
                             </div>
                             <div class="macwk-app__extend--update">
                               <i class="icon-clock"></i> 

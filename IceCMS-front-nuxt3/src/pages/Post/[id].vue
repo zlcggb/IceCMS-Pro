@@ -8,8 +8,6 @@ import { getArticleCommentnum } from "../../../api/webarticleComment";
 import EmojiPicker from "vue3-emoji-picker";
 import "vue3-emoji-picker/css";
 // import Prism from "prismjs";
-// import SideCatalog from "vue-side-catalog";
-// import "vue-side-catalog/lib/vue-side-catalog.css";
 
 // Use Nuxt 3 `useRoute` and `useNotify` for route and notifications
 const route = useRoute();
@@ -182,10 +180,10 @@ const updateDate = () => {
 //   }
 // };
 </script>
+
 <template>
   <div class="post">
     <div id="__nuxt" data-server-rendered="true">
-      <!---->
       <div id="__layout">
         <div data-fetch-key="0" class="app macwk-animation">
           <top :message3="acticve" />
@@ -568,14 +566,10 @@ import { FindProfileByName, viewarticle, lovearticle } from "@/api/webarticle";
 import { getArticleCommentnum } from "@/api/webarticleComment";
 import  comment  from "../components/Comment.vue";
 import  Prismjs  from "prismjs";
-import  SideCatalog  from "vue-side-catalog";
-import "vue-side-catalog/lib/vue-side-catalog.css";
 import { mapState, mapMutations } from "vuex";
 export default {
   name: "Post",
-
   components: {
-  
     Sticky: () => import("@/components/Sticky"),
     comment,
     Prismjs,
