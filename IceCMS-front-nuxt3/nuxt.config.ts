@@ -1,5 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 // nuxt.config.js
+
 const path = require('path');
 
 export default defineNuxtConfig({
@@ -53,7 +54,7 @@ export default defineNuxtConfig({
     './src/static/mycss/top.css',
     './src/static/mycss/body.css',
     'element-plus/dist/index.css',
-    'element-plus/theme-chalk/display.css'
+    'element-plus/theme-chalk/display.css',
   ],
   modules: [
     '@element-plus/nuxt',
@@ -61,7 +62,9 @@ export default defineNuxtConfig({
 
   ],
   compatibilityDate: '2024-11-01',
-  plugins: ['./plugins/initSettings.ts'],
+  plugins: ['./plugins/initSettings.ts',
+    './plugins/main.ts', 
+  ],
 
   devtools: { enabled: true }
 })

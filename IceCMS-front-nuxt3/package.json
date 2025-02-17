@@ -13,11 +13,13 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@kangc/v-md-editor": "^2.3.18",
     "@pinia/nuxt": "0.5.5",
     "dayjs": "^1.11.13",
     "element-plus": "^2.9.3",
     "nuxt": "^3.15.2",
     "ohash": "^1.1.4",
+    "prismjs": "^1.29.0",
     "vue": "latest",
     "vue-router": "latest",
     "vue3-emoji-picker": "^1.1.8"

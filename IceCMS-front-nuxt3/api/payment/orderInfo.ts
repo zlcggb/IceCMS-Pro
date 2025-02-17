@@ -34,6 +34,6 @@ export default {
 
   // 查询订单状态（通过用户和资源 ID）
   queryOrderStatusBytrue(userid: string, resourceid: string): Promise<ApiResponse<{ status: string }>> {
-    return httpRequest.get<ApiResponse<{ status: string }>>(`/Pay-api/order-info/query-order-status-Bytrue/${userid}/${resourceid}`);
+    return httpRequest.get<ApiResponse<any>>(`/Pay-api/order-info/query-order-status-Bytrue/${userid}/${resourceid}`);
   }
 };

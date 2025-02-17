@@ -780,9 +780,9 @@ onMounted(() => {
         <div class="app-header-nav nav" style="	overflow: hidden; max-height: 60px;">
           <nuxt-link target="_self" class="nav-link" :class="message1" aria-current="page" to="/">首页</nuxt-link>
           <nuxt-link target="_self" class="nav-link" :class="message2" to="/Alllist">资源</nuxt-link>
-          <nuxt-link target="_self" class="nav-link" :class="message3" to="/allpost">文章</nuxt-link>
-          <nuxt-link target="_self" class="nav-link" :class="message4" to="/class">分类</nuxt-link>
-          <nuxt-link target="_self" class="nav-link" :class="message5" to="/planet/1">星球</nuxt-link>
+          <nuxt-link target="_self" class="nav-link" :class="message3" to="/Allpost">文章</nuxt-link>
+          <nuxt-link target="_self" class="nav-link" :class="message4" to="/Class">分类</nuxt-link>
+          <nuxt-link target="_self" class="nav-link" :class="message5" to="/Planet/1">星球</nuxt-link>
         </div>
         <div class="app-header-search grid-list lazy-transition">
           <div id="autosuggest">
@@ -943,15 +943,15 @@ onMounted(() => {
           <div class="self-info-list">
             <div class="flex-col self-start group">
               <div class="self-start" style="display: flex; align-items: center; justify-content: center;">
-                <div class="topic-avatars" style="margin-right: 8px;">
+                <div class="topic-avatars" style="margin-left: 28px;margin-bottom: 8px;">
                   <el-avatar :src="user.profile"></el-avatar>
                 </div>
                 <span class="font-username text info-spans">{{ user.name }}</span>
               </div>
               <div style="margin-top: 16px;" class="flex-row self-stretch group_2">
                 <div class="flex-row">
-                  <span class="font_2 info-spans">积分：</span>
-                  <span class="font_3 info-spans">882</span>
+                  <span class="font_2 info-spans">积分：882</span>
+                  <span class="font_3 info-spans">会员：882</span>
                 </div>
               </div>
             </div>

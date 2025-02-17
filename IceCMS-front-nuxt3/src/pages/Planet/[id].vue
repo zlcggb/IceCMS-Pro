@@ -22,6 +22,13 @@ const route = useRoute();
 const router = useRouter();
 // const { cookies } = useCookies();
 
+definePageMeta({
+  validate: async (route) => {
+    // 检查id是否由数字组成
+    return /^\d+$/.test(route.params.id)
+  }
+})
+
 // data
 const announcementsList = ref([]);
 const isDark = ref(false);

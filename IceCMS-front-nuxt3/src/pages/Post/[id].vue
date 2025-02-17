@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, nextTick } from 'vue';
-// import { useRoute, useNotify } from 'vue-router'; // Nuxt 3 provides hooks like useRoute
+import { nextTick, onMounted, reactive, ref } from "vue";
 import { useRoute } from 'vue-router'; // Nuxt 3 provides hooks like useRoute
 
 import { getArticleById, viewarticle, lovearticle } from "../../../api/webarticle";
@@ -11,12 +10,67 @@ import "vue3-emoji-picker/css";
 
 // Use Nuxt 3 `useRoute` and `useNotify` for route and notifications
 const route = useRoute();
+const previewRef = ref(null);
+
+definePageMeta({
+  validate: async (route) => {
+    // 检查id是否由数字组成
+    return /^\d+$/.test(route.params.id)
+  }
+})
+
+const toc = ref<Array<{ id: string; title: string; lineIndex: string; indent: number }>>([]);
+
+// Method to initialize the Table of Contents
+const initializeToc = () => {
+  const anchors = previewRef.value.$el.querySelectorAll('h1, h2, h3, h4, h5, h6');
+  // console.log(anchors);  // 打印所有的标题元素
+  const arr = Array.from(anchors).filter((title) => !!title.innerText.trim());
+
+  if (!arr.length) {
+    toc.value = [];
+    return;
+  }
+
+  const hTags = Array.from(new Set(arr.map((title) => title.tagName))).sort();
+
+  toc.value = arr.map((el) => {
+    const lineIndex = el.getAttribute('data-v-md-line');
+    const id = 'toc-' + lineIndex;
+
+    // 给标题元素动态
+    el.id = id;
+    // console.log(el.getAttribute('data-v-md-line'));  // 打印每个标题的 data-v-md-line 属性
+    return {
+      id: id,
+      title: el.innerText,
+      lineIndex: lineIndex,
+      indent: hTags.indexOf(el.tagName),
+    };
+    
+  });
+};
+
+const scrollToToc = (id: string) => {
+  nextTick(() => {
+    const element = document.getElementById(id);
+    // console.log(element);  // 打印元素，确认它是否为 null
+    if (element) {
+      window.scrollTo({
+        top: element.offsetTop - 60, // Adjust the offset to account for the header
+        behavior: 'smooth',
+      });
+    }
+  });
+};
+
+// Initialize the Table of Contents after the article content is loaded
+onMounted(() => {
+  initializeToc();
+});
+
 // Ensure that articleId is treated as a string
 const articleId = Array.isArray(route.params.id) ? route.params.id[0] : route.params.id;
-
-// const $notify = useNotify(); 
-
-// Data properties (ref for reactivity)
 const firstLoveFlag = ref(true);
 const lovecheck = ref(false);
 const loveNum = ref('');
@@ -39,7 +93,7 @@ const intro = ref('');
 const addTime = ref('');
 const hits = ref('');
 const authorName = ref('');
-const content = ref('');
+const content = ref('ded');
 const title = ref('');
 const show = ref(false);
 const Article = ref<any>(null);
@@ -63,7 +117,9 @@ await handlegetArticleById();
 async function handlegetArticleById() {
   try {
     const result = await getArticleById(articleId);
+    console.log(result)
     Article.value = result.data.value;
+    content.value = Article.value.content;
     profile.value = Article.value.profile;
     thumb.value = Article.value.thumb;
     title.value = Article.value.title;
@@ -97,8 +153,8 @@ await handlegetArticleCommentnum();
 async function handlegetArticleCommentnum() {
   try {
     const result = await getArticleCommentnum(articleId as string);
-   commentnum.value = result.data.value;
-} catch (error) {
+    commentnum.value = result.data.value;
+  } catch (error) {
     console.error('获取文章评论数量出错:', error);
   }
 }
@@ -106,7 +162,7 @@ async function handlegetArticleCommentnum() {
 const loveClick = () => {
   if (!lovecheck.value) {
     if (firstLoveFlag.value) {
-      lovearticle(articleId as string).then(() => {});
+      lovearticle(articleId as string).then(() => { });
       firstLoveFlag.value = false;
     }
     $notify({
@@ -130,6 +186,7 @@ const loveClick = () => {
 };
 
 const onSelectEmoji = (emoji: any) => {
+  console.log(emoji.i)
   MyEmoge.value += emoji.i;
   /* 结果示例
   { 
@@ -201,10 +258,7 @@ const updateDate = () => {
                       {{ title }}
                     </h1>
                     <div class="d-flex mb-6 align-items-center">
-                      <img
-                        :src="profile"
-                        class="w-50 mw-50 h-50 b-0 circle m-0 mr-4"
-                      />
+                      <img :src="profile" class="w-50 mw-50 h-50 b-0 circle m-0 mr-4" />
                       <div class="flex">
                         <h4 class="mb-0 mt-0">{{ authorName }}</h4>
                         <p class="mb-0 py-0 fs-14">
@@ -219,233 +273,125 @@ const updateDate = () => {
                     </blockquote>
                     <div class=".image-header-side">
                       <div class="imgBox">
-                        <img
-                          class="image-header"
-                          alt=""
-                          :data-src="thumb"
-                          :src="thumb"
-                          lazy="loaded"
-                        />
+                        <img class="image-header" alt="" :data-src="thumb" :src="thumb" lazy="loaded" />
                       </div>
                     </div>
                     <div class="content-markdown">
-                      <!-- 内容区域 -->
-                      <div id="sidelist" v-html="content"></div>
-                      <!-- <side-catalog class="catalog" v-bind="catalogProps">
-                        <template #default="{ isActive }">
-                          <i
-                            :class="[
-                              'line-style',
-                              isActive ? 'line-style--active' : '',
-                            ]"
-                          ></i>
-                        </template>
-                      </side-catalog> -->
+                      <!-- 内容区域 -->                    
+                      <v-md-preview ref="previewRef" :text="content" height="400px"></v-md-preview>
+                      <!-- Table of Contents Sidebar -->
+                      <div style="margin-left: 150px;" v-if="toc.length" class="toc-sidebar">
+                            <ul>
+                              <li       class="toc-item"
+                              v-for="item in toc" :key="item.id" :style="{ paddingLeft: `${item.indent * 20}px` }">
+                                <a :href="'#' + item.id" @click.prevent="scrollToToc(item.id)">
+                                  {{ item.title }}
+                                </a>
+                              </li>
+                            </ul>
+                          </div>
+                       
                       <div class="catalogleft">
-                        <aside
-                          class="crayons-layout__sidebar-left"
-                          aria-label="Article actions"
-                        >
+                        <aside class="crayons-layout__sidebar-left" aria-label="Article actions">
                           <div class="crayons-article-actions print-hidden">
-                            <div
-                              style="
+                            <div style="
                                 margin-bottom: 20px;
                                 display: flex;
                                 flex-direction: column;
                                 align-items: center;
-                              "
-                              class="crayons-article-actions__inner"
-                            >
-                              <button
-                                @click="loveClick()"
-                                id="reaction-butt-like"
-                                aria-label="Like"
-                                aria-pressed="false"
-                                class="
+                              " class="crayons-article-actions__inner">
+                              <button @click="loveClick()" id="reaction-butt-like" aria-label="Like"
+                                aria-pressed="false" class="
                                   sogood
                                   crayons-reaction crayons-reaction--like
                                   activated
-                                "
-                                data-category="like"
-                                title="Heart"
-                              >
-                                <span
-                                  v-if="!lovecheck"
-                                  class="
+                                " data-category="like" title="Heart">
+                                <span v-if="!lovecheck" class="
                                     crayons-reaction__icon
                                     crayons-reaction__icon--inactive
-                                  "
-                                >
-                                  <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="24"
-                                    height="24"
-                                    viewBox="0 0 24 24"
-                                    role="img"
-                                    aria-hidden="true"
-                                    class="crayons-icon"
-                                  >
+                                  ">
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    role="img" aria-hidden="true" class="crayons-icon">
                                     <path
-                                      d="M21.179 12.794l.013.014L12 22l-9.192-9.192.013-.014A6.5 6.5 0 0112 3.64a6.5 6.5 0 019.179 9.154zM4.575 5.383a4.5 4.5 0 000 6.364L12 19.172l7.425-7.425a4.5 4.5 0 10-6.364-6.364L8.818 9.626 7.404 8.21l3.162-3.162a4.5 4.5 0 00-5.99.334l-.001.001z"
-                                    ></path>
+                                      d="M21.179 12.794l.013.014L12 22l-9.192-9.192.013-.014A6.5 6.5 0 0112 3.64a6.5 6.5 0 019.179 9.154zM4.575 5.383a4.5 4.5 0 000 6.364L12 19.172l7.425-7.425a4.5 4.5 0 10-6.364-6.364L8.818 9.626 7.404 8.21l3.162-3.162a4.5 4.5 0 00-5.99.334l-.001.001z">
+                                    </path>
                                   </svg>
                                 </span>
-                                <span
-                                  v-else
-                                  class="
+                                <span v-else class="
                                     crayons-reaction__icon
                                     crayons-reaction__icon--inactive
-                                  "
-                                >
-                                  <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="24"
-                                    height="24"
-                                    viewBox="0 0 24 24"
-                                    role="img"
-                                    aria-hidden="true"
-                                    class="crayons-icon"
-                                  >
-                                    <path
-                                      fill="red"
-                                      d="M21.179 12.794l.013.014L12 22l-9.192-9.192.013-.014A6.5 6.5 0 0112 3.64a6.5 6.5 0 019.179 9.154zM4.575 5.383a4.5 4.5 0 000 6.364L12 19.172l7.425-7.425a4.5 4.5 0 10-6.364-6.364L8.818 9.626 7.404 8.21l3.162-3.162a4.5 4.5 0 00-5.99.334l-.001.001z"
-                                    ></path>
+                                  ">
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    role="img" aria-hidden="true" class="crayons-icon">
+                                    <path fill="red"
+                                      d="M21.179 12.794l.013.014L12 22l-9.192-9.192.013-.014A6.5 6.5 0 0112 3.64a6.5 6.5 0 019.179 9.154zM4.575 5.383a4.5 4.5 0 000 6.364L12 19.172l7.425-7.425a4.5 4.5 0 10-6.364-6.364L8.818 9.626 7.404 8.21l3.162-3.162a4.5 4.5 0 00-5.99.334l-.001.001z">
+                                    </path>
                                   </svg>
                                 </span>
-                                <span
-                                  v-if="!lovecheck"
-                                  class="crayons-reaction__count"
-                                  id="reaction-number-like"
-                                  >{{ loveNum }}</span
-                                >
-                                <span
-                                  v-else
-                                  style="color: red"
-                                  class="crayons-reaction__count"
-                                  id="reaction-number-like"
-                                  >{{ loveNum }}</span
-                                >
+                                <span v-if="!lovecheck" class="crayons-reaction__count" id="reaction-number-like">{{
+                                  loveNum }}</span>
+                                <span v-else style="color: red" class="crayons-reaction__count"
+                                  id="reaction-number-like">{{ loveNum }}</span>
                               </button>
 
-                              <button
-                                style=""
-                                id="reaction-butt-unicorn"
-                                aria-label="React with unicorn"
-                                aria-pressed="false"
-                                class="
+                              <button style="" id="reaction-butt-unicorn" aria-label="React with unicorn"
+                                aria-pressed="false" class="
                                   make
                                   crayons-reaction crayons-reaction--unicorn
-                                "
-                                data-category="unicorn"
-                                title="Unicorn"
-                              >
-                                <span
-                                  class="
+                                " data-category="unicorn" title="Unicorn">
+                                <span class="
                                     crayons-reaction__icon
                                     crayons-reaction__icon--inactive
-                                  "
-                                >
-                                  <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="24"
-                                    height="24"
-                                    role="img"
-                                    aria-hidden="true"
-                                    class="crayons-icon"
-                                  >
+                                  ">
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" role="img"
+                                    aria-hidden="true" class="crayons-icon">
                                     <path
                                       d="M5.645 8.013c.013-.265-.261-.323-.4-.183-1.16 1.17-1.822 3.865-.344 7.32.294.961 1.938 3.19.84 6.131l-.003.006c-.094.255.206.404.366.263 1.395-1.226 1.933-3.593 1.1-6.375-.488-1.657-1.955-4.226-1.559-7.162zm-3.22 2.738c.05-.137-.124-.417-.326-.225-.939.893-1.316 2.863-.976 4.605.547 2.878 2.374 3.526 2.066 6.629-.028.102.176.38.348.154 1.546-2.033.409-4.453-.241-6.006-1.005-2.386-1.087-4.118-.871-5.157z"
-                                      fill="#08090A"
-                                    ></path>
-                                    <path
-                                      fill-rule="evenodd"
-                                      clip-rule="evenodd"
-                                      d="M13.622 7.223l8.579-3.68c.598-.256 1.087.547.6.985l-6.618 5.941c.881 2.043 2.738 6.34 2.931 6.775 1.348 3.031-2.055 4.918-3.807 3.583a7.027 7.027 0 01-.623-.574c-.974-.965-2.419-2.398-5.207-1.877.284-2.115-.313-3.737-.883-5.288-.38-1.032-.747-2.032-.837-3.124-.346-3.329 3.763-8.23 4.696-7.953.386.115.326 1.229.266 2.319-.051.948-.102 1.88.143 2.12.145.142.428.43.76.773zM11.5 16.5l2.5.5 2.5 2 1-.5-2-4.5-1.5-4-1.5-1-1-1-1-1.5L10 8l-.5 1.5 1 2.5 1 4.5z"
-                                    ></path>
+                                      fill="#08090A"></path>
+                                    <path fill-rule="evenodd" clip-rule="evenodd"
+                                      d="M13.622 7.223l8.579-3.68c.598-.256 1.087.547.6.985l-6.618 5.941c.881 2.043 2.738 6.34 2.931 6.775 1.348 3.031-2.055 4.918-3.807 3.583a7.027 7.027 0 01-.623-.574c-.974-.965-2.419-2.398-5.207-1.877.284-2.115-.313-3.737-.883-5.288-.38-1.032-.747-2.032-.837-3.124-.346-3.329 3.763-8.23 4.696-7.953.386.115.326 1.229.266 2.319-.051.948-.102 1.88.143 2.12.145.142.428.43.76.773zM11.5 16.5l2.5.5 2.5 2 1-.5-2-4.5-1.5-4-1.5-1-1-1-1-1.5L10 8l-.5 1.5 1 2.5 1 4.5z">
+                                    </path>
                                   </svg>
                                 </span>
-                                <span
-                                  class="crayons-reaction__count"
-                                  id="reaction-number-unicorn"
-                                  >0</span
-                                >
+                                <span class="crayons-reaction__count" id="reaction-number-unicorn">0</span>
                               </button>
-                              <button
-                                id="reaction-butt-readinglist"
-                                aria-label="Add to reading list"
-                                aria-pressed="false"
-                                class="
+                              <button id="reaction-butt-readinglist" aria-label="Add to reading list"
+                                aria-pressed="false" class="
                                   collect
                                   crayons-reaction crayons-reaction--readinglist
-                                "
-                                data-category="readinglist"
-                                title="Save"
-                              >
-                                <span
-                                  class="
+                                " data-category="readinglist" title="Save">
+                                <span class="
                                     crayons-reaction__icon
                                     crayons-reaction__icon--inactive
-                                  "
-                                >
-                                  <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="24"
-                                    height="24"
-                                    viewBox="0 0 24 24"
-                                    role="img"
-                                    aria-hidden="true"
-                                    class="crayons-icon"
-                                  >
+                                  ">
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    role="img" aria-hidden="true" class="crayons-icon">
                                     <path
-                                      d="M5 2h14a1 1 0 011 1v19.143a.5.5 0 01-.766.424L12 18.03l-7.234 4.536A.5.5 0 014 22.143V3a1 1 0 011-1zm13 2H6v15.432l6-3.761 6 3.761V4z"
-                                    ></path>
+                                      d="M5 2h14a1 1 0 011 1v19.143a.5.5 0 01-.766.424L12 18.03l-7.234 4.536A.5.5 0 014 22.143V3a1 1 0 011-1zm13 2H6v15.432l6-3.761 6 3.761V4z">
+                                    </path>
                                   </svg>
                                 </span>
-                                <span
-                                  class="crayons-reaction__count"
-                                  id="reaction-number-readinglist"
-                                  >0</span
-                                >
+                                <span class="crayons-reaction__count" id="reaction-number-readinglist">0</span>
                               </button>
-                              <div
-                                id="mod-actions-menu-btn-area"
-                                class="print-hidden hidden align-center"
-                              ></div>
+                              <div id="mod-actions-menu-btn-area" class="print-hidden hidden align-center"></div>
                               <div class="align-center m:relative">
-                                <button
-                                  id="article-show-more-button"
-                                  aria-controls="article-show-more-dropdown"
-                                  aria-expanded="false"
-                                  aria-haspopup="true"
-                                  class="
+                                <button id="article-show-more-button" aria-controls="article-show-more-dropdown"
+                                  aria-expanded="false" aria-haspopup="true" class="
                                     more
                                     dropbtn
                                     crayons-btn
                                     crayons-btn--ghost-dimmed
                                     crayons-btn--icon-rounded
-                                  "
-                                  aria-label="Share post options"
-                                  data-initialized="true"
-                                >
-                                  <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="24"
-                                    height="24"
-                                    role="img"
-                                    aria-labelledby="a6r3b1dohi4el9rjyuy41avu2a0sm5bz"
-                                    aria-hidden="true"
-                                    class="crayons-icon dropdown-icon"
-                                  >
-                                    <title
-                                      id="a6r3b1dohi4el9rjyuy41avu2a0sm5bz"
-                                    >
+                                  " aria-label="Share post options" data-initialized="true">
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" role="img"
+                                    aria-labelledby="a6r3b1dohi4el9rjyuy41avu2a0sm5bz" aria-hidden="true"
+                                    class="crayons-icon dropdown-icon">
+                                    <title id="a6r3b1dohi4el9rjyuy41avu2a0sm5bz">
                                       More...
                                     </title>
-                                    <path
-                                      fill-rule="evenodd"
-                                      clip-rule="evenodd"
-                                      d="M7 12a2 2 0 11-4 0 2 2 0 014 0zm7 0a2 2 0 11-4 0 2 2 0 014 0zm5 2a2 2 0 100-4 2 2 0 000 4z"
-                                    ></path>
+                                    <path fill-rule="evenodd" clip-rule="evenodd"
+                                      d="M7 12a2 2 0 11-4 0 2 2 0 014 0zm7 0a2 2 0 11-4 0 2 2 0 014 0zm5 2a2 2 0 100-4 2 2 0 000 4z">
+                                    </path>
                                   </svg>
                                 </button>
                               </div>
@@ -460,26 +406,17 @@ const updateDate = () => {
               <!---->
               <!-- v-on:click="show = !show"
                 v-if="!show" -->
-                <client-only>
-          <div class="myVEmojiPicker">
-            <EmojiPicker
-              v-show="showDialog"
-              :style="{ width: '340px', height: '200' }"
-              labelSearch="Search"
-              lang="pt-BR"
-              :native="true" 
-              @select="onSelectEmoji"
-            />
-          </div>
-        </client-only>
+              <client-only>
+                <div class="myVEmojiPicker">
+                  <EmojiPicker v-show="showDialog" :style="{ width: '340px', height: '200' }" labelSearch="Search"
+                    lang="pt-BR" :native="true" @select="onSelectEmoji" />
+                </div>
+              </client-only>
               <!-- 后台控制是否显示评论 -->
               <div>
                 <!-- <div v-if="!glabledata.glableCommentShow"> -->
                 <div v-show="!judjeComment">
-                  <section
-                    v-if="mycomment"
-                    @click="sendMsg"
-                    class="
+                  <section v-if="mycomment" @click="sendMsg" class="
                       fiexd-comments-bar
                       d-flex
                       align-items-center
@@ -488,10 +425,8 @@ const updateDate = () => {
                       slow
                       pc-model
                       tinRightIn
-                    "
-                  >
-                    <div
-                      class="
+                    ">
+                    <div class="
                         d-flex
                         align-items-center
                         fs-20
@@ -499,58 +434,42 @@ const updateDate = () => {
                         cursor-pointer
                         w-full
                         pl-3
-                      "
-                    >
+                      ">
                       <div class="flex">
                         共
                         <span class="fs-36 mx-1">{{ commentnum || 0 }}</span>
                         条评论
                       </div>
-                      <svg
-                        color="inherit"
-                        viewbox="0 0 32 32"
-                        class="w-32"
-                        style="
+                      <svg color="inherit" viewbox="0 0 32 32" class="w-32" style="
                           width: 1.5em;
                           height: 1.5em;
                           font-size: 2rem;
                           vertical-align: -6px;
-                        "
-                      >
-                        <path
-                          fill="#FFFFFF"
-                          d="M12.63,26.46H8.83a6.61,6.61,0,0,1-6.65-6.07,89.05,89.05,0,0,1,0-11.2A6.5,6.5,0,0,1,8.23,3.25a121.62,121.62,0,0,1,15.51,0A6.51,6.51,0,0,1,29.8,9.19a77.53,77.53,0,0,1,0,11.2,6.61,6.61,0,0,1-6.66,6.07H19.48L12.63,31V26.46"
-                        ></path>
+                        ">
+                        <path fill="#FFFFFF"
+                          d="M12.63,26.46H8.83a6.61,6.61,0,0,1-6.65-6.07,89.05,89.05,0,0,1,0-11.2A6.5,6.5,0,0,1,8.23,3.25a121.62,121.62,0,0,1,15.51,0A6.51,6.51,0,0,1,29.8,9.19a77.53,77.53,0,0,1,0,11.2,6.61,6.61,0,0,1-6.66,6.07H19.48L12.63,31V26.46">
+                        </path>
                         <path
                           d="M19.57,21.68h3.67a2.08,2.08,0,0,0,2.11-1.81,89.86,89.86,0,0,0,0-10.38,1.9,1.9,0,0,0-1.84-1.74,113.15,113.15,0,0,0-15,0A1.9,1.9,0,0,0,6.71,9.49a74.92,74.92,0,0,0-.06,10.38,2,2,0,0,0,2.1,1.81h3.81V26.5Z"
-                          class="comment-icon-path"
-                        ></path>
+                          class="comment-icon-path"></path>
                       </svg>
                     </div>
                   </section>
                 </div>
               </div>
-              <comment
-              v-if="!mycomment"
-                :articleId="articleId"
-                :theEmoge="MyEmoge"
-                ref="child"
-                @closethecpmmentName="updateDate()"
-                @openthecpmmentName="showemoge()"
-              />
+              <comment v-if="!mycomment" :articleId="articleId" :theEmoge="MyEmoge" ref="child"
+                @closethecpmmentName="updateDate()" @openthecpmmentName="showemoge()" />
             </div>
           </div>
           <foot />
           <div infos="0">
-            <div
-              class="
+            <div class="
                 adBanner
                 pub_300x250 pub_300x250m pub_728x90
                 text-ad
                 textAd
                 text_ad text_ads text-ads text-ad-links
-              "
-            />
+              " />
           </div>
         </div>
       </div>
@@ -752,23 +671,27 @@ export default {
   bottom: 20px !important;
 }
 
-.myVEmojiPicker     :deep(.category) {
+.myVEmojiPicker :deep(.category) {
   background: none;
 }
-.myVEmojiPicker     :deep(.border) {
-  border: 0px solid hsla(210, 8%, 51%, 0.09) !important;
-}
-.myVEmojiPicker     :deep(.myVEmojiPicker[data-v-3bfe90b7]) .border {
+
+.myVEmojiPicker :deep(.border) {
   border: 0px solid hsla(210, 8%, 51%, 0.09) !important;
 }
 
-.myVEmojiPicker     :deep(.category.active[data-v-6d975e7c]) {
+.myVEmojiPicker :deep(.myVEmojiPicker[data-v-3bfe90b7]) .border {
+  border: 0px solid hsla(210, 8%, 51%, 0.09) !important;
+}
+
+.myVEmojiPicker :deep(.category.active[data-v-6d975e7c]) {
   border-bottom: 3px solid #50a1ff;
 }
-.myVEmojiPicker     :deep(.grid-emojis[data-v-5c988bee]) {
+
+.myVEmojiPicker :deep(.grid-emojis[data-v-5c988bee]) {
   background: #ffffff;
 }
-.myVEmojiPicker     :deep(.emoji-picker[data-v-f1d527bc]) {
+
+.myVEmojiPicker :deep(.emoji-picker[data-v-f1d527bc]) {
   --ep-color-bg: #ffffff;
   --ep-color-sbg: none;
 }
@@ -779,53 +702,67 @@ export default {
   /* 在原本元素上再加一个transition */
   transition: all 0.5s linear 0s;
 }
+
 .make {
   border-radius: 20px 20px 20px 20px;
   transition: background-color 0.5s linear 0s;
   /* 在原本元素上再加一个transition */
   transition: all 0.5s linear 0s;
 }
+
 .collect {
   border-radius: 20px 20px 20px 20px;
   transition: background-color 0.5s linear 0s;
   /* 在原本元素上再加一个transition */
   transition: all 0.5s linear 0s;
 }
+
 .more {
   border-radius: 20px 20px 20px 20px;
   transition: background-color 0.5s linear 0s;
   /* 在原本元素上再加一个transition */
   transition: all 0.5s linear 0s;
 }
+
 .sogood:hover {
   background-color: red;
   border-radius: 20px 20px 20px 20px;
 }
+
 .make:hover {
   background-color: rgb(0, 110, 255);
   border-radius: 20px 20px 20px 20px;
 }
+
 .collect:hover {
   background-color: rgb(255, 153, 0);
   border-radius: 20px 20px 20px 20px;
 }
+
 .more:hover {
   background-color: rgb(105, 98, 98);
   border-radius: 20px 20px 20px 20px;
 }
+
 .chat-container {
   z-index: 10000;
 }
+
 /* 可以设置不同的进入和离开动画 */
 /* 设置持续时间和动画函数 */
 .slide-fade-enter-active {
   transition: all 0.4s ease;
 }
+
 .slide-fade-leave-active {
   transition: all 0.4s cubic-bezier(1, 0.5, 0.8, 1);
 }
-.slide-fade-enter, .slide-fade-leave-to
-/* .slide-fade-leave-active for below version 2.1.8 */ {
+
+.slide-fade-enter,
+.slide-fade-leave-to
+
+/* .slide-fade-leave-active for below version 2.1.8 */
+  {
   transform: translateY(620px);
   opacity: 0;
 }
@@ -836,6 +773,7 @@ export default {
 .article-content button {
   padding: 10px;
 }
+
 #sidelist {
   width: 700px;
   overflow: auto;
@@ -843,9 +781,11 @@ export default {
   line-height: 1.5;
   margin-right: 50px;
 }
+
 p {
   text-indent: 2em;
 }
+
 .catalog {
   position: fixed;
   top: 70px;
@@ -853,6 +793,7 @@ p {
   cursor: not-allowed;
   /* height: calc(100% - 100px); */
 }
+
 .catalogleft {
   position: fixed;
   top: 30%;
@@ -875,12 +816,9 @@ p {
   --su-10: 8rem;
   --radius: 0.375rem;
   --radius-large: 0.75rem;
-  --radius-auto: Max(0px, Min(var(--radius), calc((100vw - 4px - 100%) * 9999))) /
-    var(--radius);
-  --radius-large-auto: Max(
-      0px,
-      Min(var(--radius-large), calc((100vw - 4px - 100%) * 9999))
-    ) / var(--radius-large);
+  --radius-auto: Max(0px, Min(var(--radius), calc((100vw - 4px - 100%) * 9999))) / var(--radius);
+  --radius-large-auto: Max(0px,
+      Min(var(--radius-large), calc((100vw - 4px - 100%) * 9999))) / var(--radius-large);
   --transition-func: cubic-bezier(0.17, 0.67, 0.5, 0.71);
   --transition-time: 100ms;
   --transition-props: var(--transition-func) var(--transition-time);
@@ -1194,26 +1132,29 @@ p {
   --layout-sidebar-right-width: 3fr;
   --layout-sidebar-left-row-end: initial;
   --layout-content-width: 7fr;
-  --layout: var(--layout-sidebar-left-width) var(--layout-content-width)
-    var(--layout-sidebar-right-width);
+  --layout: var(--layout-sidebar-left-width) var(--layout-content-width) var(--layout-sidebar-right-width);
   -webkit-user-select: text !important;
   box-sizing: border-box;
   display: var(--layout-sidebar-left-display);
   grid-row-end: var(--layout-sidebar-left-row-end);
   width: var(--layout-sidebar-left-width);
 }
+
 .line-style {
   display: inline-block;
   height: 20px;
   width: 3px;
   background: transparent;
 }
+
 .line-style--active {
   background: currentColor;
 }
+
 .fs-14 {
   transform: translateX(-30px);
 }
+
 .image-header {
   -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color: rgba(23, 23, 23, 0);
@@ -1263,6 +1204,7 @@ p {
   border-style: none;
   border-radius: 10px;
 }
+
 .image-header-side {
   -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color: rgba(23, 23, 23, 0);
@@ -1310,9 +1252,11 @@ p {
   text-align: center;
   max-width: 1000px;
 }
+
 .category.active[data-v-6d975e7c] {
   border-bottom: 3px solid #52a1ff;
 }
+
 .myVEmojiPicker {
   position: fixed;
   display: flex;
@@ -1320,5 +1264,104 @@ p {
   right: 390px;
   bottom: 20px;
   z-index: 10;
+}
+
+:deep(.vuepress-markdown-body) {
+  background-color: transparent;
+}
+
+:deep(.vuepress-markdown-body:not(.custom)) {
+  padding: 0;
+  font-size: 14px;
+}
+.toc-sidebar {
+  position: fixed;
+  top: 160px;
+  right: 120px;
+    width: 250px;
+    bottom: 66px;
+  background-color: #f7f7f7;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+  overflow-y: auto;
+  max-height: calc(100vh - 120px); /* 限制最大高度 */
+}
+
+.toc-sidebar ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.toc-sidebar li {
+  margin: 10px 0;
+}
+
+.toc-link {
+  font-size: 16px;
+  color: #333;
+  text-decoration: none;
+  display: block;
+  padding: 5px 10px;
+  border-radius: 3px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+/* 鼠标悬停时的效果，背景颜色覆盖整个宽度 */
+.toc-link:hover {
+  background-color: #f7f7f7; /* 灰色背景 */
+  color: #333;
+}
+
+/* 点击时的效果 */
+.toc-link:active {
+  background-color: #f7f7f7;
+}
+
+/* 激活状态的效果（选中时） */
+.toc-link.active {
+  background-color: #dcdcdc; /* 激活时背景颜色 */
+  color: #333; /* 保持文本颜色 */
+  border-radius: 5px;
+  font-weight: bold; /* 加粗字体 */
+}
+
+/* 鼠标悬停时，整个项背景覆盖 */
+.toc-link:hover::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(200, 200, 200, 0.5); /* 半透明灰色 */
+  z-index: -1; /* 确保背景层在文本下方 */
+  border-radius: 5px;
+}
+.toc-item {
+  margin: 10px 0;
+  transition: background-color 0.3s ease; /* 平滑过渡 */
+}
+/* 鼠标悬停时的效果，背景颜色覆盖整个li */
+.toc-item:hover {
+  background-color: rgba(200, 200, 200, 0.5); /* 灰色半透明背景 */
+  border-radius: 5px;
+}
+
+/* 目录项链接样式 */
+.toc-item a {
+  font-size: 16px;
+  color: #50A1FF;
+  text-decoration: none;
+  display: block;
+  padding: 10px 15px;
+  transition: color 0.3s ease;
+}
+
+/* 鼠标悬停时改变链接文本颜色 */
+.toc-item:hover a {
+  color: #333;
+  font-weight: bold;
 }
 </style>

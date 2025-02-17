@@ -1,19 +1,29 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue";
-import { useRoute } from "vue-router";
-import { GetArticleBtmatte, getAllArticle, getAllArticleNumber } from "../../api/webarticle";
-import { getArticleClasslist } from "../../api/webarticleclass";
-import { getNewArticleComment } from "../../api/webarticleComment";
+import { useRoute, useRouter } from 'vue-router';
+import { GetArticleBtmatte, getAllArticle, getAllArticleNumber } from "../../../api/webarticle";
+import { getArticleClasslist } from "../../../api/webarticleclass";
+import { getNewArticleComment } from "../../../api/webarticleComment";
 import { formatDate } from "@/utils/date";
 
 // 读取路由参数
 const route = useRoute();
+const router = useRouter();
+
+// 当前选中的项
+const clickIndex = ref<number | null>(null);
+
+// 当路由变化时，设置 clickIndex 为当前路由中的 id
+watchEffect(() => {
+  const routeId = route.params.id ? Number(route.params.id) : null;
+  clickIndex.value = routeId;
+});
 
 // 状态变量
 const MatterArticleFirst = ref<any>(null);
 const MatterArticles = ref<any[]>([]);
 const NewArticleComment = ref<any[]>([]);
-const allIndex = ref(true);
+const allIndex = ref(false);
 const articleCount = ref<number | null>(null);
 const list = ref<any[]>([]);
 const articleData = ref<any[]>([]);
@@ -29,7 +39,7 @@ const listQuery = ref({
 const acticve = ref<string>("nav-link active");
 const setting = ref<any>({});
 
-import { useSettingStore } from '../../stores/setting';
+import { useSettingStore } from '../../../stores/setting';
 const settingStore = useSettingStore();
 setting.value = settingStore.settings
 
@@ -100,10 +110,14 @@ function handleCurrentChange(val: number) {
 }
 
 // **获取分类文章**
-function getNewarticleclass(id: number) {
-  allIndex.value = false;
-  list.value = list.value.filter(item => item.sortClass === id);
-  list.value = addBackgroundStyles(list.value);
+const handleNewarticleclass = (id: number) => {
+  clickIndex.value = id; // 改变高亮的项
+  router.push(`/Allpost/${id}`); // 使用 Vue Router 跳转到对应页面
+};
+
+function handleClickIndex() {
+  allIndex.value = true;
+  router.push(`/Allpost`); // 使用 Vue Router 跳转到对应页面
 }
 
 // **随机背景色**
@@ -151,7 +165,7 @@ function formatDateWrapper(time: string) {
                     <a :href="'post/'+MatterArticleFirst.id" target="_self" class="post-item post-item--featured"
                       style="background:linear-gradient(#5aa94580,#59ab4e8f,#58ac569e,#57ad5dad,#57ae65bd,#57af6ccc);background-size:100%;">
                       <img
-                        src="../static/picture/jetbrains.svg"
+                        src="../../static/picture/jetbrains.svg"
                         style="position:absolute;left:30px;top:30px;width:256px;height:256px;">
                       <div class="post-item__content">
                         <h3 :title="MatterArticleFirst.title">{{MatterArticleFirst.title}}</h3>
@@ -293,20 +307,13 @@ function formatDateWrapper(time: string) {
                         </div>
                         <nav class="menu menu--macwk——list article-menu flex">
                           <ul class="menu__list">
-                            <li @click="getList()" class="menu__item" :class="{ 'menu__item--current': allIndex }">
+                            <li  @click="handleClickIndex()" class="menu__item" :class="{ 'menu__item--current': allIndex }">
                               <a class="menu__link"> 全部文章 </a>
 
                             </li>
-                            <!-- <el-tabs v-model="activeName">
-                               <el-tab-pane @click="getList()" label="全部文章" name="first"></el-tab-pane>
-                                <el-tab-pane @click="getNewarticleclass(item.id)" v-for="(item, id) in this.classlist" :key="id" :label="item.name" :name="item.name">
-
-                                  <component :is="item.name">123</component>
-                                </el-tab-pane>
-                                
-                              </el-tabs>  -->
-                            <div @click="getNewarticleclass(item.id)" v-for="(item, id) in classlist" :key="id">
-                              <li class="menu__item " :class="{ 'menu__item--current': item.id == clickIndex }">
+                 
+                            <div @click="handleNewarticleclass(item.id)" v-for="(item, id) in classlist" :key="id">
+                              <li class="menu__item "  :class="{ 'menu__item--current': item.id === clickIndex }">
                                 <a class="menu__link"> {{ item.name }} </a>
                               </li>
                             </div>
@@ -343,7 +350,7 @@ function formatDateWrapper(time: string) {
                                 lazy>
                                 <div slot="placeholder" class="image-slot">
                                   <img style="width:100%; height:100%; object-fit:cover;"
-                                    src="../static/image/loding.gif" />
+                                    src="../../static/image/loding.gif" />
                                 </div>
                               </el-image>
                               <div v-else class="
@@ -390,12 +397,10 @@ function formatDateWrapper(time: string) {
                           </nuxt-link>
                         </div>
                       </div>
-                      <!---->
-                      <!-- <el-pagination class="app-content-bottom" @size-change="handleSizeChange"
+                      <el-pagination class="app-content-bottom" @size-change="handleSizeChange"
                         @current-change="handleCurrentChange" :current-page.sync="listQuery.page"
-                        :page-size="listQuery.limit" layout="prev, pager, next" :total="total" /> -->
+                        :page-size="listQuery.limit" layout="prev, pager, next" :total="total" />
                     </div>
-                    <!---->
                     <div class="ml-6 w-380 d-md-none d-lg-none d-xl-block">
                       <div class="d-block siderbar-apps new-post">
                         <div class="siderbar-apps__header">
@@ -640,19 +645,7 @@ function formatDateWrapper(time: string) {
                   </div>
                 </div>
               </div>
-              <div class="app-content mobile-model">
-                <div class="
-                    d-flex
-                    layout-min-full-height
-                    justify-content-center
-                    align-items-center
-                  ">
-                  <div class="text-center" style="width: 80%; margin: 0 auto">
-                    <h1 class="mb-4">哇，窗口太小啦</h1>
-                    <p class="mb-6">请调整浏览器窗口大小或者请使用手机查看！</p>
-                  </div>
-                </div>
-              </div>
+              <mobile />
               <div id="sidetools" class="macwk-animation tinUpIn" style="display: none">
                 <div class="sidetools-item">
                   <div class="sidetools-wrapper">
@@ -942,5 +935,8 @@ export default {
     border-radius: 8px;
   }
 
+}
+.menu__item--current{
+    color: #3E9EFF;
 }
 </style>

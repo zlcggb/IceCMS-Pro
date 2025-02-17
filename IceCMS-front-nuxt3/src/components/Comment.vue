@@ -38,7 +38,8 @@ onMounted(async () => {
 
 // Watch for changes in 'theEmoge' prop and append it to contentarea
 watch(() => props.theEmoge, (val) => {
-  contentarea.value += val
+  console.log(val)
+  contentarea.value = val
 })
 
 // Method to fetch all comments

@@ -1,21 +1,32 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import { useContentStore } from '../../../stores/AlllistContent';
 
 import { getResourceClasslist } from '../../../api/webresourceclass';
 import { getAllResource, getAllResourceNumber } from '../../../api/webresource';
+
+// 获取路由参数
+const route = useRoute();
+const router = useRouter();
+
+definePageMeta({
+  validate: async (route) => {
+    // 检查id是否由数字组成
+    return /^\d+$/.test(route.params.id)
+  }
+})
+
+const contentStore = useContentStore();
+const { activeTab, contentList } = storeToRefs(contentStore);
 
 // Reactive state
 const setting = ref<any>({});
 const acticve = ref<string>("nav-link active");
 const loading = ref(true);
 const isAcitive = ref<number | null>(null);
-const news = ref("new");
-const download = ref("download");
-const discuss = ref("discuss");
-const love = ref("love");
-const recommend = ref("recommend");
 const sortOrder = ref("new");
-const allIndex = ref(true);
+const allIndex = ref(false);
 const classlist = ref("");
 const istargetjudje = ref(false);
 const istarget = ref("_self");
@@ -43,6 +54,25 @@ import { useSettingStore } from '../../../stores/setting';
 const settingStore = useSettingStore();
 setting.value = settingStore.settings
 
+// 当前选中的项
+const clickIndex = ref<number | null>(null);
+
+// 当路由变化时，设置 clickIndex 为当前路由中的 id
+watchEffect(() => {
+  const routeId = route.params.id ? Number(route.params.id) : null;
+  clickIndex.value = routeId;
+});
+
+// 点击时的处理方法
+const handleClick = (id: number) => {
+  clickIndex.value = id; // 改变高亮的项
+  router.push(`/Alllist/${id}`); // 使用 Vue Router 跳转到对应页面
+};
+
+function handleClickIndex() {
+  allIndex.value = true;
+  router.push(`/Alllist`); // 使用 Vue Router 跳转到对应页面
+}
 // 获取网站设置
 // await handleGetSetting();
 // async function handleGetSetting() {
@@ -171,7 +201,6 @@ function formatDate(time: string) {
 <template>
   <div class="home">
     <div data-server-rendered="true" id="__nuxt">
-      <!---->
       <div id="__layout">
         <div data-fetch-key="0" class="app macwk-animation">
           <top :message2="acticve" />
@@ -183,17 +212,18 @@ function formatDate(time: string) {
                   <div class="macwk-sidebar mb-4 vsm_expanded">
                     <div class="vsm--scroll-wrapper">
                       <div class="vsm--list">
-                        <div class="vsm--item" @click="getList()">
+                        <div class="vsm--item" @click="handleClickIndex()">
                           <span role="link" href="[object Object]" class="vsm--link vsm--link_level-1"
                             :class="{ ' vsm--link_active': allIndex }"><span class="vsm--title">全部资源</span>
-                            <!----></span>
-                          <!---->
+                          </span>
                         </div>
-                        <div @click="getNewarticleclass(item.id)" class="vsm--item" v-for="(item, id) in classlist"
-                          :key="id">
-                          <span role="link" href="[object Object]" class="vsm--link vsm--link_level-1" :class="{
-                            'vsm--link_active': item.id == clickIndex,
-                          }"><span class="vsm--title">{{ item.name }}</span>
+                        <div @click="handleClick(item.id)" class="vsm--item" v-for="(item, id) in classlist" :key="id">
+
+                          <span role="link" :href="'/class/' + item.id" class="vsm--link vsm--link_level-1"
+                            :class="{ 'vsm--link_active': item.id === clickIndex }">
+
+                            <span class="vsm--title">{{ item.name }}</span>
+
                             <div class="vsm--arrow vsm--arrow_slot">
                               <span><i class="icon-chevron-right"></i></span>
                             </div>
@@ -264,38 +294,21 @@ function formatDate(time: string) {
                         <h5 class="i-con-h-a">
                           全部资源
                           <span class="text-muted fs-13 v-1 ml-1">
-                            <!-- {{ ResourceNumber }} -->
+                            {{ ResourceNumber }}
                           </span>
                         </h5>
                       </div>
-                      <nav class="menu menu--macwk——list macwk-soft-list-menu flex">
+                      <!-- 选项卡 -->
+                      <nav class="menu menu--macwk-list macwk-soft-list-menu flex">
                         <ul class="menu__list">
-                          <li class="menu__item" @click="changeNews()" :class="{
-                            'menu__item--current': news === sortOrder,
-                          }">
-                            <a class="menu__link"> 最新 </a>
+                          <li style="display: flex;">
+                            <button v-for="tab in ['new', 'hot', 'commend', 'like', 'recommend']" class="menu__link"
+                              :key="tab" :class="{ active: activeTab === tab }" @click="contentStore.setActiveTab(tab)">
+                              {{ tab === 'new' ? '最新' : tab === 'hot' ? '下载' : tab === 'commend' ? '评论' : tab === 'like'
+                                ? '喜欢' : tab === 'recommend' ? '推荐' : '' }}
+
+                            </button>
                           </li>
-                          <li class="menu__item" @click="changeDownload()" :class="{
-                            'menu__item--current': download === sortOrder,
-                          }">
-                            <a class="menu__link"> 下载 </a>
-                          </li>
-                          <li class="menu__item" @click="changeDiscuss()" :class="{
-                            'menu__item--current': discuss === sortOrder,
-                          }">
-                            <a class="menu__link"> 评论 </a>
-                          </li>
-                          <li class="menu__item" @click="changeLove()" :class="{
-                            'menu__item--current': love === sortOrder,
-                          }">
-                            <a class="menu__link"> 喜欢 </a>
-                          </li>
-                          <li class="menu__item" @click="changeRecommend()" :class="{
-                            'menu__item--current': recommend === sortOrder,
-                          }">
-                            <a class="menu__link"> 推荐 </a>
-                          </li>
-                          <li class="menu__line"></li>
                         </ul>
                       </nav>
                       <div class="target-blank">
@@ -324,116 +337,113 @@ function formatDate(time: string) {
                       </div>
                     </div>
                     <!---->
-                    <!---->
                     <div id="listAppContainer" class="app-content-body listAppContainer">
                       <div class="mw-row">
-                          <div v-for="item, index in list" :key="item.id" class="mw-col list-animation-leftIn delay-3">
-                            <div v-if="!setting.imageFormat">
-                              <div v-if="item.status.includes('published')">
-                                <nuxt-link :target="istarget" :to="'/list/' + item.id">
-                                  <a class="macwk-app border white cursor-pointer">
-                                    <el-image v-if="item.thumb != null" class="listtitleimg delay-3" :src="item.thumb"
-                                      lazy>
-                                      <div slot="placeholder" class="image-slot">
-                                        <img style="
+                        <div v-for="item, index in list" :key="item.id" class="mw-col list-animation-leftIn delay-3">
+                          <div v-if="!setting.imageFormat">
+                            <div v-if="item.status.includes('published')">
+                              <nuxt-link :target="istarget" :to="'/list/' + item.id">
+                                <a class="macwk-app border white cursor-pointer">
+                                  <el-image v-if="item.thumb != null" class="listtitleimg delay-3" :src="item.thumb"
+                                    lazy>
+                                    <div slot="placeholder" class="image-slot">
+                                      <img style="
                                         width: 100%;
                                         height: 100%;
                                         object-fit: cover;
                                       " src="../static/image/loding.gif" />
-                                      </div>
-                                    </el-image>
+                                    </div>
+                                  </el-image>
 
-                                    <div v-else class="delayImg" :style="getStyles()">
-                                      <h3 class="
+                                  <div v-else class="delayImg" :style="getStyles()">
+                                    <h3 class="
                                       flex
                                       text-center text-white
                                       opacity-50
                                     ">
-                                        NOPIC
-                                      </h3>
-                                    </div>
+                                      NOPIC
+                                    </h3>
+                                  </div>
+                                  <div class="macwk-app__body">
+                                    <div class="card-meta">
+                                      <div class="meta-item post-author">
+                                        <el-avatar style=" margin-bottom: 3px;  margin-right: 3px;"
+                                          :src="item.authorThumb"></el-avatar>
+                                        <a class="author-name">{{ item.author }}</a>
+                                      </div>
+                                      <span v-if="item.createTime != null" class="meta-item">
+                                        {{ formatDate(item.createTime) }}</span>
+                                      <span v-else class="meta-item"> {{ formatDate(item.addTime) }}</span>
 
-                                    <div class="macwk-app__body">
-                                      <div class="card-meta">
-                                        <div class="meta-item post-author">
-                                          <el-avatar style=" margin-bottom: 3px;  margin-right: 3px;"
-                                            :src="item.authorThumb"></el-avatar>
-                                          <a class="author-name">{{ item.author }}</a>
-                                        </div>
-                                        <span v-if="item.createTime != null" class="meta-item">
-                                          {{ formatDate(item.createTime) }}</span>
-                                        <span v-else class="meta-item"> {{ formatDate(item.addTime) }}</span>
+                                      <span class="meta-item"><i class="el-icon-share"></i></span>
+                                    </div>
+                                    <h3 class="heading-tertiary-list">{{ item.title }}</h3>
+                                  </div>
+                                  <div class="extend">
+                                    <div class="button">
+                                      <div style="margin-left:12px">
+                                        <span style="font-size: 36px;line-height: 1;">
 
-                                        <span class="meta-item"><i class="el-icon-share"></i></span>
+                                          <i class="light-icon-more icon-next-arrow"></i>
+                                        </span>
                                       </div>
-                                      <h3 class="heading-tertiary-list">{{ item.title }}</h3>
-                                    </div>
-                                    <div class="extend">
-                                      <div class="button">
-                                        <div style="margin-left:12px">
-                                          <span style="font-size: 36px;line-height: 1;">
 
-                                            <i class="light-icon-more icon-next-arrow"></i>
-                                          </span>
-                                        </div>
-
-                                        <div style="margin-right:12px">
-                                          <span class="value">￥{{ item.price }}</span>
-                                        </div>
+                                      <div style="margin-right:12px">
+                                        <span class="value">￥{{ item.price }}</span>
                                       </div>
                                     </div>
-                                    <div class="macwk-app__footer">
-                                      <div v-show="showfootnext" class="macwk-app__footer--more">
-                                        <i class="light-icon-more icon-next-arrow"></i>
-                                      </div>
+                                  </div>
+                                  <div class="macwk-app__footer">
+                                    <div v-show="showfootnext" class="macwk-app__footer--more">
+                                      <i class="light-icon-more icon-next-arrow"></i>
                                     </div>
-                                  </a>
-                                </nuxt-link>
-                              </div>
-                            </div>
-                            <div v-else>
-                              <div @mouseover="dowmloadover(index)" @mouseleave="downloadleave()"
-                                v-if="item.status.includes('published')">
-                                <nuxt-link :target="istarget" :to="'/list/' + item.id">
-                                  <a class="macwk-app border white cursor-pointer padding-xl">
-                                    <div class="soft-card">
-                                      <div class="li-card-img-div">
-                                        <img :src="item.thumb" class="budongImg img72 dingweiImg" />
-                                        <transition name="fade">
-                                          <img v-show="isAcitive == index" :src="item.thumb"
-                                            class="gaosiImg img72 dingweiImg" />
-                                        </transition>
-                                      </div>
-                                      <div class="size-12 text-B6BABF margin-top-90" style="min-height: 20px;">
-                                        <span>{{ item.subhead }}</span>
-                                      </div>
-                                      <div class="margin-top size-18 text-bold  text-block card-hover-red">
-                                        <span>{{ item.title }} </span>
-                                      </div>
-                                      <div class="margin-top1 size-14 text-B6BABF limitText">
-                                        <span>{{ item.intro }}</span>
-                                      </div>
-                                      <div class="margin-top2 text-B6BABF flex-row size-12"
-                                        style="display: flex; flex-wrap: wrap; justify-content: space-between; width: 100%;">
-                                        <div style="margin-left: 0px; display: flex; align-items: center;">
-                                          <img class="view-icon--right" src="../../static/image/con-view.svg" />
-                                          <span>{{ item.hits || 0 }}</span>
-                                        </div>
-                                        <div style="margin: auto; display: flex; align-items: center;">
-                                          <span>{{ item.author }}</span>
-                                        </div>
-                                        <div
-                                          style="position: relative; right: 0px; display: flex; align-items: center;">
-                                          <span v-if="item.createTime != null">{{ formatDate(item.createTime) }}</span>
-                                          <span v-else>{{ formatDate(item.addTime) }}</span>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </a>
-                                </nuxt-link>
-                              </div>
+                                  </div>
+                                </a>
+                              </nuxt-link>
                             </div>
                           </div>
+                          <div v-else>
+                            <div @mouseover="dowmloadover(index)" @mouseleave="downloadleave()"
+                              v-if="item.status.includes('published')">
+                              <nuxt-link :target="istarget" :to="'/list/' + item.id">
+                                <a class="macwk-app border white cursor-pointer padding-xl">
+                                  <div class="soft-card">
+                                    <div class="li-card-img-div">
+                                      <img :src="item.thumb" class="budongImg img72 dingweiImg" />
+                                      <transition name="fade">
+                                        <img v-show="isAcitive == index" :src="item.thumb"
+                                          class="gaosiImg img72 dingweiImg" />
+                                      </transition>
+                                    </div>
+                                    <div class="size-12 text-B6BABF margin-top-90" style="min-height: 20px;">
+                                      <span>{{ item.subhead }}</span>
+                                    </div>
+                                    <div class="margin-top size-18 text-bold  text-block card-hover-red">
+                                      <span>{{ item.title }} </span>
+                                    </div>
+                                    <div class="margin-top1 size-14 text-B6BABF limitText">
+                                      <span>{{ item.intro }}</span>
+                                    </div>
+                                    <div class="margin-top2 text-B6BABF flex-row size-12"
+                                      style="display: flex; flex-wrap: wrap; justify-content: space-between; width: 100%;">
+                                      <div style="margin-left: 0px; display: flex; align-items: center;">
+                                        <img class="view-icon--right" src="../../static/image/con-view.svg" />
+                                        <span>{{ item.hits || 0 }}</span>
+                                      </div>
+                                      <div style="margin: auto; display: flex; align-items: center;">
+                                        <span>{{ item.author }}</span>
+                                      </div>
+                                      <div style="position: relative; right: 0px; display: flex; align-items: center;">
+                                        <span v-if="item.createTime != null">{{ formatDate(item.createTime) }}</span>
+                                        <span v-else>{{ formatDate(item.addTime) }}</span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </a>
+                              </nuxt-link>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                     <!---->
@@ -469,19 +479,7 @@ function formatDate(time: string) {
                   </div>
                 </div>
               </div>
-              <div class="app-content mobile-model">
-                <div class="
-                    d-flex
-                    layout-min-full-height
-                    justify-content-center
-                    align-items-center
-                  ">
-                  <div class="text-center" style="width: 80%; margin: 0 auto">
-                    <h1 class="mb-4">哇，窗口太小啦</h1>
-                    <p class="mb-6">请调整浏览器窗口大小或者请使用手机查看！</p>
-                  </div>
-                </div>
-              </div>
+              <mobile />
             </div>
           </div>
           <foot />
@@ -980,6 +978,7 @@ export default ({
   display: flex;
   flex-wrap: wrap;
 }
+
 .view-icon--right {
   margin-right: 5px;
   width: 20px;

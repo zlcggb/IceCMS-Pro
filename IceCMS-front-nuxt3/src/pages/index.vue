@@ -76,7 +76,7 @@ await handlegetCarousel();
 async function handlegetCarousel() {
   try {
     const result = await getCarousel("") as { data: { value: any } };
-    Carousel.value = result.data.value
+    Carousel.value = result.data.value;
   } catch (error) {
     console.error('获取Carousel出错:', error);
   }
@@ -133,13 +133,11 @@ onMounted(() => {
 <template>
   <div class="home">
     <div id="__nuxt">
-      <!---->
       <div id="__layout">
         <div data-fetch-key="0" class="app macwk-animation">
           <top :message1="acticve" />
           <div>
             <section class="layout-index pc-model mt-5">
-              <!-- class="banner-index mb-6" -->
               <div class="outsection">
                 <el-carousel indicator-position="outside" class="index1 banner-index mb-6 Thecarousel"
                   :height="dataHeight" :interval="3000" arrow="always">

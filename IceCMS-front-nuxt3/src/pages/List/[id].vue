@@ -1,18 +1,19 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, watch, reactive } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { useAsyncData } from '#app';
 import { getResourceById } from '../../../api/webresource';
 import { getResourceCommentnum } from '../../../api/webresourceComment';
 import { loveresource } from '../../../api/webresource';
 import { getResourceClassNameByid } from '../../../api/webresourceclass';
 // import { formatDate, GetWeekdate } from '@/utils/date';
 import { formatDate, GetWeekdate } from '../../utils/date.js'
+import EmojiPicker from "vue3-emoji-picker";
+import "vue3-emoji-picker/css";
+import { useUserStore } from "../../../stores/useUserStore";
 
 import wxPayApi from '../../../api/payment/wxPay';
 import aliPayApi from '../../../api/payment/aliPay';
 import orderInfoApi from '../../../api/payment/orderInfo';
-// import VEmojiPicker from 'v-emoji-picker';
 // import Comment from '@/components/ResComment.vue';
 
 // 获取路由参数
@@ -32,13 +33,15 @@ const commentNum = ref<number>(0);
 const MyEmoge = ref('');
 const showDialog = ref(false);
 const mycomment = ref(true);
+const IsvideoSource = ref(false);
 const carousel = ref<string[]>([]);
 const className = ref('');
 const sortClasss = ref<number | string>('');
 const addTime = ref('');
 const createTime = ref('');
 const Theweeks = ref('');
-const payJudge = ref(true);
+const payJudge = ref(false);
+const IsFreePrice = ref('');
 const payBtnDisabled = ref(false);
 const orderNo = ref('');
 const codeUrl = ref('');
@@ -81,6 +84,45 @@ import { useSettingStore } from '../../../stores/setting';
 const settingStore = useSettingStore();
 setting.value = settingStore.settings
 
+const onSelectEmoji = (emoji: any) => {
+  console.log(emoji.i)
+  MyEmoge.value += emoji.i;
+  /* 结果示例
+  { 
+      i: "ernes", // 表情图标
+      n: ["kissing face"], 
+      r: "1f61a", // 包含肤色
+      t: "neutral", // 肤色
+      u: "1f61a" // 不带肤色
+  }
+  */
+};
+// 判断用户是否已购买
+await judgeResource();
+async function judgeResource() {
+  if (process.client) {
+    const userStore = useUserStore();  // 获取 Pinia store 实例
+    // 判断用户是否已登录
+    if (userStore.userid) {
+      const result = await orderInfoApi.queryOrderStatusBytrue(route.params.id, userStore.userid);
+      const IsOrder = result.data.value;
+      const rawIsOrder = toRaw(IsOrder);
+      //检查已登录用户是否购买过此资源，根据userid和resourceid判断
+      if (rawIsOrder?.code == 0) {
+        payJudge.value = true
+      }
+      if (rawIsOrder?.code == 101) {
+        payJudge.value = false
+      }
+    } else {
+      console.log("用户未登录");
+      // 可以在这里做一些跳转，或者显示登录提示等
+      payJudge.value = false
+    }
+
+  }
+};
+
 // 获取资源数据
 await handlegetResourceById();
 async function handlegetResourceById() {
@@ -90,7 +132,14 @@ async function handlegetResourceById() {
     console.log(Resource)
     hits.value = Resource.value.hits ?? 0;
     loveNum.value = Resource.value.loveNum ?? 0;
-    videoSource.value = Resource.value.videoAddress ? [{ src: Resource.value.videoAddress, resolution: '1080p' }] : [];
+    videoSource.value = Resource.value.resAddress ? [{ src: Resource.value.resAddress, resolution: '1080p' }] : [];
+    if (Resource.value.resAddress) {
+      IsvideoSource.value = true;
+    } else {
+      IsvideoSource.value = false;
+
+    }
+    IsFreePrice.value = Resource.value.price;
     carouselNum.value = Resource.value.carousel ? JSON.parse(Resource.value.carousel).length : 0;
     carousel.value = Resource.value.carousel ? JSON.parse(Resource.value.carousel) : [];
     sortClasss.value = Resource.value.sortClass;
@@ -246,12 +295,6 @@ const closeDialog = () => {
   payBtnDisabled.value = false;
 };
 
-// 判断用户是否已购买
-const judgeResource = async () => {
-  const res = await orderInfoApi.queryOrderStatusBytrue(route.params.id as string, payOrder.productId);
-  payJudge.value = res.data.code !== 0;
-};
-
 // 初始化数据
 onMounted(() => {
   const savedMode = localStorage.getItem('darkMode');
@@ -338,7 +381,7 @@ onMounted(() => {
           <div class="bottom alipay">使用扫码支付 {{ price / 100 }}元</div>
         </h5>
         <h5 class="outh5">
-          <qriously :value="codeUrl" :size="190" />
+          <!-- <qriously :value="codeUrl" :size="190" /> -->
         </h5>
         <div style="height: 40px"></div>
         <h5 class="outh7">
@@ -358,7 +401,7 @@ onMounted(() => {
           <div class="bottom alipay">使用扫码支付 {{ price / 100 }}元</div>
         </h5>
         <h5 class="outh5">
-          <qriously :value="codeUrl" :size="190" />
+          <!-- <qriously :value="codeUrl" :size="190" /> -->
         </h5>
         <div style="height: 40px"></div>
         <h5 class="outh6">
@@ -387,7 +430,8 @@ onMounted(() => {
                   class="shape-eleven" /><img src="../../static/image/shape-10.svg" class="shape-10" /><img
                   src="../../static/image/shape-11.svg" class="shape-11" />
               </div>
-              <div v-if="videoAddress != null" class="container">
+              <!-- 视频模式 -->
+              <div v-if="IsvideoSource" class="container">
                 <div class="row align-items-center">
                   <div class="col-xs-12 col-lg-6 col-xl-6">
                     <div class="header-app">
@@ -397,13 +441,21 @@ onMounted(() => {
                           {{ title }}
                         </h2>
                         <div class="mb-15">
-                          <el-button size="mini" v-if="payJudej" :disabled="payBtnDisabled" @click="Download()"
-                            class="btn btn-theme btn-round w-200 cursor mr-4" round><i class="el-icon-download"></i>
-                            支付下载</el-button>
-                          <el-button size="mini" v-else :disabled="payBtnDisabled" @click="NowDownload()"
-                            class="btn btn-theme btn-round w-200 cursor mr-4" round><i class="el-icon-download"></i>
-                            立即下载(已支付)</el-button>
-                          <button v-if="!lovecheck" @click="loveClick()" class="
+                          <el-button v-if="!IsFreePrice || IsFreePrice == '0'" :disabled="payBtnDisabled"
+                            @click="Download()" class="large-btn btn btn-theme btn-round w-200 cursor mr-4" round><i
+                              class="el-icon-download"></i>
+                            免费下载</el-button>
+                          <div v-else>
+                            <el-button v-if="!payJudge" :disabled="payBtnDisabled" @click="Download()"
+                              class="large-btn btn btn-theme btn-round w-200 cursor mr-4" round><i
+                                class="el-icon-download"></i>
+                              支付下载</el-button>
+                            <el-button v-else :disabled="payBtnDisabled" @click="NowDownload()"
+                              class="large-btn btn btn-theme btn-round w-200 cursor mr-4" round><i
+                                class="el-icon-download"></i>
+                              立即下载(已支付)</el-button>
+                          </div>
+                          <button v-if="!loveCheck" @click="loveClick()" class="
                               btn btn-outline-theme btn-round
                               px-5
                               zanUp
@@ -433,7 +485,7 @@ onMounted(() => {
                     </div>
                   </div>
                   <div class="col-xs-12 col-lg-6 col-xl-6 text-center">
-                    <vue-core-video-player :src="videoSource" :title="title" theme="#50A1FF"></vue-core-video-player>
+                    <!-- <vue-core-video-player :src="videoSource" :title="title" theme="#50A1FF"></vue-core-video-player> -->
 
                     <!-- <div class="
                         device device-macbook-pro device-silver device-silver
@@ -450,8 +502,9 @@ onMounted(() => {
                     </div> -->
                   </div>
 
+                </div>
               </div>
-              </div>
+              <!-- 普通模式 -->
               <div v-else class="container">
                 <div class="row align-items-center">
                   <div class="col-xs-12 col-lg-6 col-xl-6">
@@ -459,16 +512,24 @@ onMounted(() => {
                       <img class="app-icon mr-3" />
                       <div class="list-body">
                         <h2 class="mb-4">
-                          {{ title }}                     
+                          {{ title }}
                         </h2>
                         <div class="mb-15">
-                          <el-button size="mini" v-if="payJudej" :disabled="payBtnDisabled" @click="Download()"
-                            class="btn btn-theme btn-round w-200 cursor mr-4" round><i class="el-icon-download"></i>
+                          <el-button v-if="!IsFreePrice || IsFreePrice == '0'" :disabled="payBtnDisabled"
+                            @click="Download()" class="large-btn btn btn-theme btn-round w-200 cursor mr-4" round><i
+                              class="el-icon-download"></i>
+                            免费下载</el-button>
+                          <div v-else>
+                          <el-button v-if="!payJudge" :disabled="payBtnDisabled" @click="Download()"
+                            class="large-btn btn btn-theme btn-round w-200 cursor mr-4" round><i
+                              class="el-icon-download"></i>
                             支付下载</el-button>
-                          <el-button size="mini" v-else :disabled="payBtnDisabled" @click="NowDownload()"
-                            class="btn btn-theme btn-round w-200 cursor mr-4" round><i class="el-icon-download"></i>
+                          <el-button v-else :disabled="payBtnDisabled" @click="NowDownload()"
+                            class="large-btn btn btn-theme btn-round w-200 cursor mr-4" round><i
+                              class="el-icon-download"></i>
                             立即下载(已支付)</el-button>
-                          <button v-if="!lovecheck" @click="loveClick()" class="
+                          </div>
+                          <button v-if="!loveCheck" @click="loveClick()" class="
                               btn btn-outline-theme btn-round
                               px-5
                               zanUp
@@ -542,10 +603,10 @@ onMounted(() => {
                             line-height-3
                             opacity-70
                           ">
-                          
+
                         </p>
                         <p class="text-uppercase fs-10 ls-2 mb-0 opacity-70">
-                          
+
                         </p>
                       </div>
                     </div>
@@ -620,7 +681,8 @@ onMounted(() => {
                         <p class="text-muted text-uppercase fs-10 ls-2 mb-0">
                           类别
                         </p>
-                        <p class="
+                        <client-only>
+                        <p  class="
                             mb-0
                             fs-20
                             font-weight-bolder
@@ -629,10 +691,10 @@ onMounted(() => {
                             hover-opacity-normal
                           ">
 
-                          <a :href="'/classdetal/' + sortClasss">
+                          <NuxtLink :to="'/classdetal/' + sortClasss">
                             {{ className }}
-                            <i class="icon-arrow-r text-muted"></i></a>
-                        </p>
+                            <i class="icon-arrow-r text-muted"></i></NuxtLink>
+                        </p></client-only>
                         <p class="fs-10 ls-2 mb-0 opacity-70">enhancement</p>
                       </div>
                     </div>
@@ -710,19 +772,7 @@ onMounted(() => {
                 <!---->
               </section>
             </div>
-            <div class="mobile-model">
-              <div class="
-                  d-flex
-                  layout-min-full-height
-                  justify-content-center
-                  align-items-center
-                ">
-                <div class="text-center" style="width: 80%; margin: 0 auto">
-                  <h1 class="mb-4">哇，窗口太小啦</h1>
-                  <p class="mb-6">请调整浏览器窗口大小或者请使用手机查看！</p>
-                </div>
-              </div>
-            </div>
+            <mobile />
             <div class="el-dialog__wrapper text-center" style="display: none">
               <div role="dialog" aria-modal="true" aria-label="dialog" class="el-dialog no-bg no-shadow"
                 style="margin-top: 15vh; width: 1300px">
@@ -776,10 +826,10 @@ onMounted(() => {
           <!-- v-on:click="show = !show"
                 v-if="!show" -->
           <client-only>
-            <!-- <div class="myVEmojiPicker">
-              <VEmojiPicker v-show="showDialog" :style="{ width: '340px', height: '200' }" labelSearch="Search"
-                lang="pt-BR" @select="onSelectEmoji" />
-            </div> -->
+            <div class="myVEmojiPicker">
+              <EmojiPicker v-show="showDialog" :style="{ width: '340px', height: '200' }" labelSearch="Search"
+                lang="pt-BR" :native="true" @select="onSelectEmoji" />
+            </div>
           </client-only>
           <!-- 后台控制是否显示评论 -->
           <!-- <div v-if="!glabledata.glableCommentShow">
@@ -805,7 +855,7 @@ onMounted(() => {
               ">
               <div class="flex">
                 共
-                <span class="fs-36 mx-1">{{ commentnum || 0 }}</span>
+                <span class="fs-36 mx-1">{{ commentNum || 0 }}</span>
                 条评论
               </div>
               <svg color="inherit" viewbox="0 0 32 32" class="w-32" style="
@@ -825,9 +875,7 @@ onMounted(() => {
           </section>
           <!-- </div>
           </div> -->
-          <ResComment
-          v-if="!mycomment"
-           :articleId="$route.params.id" :theEmoge="MyEmoge" ref="child"
+          <ResComment v-if="!mycomment" :articleId="$route.params.id" :theEmoge="MyEmoge" ref="child"
             @closethecpmmentName="updateDate()" @openthecpmmentName="showemoge()" /> -->
           <!--
           <!---->
@@ -1430,5 +1478,17 @@ export default {
 .player-container-out {
   width: 70%;
   display: flex;
+}
+
+/* 自定义样式 */
+.large-btn {
+  font-size: 18px;
+  /* 调整字体大小 */
+  padding: 15px 30px;
+  /* 调整按钮内边距 */
+  height: 45px;
+  /* 设置按钮高度 */
+  line-height: 50px;
+  /* 使文本垂直居中 */
 }
 </style>

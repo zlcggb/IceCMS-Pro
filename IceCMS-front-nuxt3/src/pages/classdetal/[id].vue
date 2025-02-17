@@ -15,6 +15,13 @@ const moreaction = () => {
   moreIndex.value = !moreIndex.value;
 };
 
+definePageMeta({
+  validate: async (route) => {
+    // 检查id是否由数字组成
+    return /^\d+$/.test(route.params.id)
+  }
+})
+
 const formatDateString = (time: string | number | Date) => {
   return formatDate(new Date(time), 'yyyy-MM-dd ');
 };
