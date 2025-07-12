@@ -1,0 +1,17 @@
+
+> IceCMS@3.2.5 dev /Users/zora/Downloads/IceCMS-Pro/IceCMS-front-admin
+> NODE_OPTIONS=--max-old-space-size=4096 vite
+
+╭─────────────────────────────────────────╮
+│ Hello! 欢迎使用 icecms                  │
+│ 我们为您精心准备了下面贴心的保姆级文档  │
+│ https://www.icecms.com                  │
+╰─────────────────────────────────────────╯
+
+  VITE v5.0.12  ready in 858 ms
+
+  ➜  Local:   http://localhost:2580/
+  ➜  Network: http://192.168.8.183:2580/
+Browserslist: caniuse-lite is outdated. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme

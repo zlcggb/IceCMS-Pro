@@ -1,0 +1,21 @@
+
+> nuxt-app@ dev /Users/zora/Downloads/IceCMS-Pro/IceCMS-front-nuxt3
+> nuxt dev --dotenv .env.development
+
+[nuxi] Nuxt 3.15.2 with Nitro 2.10.4
+
+  ➜ Local:    http://localhost:3000/
+  ➜ Network:  use --host to expose
+
+  ➜ DevTools: press Shift + Option + D in the browser (v1.7.0)
+
+✔ Vite client built in 16ms
+✔ Vite server built in 450ms
+
+ WARN  Browserslist: browsers data (caniuse-lite) is 6 months old. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+
+[nitro] ✔ Nuxt Nitro server built in 525 ms
+ℹ Vite client warmed up in 121ms
+ℹ Vite server warmed up in 1309ms
