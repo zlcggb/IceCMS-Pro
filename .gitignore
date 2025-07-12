@@ -10,6 +10,9 @@
 *.war
 *.ear
 
+# 注意：JAR文件较大，建议本地构建
+# 如需分享JAR文件，请使用其他方式（如Release页面）
+
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 /target/

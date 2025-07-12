@@ -1,43 +1,36 @@
-# Git LFS 配置文件
-# 处理大文件，避免GitHub警告
+# Git 属性配置文件
+# 确保跨平台的一致性
 
-# Java JAR 文件
-*.jar filter=lfs diff=lfs merge=lfs -text
+# 文本文件使用LF换行符
+*.md text eol=lf
+*.txt text eol=lf
+*.json text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.xml text eol=lf
+*.properties text eol=lf
 
-# 其他大文件类型
-*.zip filter=lfs diff=lfs merge=lfs -text
-*.tar.gz filter=lfs diff=lfs merge=lfs -text
-*.war filter=lfs diff=lfs merge=lfs -text
+# 源代码文件
+*.java text eol=lf
+*.js text eol=lf
+*.ts text eol=lf
+*.vue text eol=lf
+*.css text eol=lf
+*.scss text eol=lf
+*.html text eol=lf
 
-# 数据库文件
-*.db filter=lfs diff=lfs merge=lfs -text
-*.sqlite filter=lfs diff=lfs merge=lfs -text
+# 配置文件
+*.sh text eol=lf
+*.bat text eol=crlf
 
-# 媒体文件
-*.mp4 filter=lfs diff=lfs merge=lfs -text
-*.avi filter=lfs diff=lfs merge=lfs -text
-*.mov filter=lfs diff=lfs merge=lfs -text
-*.wmv filter=lfs diff=lfs merge=lfs -text
-*.mp3 filter=lfs diff=lfs merge=lfs -text
-*.wav filter=lfs diff=lfs merge=lfs -text
-*.flac filter=lfs diff=lfs merge=lfs -text
-
-# 图片文件（大于1MB的）
-*.psd filter=lfs diff=lfs merge=lfs -text
-*.ai filter=lfs diff=lfs merge=lfs -text
-*.tiff filter=lfs diff=lfs merge=lfs -text
-*.tif filter=lfs diff=lfs merge=lfs -text
-
-# 文档文件
-*.pdf filter=lfs diff=lfs merge=lfs -text
-*.doc filter=lfs diff=lfs merge=lfs -text
-*.docx filter=lfs diff=lfs merge=lfs -text
-*.ppt filter=lfs diff=lfs merge=lfs -text
-*.pptx filter=lfs diff=lfs merge=lfs -text
-
-# 其他二进制文件
-*.exe filter=lfs diff=lfs merge=lfs -text
-*.dmg filter=lfs diff=lfs merge=lfs -text
-*.pkg filter=lfs diff=lfs merge=lfs -text
-*.deb filter=lfs diff=lfs merge=lfs -text
-*.rpm filter=lfs diff=lfs merge=lfs -text
+# 二进制文件
+*.jar binary
+*.zip binary
+*.tar.gz binary
+*.war binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary

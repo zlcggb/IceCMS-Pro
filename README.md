@@ -9,12 +9,13 @@
 </p>
 
 <p align="center">
-	<img style="padding: 4px;" alt="Label" src="https://img.shields.io/badge/JDK-1.8+-orange">
+	<img style="padding: 4px;" alt="Label" src="https://img.shields.io/badge/JDK-11+-orange">
 	<img style="padding: 4px;" alt="Label" src="https://img.shields.io/badge/SpringBoot-2.2.7.RELEASE-brightgreen">
 	<img style="padding: 4px;" alt="Label" src="https://img.shields.io/badge/MyBatis-3.5.5-red">
-	<img style="padding: 4px;" alt="Label" src="https://img.shields.io/badge/Vue-2.6.11-brightgreen">
+	<img style="padding: 4px;" alt="Label" src="https://img.shields.io/badge/Vue-3.0+-brightgreen">
+	<img style="padding: 4px;" alt="Label" src="https://img.shields.io/badge/Nuxt-3.0+-green">
 	<img style="padding: 4px;" alt="Label" src="https://img.shields.io/badge/license-MIT-blue">
-	<img style="padding: 4px;" alt="Label" src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2FNaccl%2FNBlog&count_bg=%2344CC11&title_bg=%23555555&icon=notist.svg&icon_color=%231296DB&title=hits&edge_flat=false">
+	<img style="padding: 4px;" alt="Label" src="https://img.shields.io/badge/Mac-一键部署-red">
 </p>
 
 ## 🚀 Mac一键启动功能
@@ -70,7 +71,7 @@ IceCMS-Pro/
 
 ## 简介
 
-基于 Spring Boot + Vue 前后端分离的内容管理系统
+基于 Spring Boot + Vue 前后端分离的内容管理系统，支持Mac环境一键部署。
 
 演示: （[www.icecmspro.com](https://www.icecmspro.com/)）
 后台:（[admin.icecmspro.com](https://admin.icecmspro.com/)）
@@ -78,6 +79,20 @@ IceCMS-Pro/
 官网: （[www.icecms.cn](https://doc.icecms.cn)）
 
 IceCMS 文档： （[http://www.icecms.cn](https://www.icecms.cn)）
+
+## ⚠️ 重要提示
+
+**关于大文件：**
+- 项目中的JAR文件（如`main.jar`）较大，已从仓库中排除
+- 首次运行时，脚本会自动构建生成所需的JAR文件
+- 如需预构建的JAR文件，请查看[Releases页面](https://github.com/zlcggb/IceCMS-Pro/releases)
+
+**快速开始：**
+```bash
+git clone https://github.com/zlcggb/IceCMS-Pro.git
+cd IceCMS-Pro
+./scripts/start-all.sh
+```
 
 内容管理：文章、图片、资源等多种类型的内容管理；
 
@@ -138,13 +153,21 @@ API文档：[api.icecmspro.com/doc.html](https://api.icecmspro.com/doc.html)
 7. Markdown 转 HTML：[commonmark-java](https://github.com/commonmark/commonmark-java)
 8. 离线 IP 地址库：[ip2region](https://github.com/lionsoul2014/ip2region)
 
-基于 JDK8 开发，8以上要添加依赖：
+**重要提示：推荐使用 JDK 11 或以上版本以获得更好的兼容性和性能。**
 
-  ```xml
-  <dependency>
-  <groupId>javax.xml.bind</groupId>
-  <artifactId>jaxb-api</artifactId>
-  <version>2.3.0</version>
+JDK 11+ 的优势：
+- 更好的性能和内存管理
+- 长期支持版本（LTS）
+- 更好的容器化支持
+- 现代化的垃圾收集器
+
+如果使用 JDK 8，需要添加以下依赖：
+
+```xml
+<dependency>
+    <groupId>javax.xml.bind</groupId>
+    <artifactId>jaxb-api</artifactId>
+    <version>2.3.0</version>
 </dependency>
 ```
 
@@ -296,15 +319,23 @@ Docker部署方式(推荐,可用于快速上线或测试)
     ├── icecms5.6.sql
     └── icecms8.0.sql
 
-## <strong>配置最小开发环境</strong>
+## 🛠️ 环境要求
 
-1.环境配置
+### 必需环境
 
-MySQL
-JDK1.8或以上
-Maven
-Nodejs
-微信开发者工具
+- **Java**: JDK 11+ （推荐）或 JDK 1.8+
+- **Node.js**: 16.0+
+- **MySQL**: 5.7+ 或 8.0+
+- **Redis**: 3.0+ （可选，用于缓存）
+- **Maven**: 3.6+
+- **Git**: 2.0+
+- **Git LFS**: 用于大文件管理
+
+### 开发工具（可选）
+
+- IntelliJ IDEA 或 Eclipse
+- VS Code
+- 微信开发者工具（用于uni-app开发）
 
 ### <strong>后端部署</strong>
 
