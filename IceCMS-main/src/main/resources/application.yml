@@ -5,10 +5,10 @@ spring:
     password: IceCMS@2024#User
     driver-class-name: com.mysql.cj.jdbc.Driver
   mail:
-    username: icecms@qq.com # 发送人邮箱
-    password: uxugdfugeozajadh # 邮箱授权码(上面获取到的)
-    host: smtp.qq.com # 邮件服务器,163邮箱就是smtp.163.com
-    protocol: smtp # 协议，可以不配，默认就是这个
+    username: icecmspro
+    password: IceCMS@2024#User
+    host: smtp.qq.com
+    protocol: smtp
   redis:
     host: localhost
     port: 6379
@@ -17,15 +17,7 @@ spring:
       max-file-size: 10MB
       max-request-size: 10MB
 mybatis-plus:
-  #  mybatis-plus??sql??
-  # configuration:
-  # log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   mapper-locations: classpath:com/ttice/mapper/xml/*.xml
 server:
   address: 0.0.0.0
   port: 8181
-  #  ??ssh https
-#  ssl:
-#    key-store: classpath:Myssh.pfx
-#    key-store-password: ko674hz8x35
-#    key-store-type: PKCS12

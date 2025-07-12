@@ -404,7 +404,21 @@ EOF
     # 导入数据库结构
     if [[ -f "$PROJECT_ROOT/sql/icecms8.0.sql" ]]; then
         log_info "导入数据库结构..."
-        mysql -u "$MYSQL_DB_USER" -p"$MYSQL_DB_PASSWORD" "$MYSQL_DB_NAME" < "$PROJECT_ROOT/sql/icecms8.0.sql"
+
+        # 检测数据库类型
+        DB_VERSION=$(mysql -u root -p"$MYSQL_ROOT_PASSWORD" -e "SELECT VERSION();" 2>/dev/null | tail -n 1)
+
+        if [[ "$DB_VERSION" == *"MariaDB"* ]]; then
+            log_info "检测到 MariaDB，转换排序规则..."
+            # 为 MariaDB 创建兼容的 SQL 文件
+            sed 's/utf8mb4_0900_ai_ci/utf8mb4_general_ci/g' "$PROJECT_ROOT/sql/icecms8.0.sql" > "$PROJECT_ROOT/sql/icecms_mariadb.sql"
+            mysql -u "$MYSQL_DB_USER" -p"$MYSQL_DB_PASSWORD" "$MYSQL_DB_NAME" < "$PROJECT_ROOT/sql/icecms_mariadb.sql"
+            rm -f "$PROJECT_ROOT/sql/icecms_mariadb.sql"  # 清理临时文件
+        else
+            log_info "检测到 MySQL，使用原始 SQL 文件..."
+            mysql -u "$MYSQL_DB_USER" -p"$MYSQL_DB_PASSWORD" "$MYSQL_DB_NAME" < "$PROJECT_ROOT/sql/icecms8.0.sql"
+        fi
+
         log_success "数据库结构导入完成"
     else
         log_warning "数据库 SQL 文件不存在，请手动导入"
@@ -459,6 +473,51 @@ configure_backend() {
         fi
     else
         log_warning "后端目录不存在: $BACKEND_DIR"
+    fi
+}
+
+# 配置前端网络绑定
+configure_frontend_network_binding() {
+    log_info "配置前端网络绑定..."
+
+    if [[ -f "package.json" ]]; then
+        # 更新 package.json 中的启动脚本，添加 --host 0.0.0.0 参数
+        log_info "更新前端启动脚本以支持外网访问..."
+
+        # 备份原文件
+        cp package.json package.json.network.backup
+
+        # 使用 node 脚本更新 package.json
+        node -e "
+        const fs = require('fs');
+        const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+
+        if (pkg.scripts) {
+            if (pkg.scripts.dev) {
+                pkg.scripts.dev = pkg.scripts.dev.replace(/nuxt dev/, 'nuxt dev --host 0.0.0.0 --port 3000');
+                if (!pkg.scripts.dev.includes('--host')) {
+                    pkg.scripts.dev += ' --host 0.0.0.0 --port 3000';
+                }
+            }
+            if (pkg.scripts.serve) {
+                pkg.scripts.serve = pkg.scripts.serve.replace(/nuxt dev/, 'nuxt dev --host 0.0.0.0 --port 3000');
+                if (!pkg.scripts.serve.includes('--host')) {
+                    pkg.scripts.serve += ' --host 0.0.0.0 --port 3000';
+                }
+            }
+        }
+
+        fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2));
+        " 2>/dev/null || {
+            # 如果 node 脚本失败，使用 sed 作为备用方案
+            log_warning "Node.js 脚本更新失败，使用 sed 备用方案..."
+            sed -i 's/"dev": "nuxt dev/"dev": "nuxt dev --host 0.0.0.0 --port 3000/g' package.json
+            sed -i 's/"serve": "nuxt dev/"serve": "nuxt dev --host 0.0.0.0 --port 3000/g' package.json
+        }
+
+        log_success "前端网络绑定配置完成"
+    else
+        log_warning "package.json 不存在，跳过网络绑定配置"
     fi
 }
 
@@ -580,6 +639,9 @@ install_frontend_deps_arm_device() {
     # ARM 设备内存和性能有限，使用更保守的设置
     export NODE_OPTIONS="--max-old-space-size=1024"
 
+    # 配置前端网络绑定（支持外网访问）
+    configure_frontend_network_binding
+
     # 创建简化的 package.json
     if [[ -f "package.json" ]]; then
         cp package.json package.json.backup
@@ -587,6 +649,10 @@ install_frontend_deps_arm_device() {
 
         # 使用简化配置安装
         if pnpm install --ignore-scripts --no-optional; then
+            log_info "安装 ARM64 原生绑定..."
+            # 安装 ARM64 原生绑定模块
+            pnpm add @oxc-parser/binding-linux-arm64-gnu || log_warning "ARM64 绑定安装失败，运行时可能需要手动安装"
+
             log_success "ARM 设备简化安装成功"
             # 恢复原始配置
             mv package.json.backup package.json
@@ -697,7 +763,13 @@ show_result() {
     else
         echo -e "${YELLOW}⚠${NC} pnpm: 未安装（将使用 npm）"
     fi
-    echo -e "${GREEN}✓${NC} MySQL: 已安装并启动"
+    # 检测数据库类型并显示
+    DB_VERSION=$(mysql -u root -p"$MYSQL_ROOT_PASSWORD" -e "SELECT VERSION();" 2>/dev/null | tail -n 1)
+    if [[ "$DB_VERSION" == *"MariaDB"* ]]; then
+        echo -e "${GREEN}✓${NC} MariaDB: 已安装并启动"
+    else
+        echo -e "${GREEN}✓${NC} MySQL: 已安装并启动"
+    fi
     echo -e "${GREEN}✓${NC} Redis: 已安装并启动"
     echo
     echo "🔐 数据库配置信息："
@@ -721,6 +793,9 @@ show_result() {
             if [[ "$DEVICE_TYPE" == "raspberry_pi" ]]; then
                 echo "- 树莓派设备：如遇性能问题，可适当增加 swap 空间"
                 echo "- 建议使用 Class 10 或更快的 SD 卡"
+                if [[ "$DB_VERSION" == *"MariaDB"* ]]; then
+                    echo "- 已自动处理 MariaDB 字符集兼容性问题"
+                fi
             elif [[ "$DEVICE_TYPE" == "jetson" ]]; then
                 echo "- Jetson 设备：已优化 GPU 加速支持"
                 echo "- 确保 CUDA 环境正确配置"

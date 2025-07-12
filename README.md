@@ -62,6 +62,29 @@ cd IceCMS-Pro
 | **ARM64** | 树莓派4/5、Jetson Orin、阿里云ARM | ✅ 自动优化 |
 | **ARM32** | 树莓派3 | ⚠️ 轻量化支持 |
 
+#### 🍓 树莓派部署特殊说明
+
+**已解决的关键问题：**
+1. ✅ **Maven 下载慢** - 自动配置阿里云镜像
+2. ✅ **MariaDB 兼容性** - 自动转换字符集排序规则
+3. ✅ **ARM64 原生模块** - 自动安装 `@oxc-parser/binding-linux-arm64-gnu`
+4. ✅ **网络绑定问题** - 自动配置 `--host 0.0.0.0`
+5. ✅ **npm 下载慢** - 自动配置淘宝镜像
+6. ✅ **数据库初始化** - 自动创建用户和导入表结构
+
+**树莓派用户无需额外操作，脚本会自动处理所有兼容性问题！**
+
+**如遇问题，可运行修复脚本：**
+```bash
+./scripts/fix-frontend-deps.sh  # 修复前端依赖
+./scripts/status.sh             # 查看服务状态
+./scripts/logs.sh               # 查看详细日志
+```
+
+**详细文档：**
+- 📖 [树莓派部署指南](docs/RASPBERRY_PI_DEPLOYMENT.md)
+- 🔧 [部署问题解决方案](docs/DEPLOYMENT_SOLUTIONS.md)
+
 ### 🔐 密码管理
 
 **所有密码都已预配置强密码，无需手动设置：**

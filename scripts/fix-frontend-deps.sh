@@ -40,6 +40,28 @@ fix_frontend_deps() {
     export SKIP_POSTINSTALL=1
     export NODE_OPTIONS="--max-old-space-size=4096"
     export NUXT_TELEMETRY_DISABLED=1
+
+    # 检测系统架构并安装对应的原生绑定
+    ARCH=$(uname -m)
+    log_info "检测到系统架构: $ARCH"
+
+    case $ARCH in
+        aarch64|arm64)
+            log_info "ARM64 架构，安装 ARM64 原生绑定..."
+            if command_exists pnpm; then
+                pnpm add @oxc-parser/binding-linux-arm64-gnu || log_warning "ARM64 绑定安装失败，将在后续步骤重试"
+            fi
+            ;;
+        x86_64)
+            log_info "x64 架构，安装 x64 原生绑定..."
+            if command_exists pnpm; then
+                pnpm add @oxc-parser/binding-linux-x64-gnu || log_warning "x64 绑定安装失败，将在后续步骤重试"
+            fi
+            ;;
+        *)
+            log_warning "未知架构: $ARCH，跳过原生绑定安装"
+            ;;
+    esac
     
     # 方案1: 使用 pnpm 安装（跳过脚本和可选依赖）
     log_info "尝试使用 pnpm 安装依赖（跳过构建脚本）..."
@@ -127,8 +149,10 @@ EOF
     log_error "所有修复方案都失败了"
     log_info "建议手动检查以下问题："
     log_info "1. Node.js 版本是否兼容 (需要 18+)"
-    log_info "2. 系统架构是否支持 (x64)"
+    log_info "2. 系统架构是否支持 (x64/ARM64)"
     log_info "3. 网络连接是否正常"
+    log_info "4. 对于 ARM64 设备，确保安装了正确的原生绑定："
+    log_info "   pnpm add @oxc-parser/binding-linux-arm64-gnu"
     
     return 1
 }
