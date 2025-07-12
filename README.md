@@ -1,12 +1,14 @@
+# IceCMS-Pro
+
 简体中文 | [English](README_en.md)
 
 <p align="center">
   <a href="https://www.icecmspro.com" target="_blank">
     <img alt="logo" style="height: 120px" src="https://res.cloudinary.com/dxl1idlr5/image/upload/v1700470902/logo_s4maqv.svg"/>
   </a>
-</p>  
+</p>
 
- <p align="center">
+<p align="center">
 	<img style="padding: 4px;" alt="Label" src="https://img.shields.io/badge/JDK-1.8+-orange">
 	<img style="padding: 4px;" alt="Label" src="https://img.shields.io/badge/SpringBoot-2.2.7.RELEASE-brightgreen">
 	<img style="padding: 4px;" alt="Label" src="https://img.shields.io/badge/MyBatis-3.5.5-red">
@@ -15,6 +17,56 @@
 	<img style="padding: 4px;" alt="Label" src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2FNaccl%2FNBlog&count_bg=%2344CC11&title_bg=%23555555&icon=notist.svg&icon_color=%231296DB&title=hits&edge_flat=false">
 </p>
 
+## 🚀 Mac一键启动功能
+
+本项目已添加Mac环境下的一键启动功能，支持自动安装依赖和启动所有服务。
+
+### 快速开始
+
+```bash
+# 一键启动所有服务
+./scripts/start-all.sh
+```
+
+该脚本会自动：
+- 检查并安装Java环境
+- 检查并安装Node.js和pnpm
+- 安装项目依赖
+- 启动后端服务
+- 启动前端服务
+- 提供访问链接
+
+### 其他脚本
+
+```bash
+# 查看服务状态
+./scripts/status.sh
+
+# 停止所有服务
+./scripts/stop-all.sh
+
+# 查看日志
+./scripts/logs.sh
+
+# 智能启动（检测已运行的服务）
+./scripts/smart-start.sh
+```
+
+## 📁 项目结构
+
+```
+IceCMS-Pro/
+├── IceCMS-main/              # 后端主服务 (Spring Boot)
+├── IceCMS-front-admin/       # 管理后台前端 (Vue 3 + Vite)
+├── IceCMS-front-nuxt3/       # 用户前端 (Nuxt 3)
+├── IceCMS-Docker/            # Docker部署配置
+├── IceCMS-uniApp/            # 移动端应用 (uni-app)
+├── IceCMS-ment/              # 评论服务
+├── IcePay-ment/              # 支付服务
+├── scripts/                  # 部署和管理脚本
+├── sql/                      # 数据库脚本
+└── logs/                     # 日志文件
+```
 
 ## 简介
 
