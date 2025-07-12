@@ -139,3 +139,5 @@ _/    _/    _/  _/_/_/_/  _/  _/        _/    _/  _/    _/    _/  _/_/_/_/
 2025-07-12 18:51:46.748  INFO 16809 --- [ate_cert_thread] c.w.p.c.a.h.cert.CertManagerSingleton    : Finish update Certificate.Date:2025-07-12T10:51:46.748442Z
 2025-07-12 18:55:02.296  INFO 16809 --- [idationThread-1] a.s.s.m.AbstractValidatingSessionManager : Validating all active sessions...
 2025-07-12 18:55:02.302  INFO 16809 --- [idationThread-1] a.s.s.m.AbstractValidatingSessionManager : Finished session validation.  No sessions were stopped.
+2025-07-12 19:51:46.328  INFO 16809 --- [ate_cert_thread] c.w.p.c.a.h.cert.CertManagerSingleton    : Begin update Certificate.Date:2025-07-12T11:51:46.328833Z
+2025-07-12 19:51:46.927  INFO 16809 --- [ate_cert_thread] c.w.p.c.a.h.cert.CertManagerSingleton    : Finish update Certificate.Date:2025-07-12T11:51:46.927824Z

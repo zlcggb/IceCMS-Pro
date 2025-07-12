@@ -469,16 +469,15 @@ install_project_dependencies() {
     # 配置后端数据库连接
     configure_backend
 
-    # 后端依赖
-    if [[ -d "$BACKEND_DIR" ]]; then
-        log_info "编译后端项目..."
-        cd "$BACKEND_DIR"
-        mvn clean package -DskipTests
-        cd "$PROJECT_ROOT"
-        log_success "后端项目编译完成"
-    else
-        log_warning "后端目录不存在: $BACKEND_DIR"
-    fi
+    # 后端依赖 - 多模块项目需要在根目录编译
+    log_info "编译后端项目（多模块）..."
+    cd "$PROJECT_ROOT"
+
+    # 首先安装父模块和子模块到本地仓库
+    log_info "安装子模块到本地仓库..."
+    mvn clean install -DskipTests
+
+    log_success "后端项目编译完成"
     
     # 前端依赖
     export PNPM_HOME="$HOME/.local/share/pnpm"
