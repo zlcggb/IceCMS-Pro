@@ -244,3 +244,7 @@ Caused by: java.lang.NumberFormatException: For input string: "undefined"
 2025-07-12 23:51:46.843  INFO 16809 --- [ate_cert_thread] c.w.p.c.a.h.cert.CertManagerSingleton    : Finish update Certificate.Date:2025-07-12T15:51:46.843791Z
 2025-07-12 23:55:02.337  INFO 16809 --- [idationThread-1] a.s.s.m.AbstractValidatingSessionManager : Validating all active sessions...
 2025-07-12 23:55:02.348  INFO 16809 --- [idationThread-1] a.s.s.m.AbstractValidatingSessionManager : Finished session validation.  No sessions were stopped.
+2025-07-13 00:51:46.352  INFO 16809 --- [ate_cert_thread] c.w.p.c.a.h.cert.CertManagerSingleton    : Begin update Certificate.Date:2025-07-12T16:51:46.351866Z
+2025-07-13 00:51:46.775  INFO 16809 --- [ate_cert_thread] c.w.p.c.a.h.cert.CertManagerSingleton    : Finish update Certificate.Date:2025-07-12T16:51:46.775667Z
+2025-07-13 00:55:02.367  INFO 16809 --- [idationThread-1] a.s.s.m.AbstractValidatingSessionManager : Validating all active sessions...
+2025-07-13 00:55:02.388  INFO 16809 --- [idationThread-1] a.s.s.m.AbstractValidatingSessionManager : Finished session validation.  No sessions were stopped.

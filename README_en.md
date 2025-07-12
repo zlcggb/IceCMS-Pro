@@ -1,348 +1,370 @@
+# IceCMS-Pro
+
 [简体中文](README.md) | English
 
-<p align="center">   <a href="https://www.icecmspro.com" target="_blank"></a><img alt="logo" style="height: 120px" src="https://res.cloudinary.com/dxl1idlr5/image/upload/v1700470902/logo_s4maqv.svg"> </p>
+<p align="center">
+  <a href="https://www.icecmspro.com" target="_blank">
+    <img alt="logo" style="height: 120px" src="https://res.cloudinary.com/dxl1idlr5/image/upload/v1700470902/logo_s4maqv.svg"/>
+  </a>
+</p>
 
+<p align="center">
+	<img style="padding: 4px;" alt="Label" src="https://img.shields.io/badge/JDK-11+-orange">
+	<img style="padding: 4px;" alt="Label" src="https://img.shields.io/badge/SpringBoot-2.2.7.RELEASE-brightgreen">
+	<img style="padding: 4px;" alt="Label" src="https://img.shields.io/badge/MyBatis-3.5.5-red">
+	<img style="padding: 4px;" alt="Label" src="https://img.shields.io/badge/Vue-3.0+-brightgreen">
+	<img style="padding: 4px;" alt="Label" src="https://img.shields.io/badge/Nuxt-3.0+-green">
+	<img style="padding: 4px;" alt="Label" src="https://img.shields.io/badge/license-MIT-blue">
+	<img style="padding: 4px;" alt="Label" src="https://img.shields.io/badge/Mac-One--Click--Deploy-red">
+	<img style="padding: 4px;" alt="Label" src="https://img.shields.io/badge/Ubuntu-One--Click--Deploy-blue">
+</p>
 
- <p align="center"> 	<img style="padding: 4px;" alt="Label" src="https://img.shields.io/badge/JDK-1.8+-orange"><img style="padding: 4px;" alt="Label" src="https://img.shields.io/badge/SpringBoot-2.2.7.RELEASE-brightgreen"><img style="padding: 4px;" alt="Label" src="https://img.shields.io/badge/MyBatis-3.5.5-red"><img style="padding: 4px;" alt="Label" src="https://img.shields.io/badge/Vue-2.6.11-brightgreen"><img style="padding: 4px;" alt="Label" src="https://img.shields.io/badge/license-MIT-blue"><img style="padding: 4px;" alt="Label" src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2FNaccl%2FNBlog&amp;count_bg=%2344CC11&amp;title_bg=%23555555&amp;icon=notist.svg&amp;icon_color=%231296DB&amp;title=hits&amp;edge_flat=false"> </p>
+## 📋 Table of Contents
 
+- [🚀 Quick Start](#-quick-start)
+- [💻 Requirements](#-requirements)
+- [🔧 Deployment Guide](#-deployment-guide)
+- [📁 Project Structure](#-project-structure)
+- [🌐 Access URLs](#-access-urls)
+- [📖 Documentation](#-documentation)
+- [❓ FAQ](#-faq)
 
-## Introduction
+## 🚀 Quick Start
 
-Content management system based on Spring Boot + Vue front-end and back-end separation
+A modern Content Management System based on Spring Boot + Vue with frontend-backend separation, supporting **Mac** and **Ubuntu** one-click deployment.
 
-Demo: ( [www.icecmspro.com](https://www.icecmspro.com/) ) Backend: ( [admin.icecmspro.com](https://admin.icecmspro.com/) )
+### ⚡ Super Quick Deployment (Recommended)
 
-Official website: ( [www.icecms.cn](https://doc.icecms.cn) )
+**Mac Environment:**
+```bash
+git clone https://github.com/zlcggb/IceCMS-Pro.git
+cd IceCMS-Pro
+./scripts/start-all.sh  # One-click start all services
+```
 
-IceCMS Documentation: ( [http://www.icecms.cn](https://www.icecms.cn) )
+**Ubuntu Environment:**
+```bash
+git clone https://github.com/zlcggb/IceCMS-Pro.git
+cd IceCMS-Pro
+./scripts/check-system.sh    # Check system compatibility (recommended)
+./scripts/ubuntu-install.sh  # One-click install dependencies (auto-adapt architecture)
+./scripts/ubuntu-start.sh    # One-click start services
+```
 
-Content management: management of various types of content such as articles, pictures, resources, etc.
+### 🏗️ Multi-Architecture Support
 
-Column management: customize columns, add, delete, modify and query columns;
+| Architecture | Device Examples | Support Status |
+|--------------|-----------------|----------------|
+| **x86_64** | Servers, PCs | ✅ Full Support |
+| **ARM64** | Raspberry Pi 4/5, Jetson Orin, Alibaba Cloud ARM | ✅ Auto-Optimized |
+| **ARM32** | Raspberry Pi 3 | ⚠️ Lightweight Support |
 
-User management: manage backend users, including adding, deleting, modifying, assigning permissions, etc.
+#### 🍓 Raspberry Pi Deployment Notes
 
-Data statistics: statistical analysis of website visits, user behavior, etc.;
+**Key Issues Resolved:**
+1. ✅ **Slow Maven Downloads** - Auto-configure Alibaba Cloud mirrors
+2. ✅ **MariaDB Compatibility** - Auto-convert charset collation rules
+3. ✅ **ARM64 Native Modules** - Auto-install `@oxc-parser/binding-linux-arm64-gnu`
+4. ✅ **Network Binding Issues** - Auto-configure `--host 0.0.0.0`
+5. ✅ **Slow npm Downloads** - Auto-configure Taobao mirrors
+6. ✅ **Database Initialization** - Auto-create users and import table structures
 
-Template management: custom website templates to facilitate and quickly build websites;
+**Raspberry Pi users need no extra operations - scripts handle all compatibility issues automatically!**
 
-SEO optimization: website title, keywords, description and other SEO optimization functions.
+**If you encounter issues, run repair scripts:**
+```bash
+./scripts/fix-frontend-deps.sh  # Fix frontend dependencies
+./scripts/status.sh             # Check service status
+./scripts/logs.sh               # View detailed logs
+```
 
-## Preview address:
+**Detailed Documentation:**
+- 📖 [Raspberry Pi Deployment Guide](docs/RASPBERRY_PI_DEPLOYMENT.md)
+- 🔧 [Deployment Solutions](docs/DEPLOYMENT_SOLUTIONS.md)
 
-Front Desk: [www.icecmspro.com](https://www.icecmspro.com)
+### 🔐 Password Management
 
-uniapp mobile version: [uni.icecmspro.com](https://m.www.icecmspro.com)
+**All passwords are pre-configured with strong passwords, no manual setup required:**
+```bash
+# View all passwords and configuration info
+./scripts/show-passwords.sh
+```
 
-Backstage: [admin.icecmspro.com](https://admin.icecmspro.com) Account: `admin` Password: `admin123`
+**Default Configuration:**
+- MySQL Root Password: `IceCMS@2024#Root`
+- Database User Password: `IceCMS@2024#User`
+- Admin Account: `admin` / `admin123`
 
-API documentation: [api.icecmspro.com/doc.html](https://api.icecmspro.com/doc.html)
+### 🎯 Access URLs After Startup
 
-## PC
+- **Admin Panel**: http://localhost:2580 (Username: `admin` Password: `admin123`)
+- **User Frontend**: http://localhost:3000
+- **API Documentation**: http://localhost:8181/doc.html
 
-<div class="half">   <img alt="describe" src="https://res.cloudinary.com/dxl1idlr5/image/upload/v1689828922/63d19ee5a6c55_xu7ex3.png" width="50%"><img alt="describe" src="https://res.cloudinary.com/dxl1idlr5/image/upload/v1689829049/63d19ee456c4b_fhibyf.png" width="50%"> </div>
-<div class="half">   <img alt="describe" src="https://res.cloudinary.com/dxl1idlr5/image/upload/v1689829099/63d19ee6e070e_meudqj.png" width="50%"><img alt="describe" src="https://res.cloudinary.com/dxl1idlr5/image/upload/v1689829121/63d19ee4b609d_pt54fj.png" width="50%"> </div>
+## 💻 Requirements
 
-## Backstage
+### 🔴 Important: Java Version Requirements
 
-<div class="half">   <img alt="describe" src="https://res.cloudinary.com/dxl1idlr5/image/upload/v1710237058/Screenshot_2024-03-12_at_17.48.51_el9tcs.png" width="50%"><img alt="describe" src="https://res.cloudinary.com/dxl1idlr5/image/upload/v1710237057/Screenshot_2024-03-12_at_17.49.02_eioj84.png" width="50%"> </div>
-<div data-md-type="block_html"></div>
-<div class="half">   <img alt="describe" src="https://res.cloudinary.com/dxl1idlr5/image/upload/v1710237060/Screenshot_2024-03-12_at_17.49.12_x7aotb.png" width="50%"> </div>
+**⚠️ This project recommends Java 11 or higher, Java 8 is no longer recommended**
 
-## UniApp H5, Mini Program Mobile
+- **Recommended**: Java 11+ (LTS Long Term Support)
+- **Minimum**: Java 8 (requires additional configuration, not recommended)
 
+**Advantages of Java 11+:**
+- ✅ Better performance and memory management
+- ✅ Long Term Support (LTS) version
+- ✅ Better containerization support
+- ✅ Modern garbage collectors
+- ✅ Enhanced security and stability
 
-<img alt="describe" src="https://i0.hdslb.com/bfs/album/354a1caa29bfd8bc9571be67b18db13227bea80f.png" width="280" height="405">
+### System Requirements
 
-## rear end
+| Component | Mac Environment | Ubuntu Environment | Notes |
+|-----------|-----------------|-------------------|-------|
+| **Java** | JDK 11+ | JDK 11+ | Recommend OpenJDK |
+| **Node.js** | 18.18.0+ | 18.18.0+ | Support 20.x |
+| **MySQL** | 5.7+ / 8.0+ | 5.7+ / 8.0+ | Charset utf8mb4 |
+| **Redis** | 3.0+ | 3.0+ | Optional, for caching |
+| **Maven** | 3.6+ | 3.6+ | Build tool |
+| **pnpm** | 8.6.10+ | 8.6.10+ | Package manager |
 
-1. Core framework: [Spring Boot](https://github.com/spring-projects/spring-boot)
-2. Security Framework: [Spring Security](https://github.com/spring-projects/spring-security)
-3. Token authentication: [jjwt](https://github.com/jwtk/jjwt)
-4. Persistence framework: [MyBatis](https://github.com/mybatis/spring-boot-starter)
-5. Pagination plugin: [PageHelper](https://github.com/pagehelper/Mybatis-PageHelper)
-6. NoSQL Cache: [Redis](https://github.com/redis/redis)
-7. Convert Markdown to HTML: [commonmark-java](https://github.com/commonmark/commonmark-java)
-8. Offline IP address database: [ip2region](https://github.com/lionsoul2014/ip2region)
+## 🔧 Deployment Guide
 
-Developed based on JDK8, add dependencies for 8 and above:
+### Mac Deployment
 
+**Method 1: One-Click Start (Recommended)**
+```bash
+# Clone project
+git clone https://github.com/zlcggb/IceCMS-Pro.git
+cd IceCMS-Pro
+
+# One-click start (auto-install dependencies and start services)
+./scripts/start-all.sh
+```
+
+**Method 2: Step-by-Step Installation**
+```bash
+# 1. Install dependencies
+./scripts/install-dependencies.sh
+
+# 2. Start services
+./scripts/start-all.sh
+
+# 3. Manage services
+./scripts/status.sh      # Check status
+./scripts/stop-all.sh    # Stop services
+./scripts/logs.sh        # View logs
+```
+
+### Ubuntu Deployment
+
+**One-Click Deployment Process:**
+```bash
+# 1. Clone project
+git clone https://github.com/zlcggb/IceCMS-Pro.git
+cd IceCMS-Pro
+
+# 2. One-click install all dependencies (Java, MySQL, Node.js, etc.)
+./scripts/ubuntu-install.sh
+
+# 3. One-click start all services
+./scripts/ubuntu-start.sh
+
+# 4. Manage services
+./scripts/ubuntu-stop.sh  # Stop services
+./scripts/status.sh       # Check status
+```
+
+### Docker Deployment
+
+**Quick Docker Deployment:**
+```bash
+# Clone project
+git clone https://github.com/zlcggb/IceCMS-Pro.git
+cd IceCMS-Pro/IceCMS-Docker
+
+# One-click start all services
+docker-compose up -d
+
+# Check service status
+docker-compose ps
+```
+
+**Detailed Documentation:** 📖 [Docker Deployment Guide](docs/DOCKER_DEPLOYMENT.md)
+
+### 📚 Core Documentation Overview
+
+#### 1. [Project Analysis & Modernization](docs/PROJECT_ANALYSIS_AND_MODERNIZATION.md)
+- 🔍 In-depth problem analysis
+- 🚀 Modernization refactoring solutions
+- 🛠️ Technical implementation details
+- 📊 Expected benefits analysis
+
+#### 2. [Quick Reference Guide](docs/QUICK_REFERENCE_GUIDE.md)
+- ⚡ Key information quick lookup
+- 🎯 Implementation step checklist
+- 🔧 Technology selection recommendations
+- 📈 Success criteria definition
+
+#### 3. [AI Assistant Guide](docs/AI_RECONSTRUCTION_GUIDE.md)
+- 🤖 AI decision matrix
+- 🎯 Problem diagnosis process
+- 💡 Best practice principles
+- 📋 Common problem solutions
+
+## 📁 Project Structure
+
+```
+IceCMS-Pro/
+├── IceCMS-main/              # Backend main service (Spring Boot + Java 11)
+├── IceCMS-front-admin/       # Admin panel (Vue 3 + Vite + TypeScript)
+├── IceCMS-front-nuxt3/       # User frontend (Nuxt 3 + Vue 3)
+├── IceCMS-Docker/            # Docker deployment configuration
+├── IceCMS-uniApp/            # Mobile app (uni-app)
+├── IceCMS-ment/              # Comment service module
+├── IcePay-ment/              # Payment service module
+├── scripts/                  # 🔧 Deployment and management scripts
+│   ├── start-all.sh          # Mac one-click start
+│   ├── ubuntu-install.sh     # Ubuntu one-click install
+│   ├── ubuntu-start.sh       # Ubuntu one-click start
+│   └── ...                   # Other management scripts
+├── docs/                     # 📖 Documentation directory
+├── sql/                      # Database scripts
+└── logs/                     # Log files
+```
+
+## 🌐 Access URLs
+
+| Service | URL | Description |
+|---------|-----|-------------|
+| **Admin Panel** | http://localhost:2580 | Username: `admin` Password: `admin123` |
+| **User Frontend** | http://localhost:3000 | Website frontend pages |
+| **Backend API** | http://localhost:8181 | RESTful API service |
+| **API Documentation** | http://localhost:8181/doc.html | Swagger interface documentation |
+
+## 📖 Documentation
+
+| Document | Description | Applicable Environment |
+|----------|-------------|----------------------|
+| 📱 [Mac Deployment Guide](docs/IceCMS项目技术分析与Mac本地部署指南.md) | Detailed Mac environment deployment tutorial | macOS |
+| 🐧 [Ubuntu Deployment Guide](docs/Ubuntu-Deployment.md) | Complete Ubuntu deployment and production configuration | Ubuntu 18.04+ |
+| 🐳 [Docker Deployment Guide](docs/DOCKER_DEPLOYMENT.md) | Containerized deployment solution | Cross-platform |
+| 🍓 [Raspberry Pi Deployment Guide](docs/RASPBERRY_PI_DEPLOYMENT.md) | Specialized Raspberry Pi deployment tutorial | ARM64/ARM32 |
+| 🔧 [Deployment Solutions](docs/DEPLOYMENT_SOLUTIONS.md) | Common issues and solutions | All platforms |
+
+## ❓ FAQ
+
+### 🔧 Java Version Issues
+
+**Q: Why recommend Java 11 instead of Java 8?**
+
+A: Java 11 is an LTS version with the following advantages:
+- Better performance and memory management
+- Enhanced security and stability
+- Better containerization support
+- Modern garbage collectors
+
+**Q: What if I must use Java 8?**
+
+A: You need to add the following dependency in `pom.xml`:
 ```xml
 <dependency>
-  <groupId>javax.xml.bind</groupId>
-  <artifactId>jaxb-api</artifactId>
-  <version>2.3.0</version>
+    <groupId>javax.xml.bind</groupId>
+    <artifactId>jaxb-api</artifactId>
+    <version>2.3.0</version>
 </dependency>
 ```
 
-## front end
+### 🚀 Deployment Issues
 
-Core framework: Vue2.x, Vue Router, Vuex
-
-Vue project is built based on @vue/cli4.x
-
-JS dependencies and referenced CSS: [axios](https://github.com/axios/axios) , [moment](https://github.com/moment/moment) , [nprogress](https://github.com/rstacruz/nprogress) , [v-viewer](https://github.com/fengyuanchen/viewerjs) , [prismjs](https://github.com/PrismJS/prism) , [APlayer](https://github.com/DIYgod/APlayer) , [MetingJS](https://github.com/metowolf/MetingJS) , [lodash](https://github.com/lodash/lodash) , [mavonEditor](https://github.com/hinesboy/mavonEditor) , [echarts](https://github.com/apache/echarts) , [tocbot](https://github.com/tscanlin/tocbot) , [iCSS](https://github.com/chokcoco/iCSS)
-
-### Backstage UI
-
-Backend CMS is partly based on [vue-admin-template](https://github.com/PanJiaChen/vue-admin-template)
-
-The UI framework is [Element UI](https://github.com/ElemeFE/element)
-
-### Front-end UI
-
-[Element UI](https://github.com/ElemeFE/element) : Partial use, some small components, changed the UI style to facilitate quick effect
-
-## Recently Updated
-
-Add label function
-
-Improve some UI
-
-Docker front-end deployment method
-
-Docker Compose one-click deployment
-
-# Quick Start
-
-Docker deployment method (recommended, can be used for rapid launch or testing)
-
-```
-# 未安装docker的请先安装docker，已经安装的跳过此步
-yum install docker-ce -y
-#启动docker
-systemctl start docker
-# 配置国内源
-# 创建docker目录
-sudo mkdir -p /etc/docker
-# 创建配置文件
-sudo tee /etc/docker/daemon.json <<-'EOF'
-{
-"registry-mirrors": ["https://mirror.ccs.tencentyun.com"]
-}
-EOF
-# 加载新的配置文件
-sudo systemctl daemon-reload
-# 重启docker服务
-sudo systemctl restart docker
-
-main-命令执行
-Ps:按顺序执行
-
-1.运行Mysql容器
-docker run -d -p 0:3389 \
---name ice-sql \
---restart always \
-thecosy/icemysql:v2.2.0
-
-2.运行Spring容器
-docker run -d -p 8181:8181 \
---name ice-api \
---restart always \
---link ice-sql:db \
-thecosy/icecms:v2.2.0
-
-3.运行Vue容器
-docker run -d -p 3000:80 \
---name ice-vue \
---restart always \
---link  ice-api:iceApi \
-thecosy/icevue:v2.2.0
-
-#访问前端地址http://ip:3000
-```
-
-## Directory Structure
-
-```
-iceCMS/
-├── HELP.md
-├── IceCMS-java.iml
-├── IceCMS-main             --java主程序启动入口
-│   ├── IceCMS-main.iml
-│   ├── main.iml
-│   ├── pom.xml
-│   ├── src
-│   └── target
-├── IcePay-ment             --java支付模块
-│   ├── IcePay-ment.iml
-│   ├── pom.xml
-│   ├── src
-│   └── target
-├── IceWk-ment              --java前端api模块
-│   ├── IceWk-ment.iml
-│   ├── pom.xml
-│   ├── src
-│   └── target
-├── IceWk-uniApp            --h5Uniapp模块
-│   ├── App.vue
-│   ├── LICENSE
-│   ├── components
-│   ├── main.js
-│   ├── manifest.json
-│   ├── nPro
-│   ├── package-lock.json
-│   ├── package.json
-│   ├── pages
-│   ├── pages.json
-│   ├── static
-│   ├── store
-│   ├── subPage
-│   ├── template.h5.html
-│   ├── theme
-│   ├── uni.scss
-│   ├── uni_modules
-│   ├── utils
-│   └── vue.config.js
-├── IceWk-vues                --前端vue模块
-│   ├── LICENSE
-│   ├── README.md
-│   ├── babel.config.js
-│   ├── build
-│   ├── dist
-│   ├── jest.config.js
-│   ├── jsconfig.json
-│   ├── node_modules
-│   ├── package-lock.json
-│   ├── package.json
-│   ├── postcss.config.js
-│   ├── public
-│   ├── serverless.yml
-│   ├── src
-│   ├── vue.config.js
-│   └── yarn.lock
-├── README.md
-├── bin
-│   ├── clean.bat
-│   ├── package.bat
-│   └── run.bat
-├── doc
-│   └── IceCMS环境使用手册.docx
-├── mvnw
-├── mvnw.cmd
-├── pom.xml
-└── sql                        --项目sql文件
-├── icecms5.6.sql
-└── icecms8.0.sql
-```
-
-## <strong>Configuring a minimal development environment</strong>
-
-1. Environment Configuration
-
-MySQL JDK1.8 or above Maven Nodejs WeChat Developer Tools
-
-### <strong>Backend deployment</strong>
-
-2. Create the MySQL database `IceCMS` and execute `/sql/IceCMS.sql` to initialize the table data
-
-3. Start the backend service of iceCMS-main management background
-
-3.1. Modify the configuration information `IceCMS-main/src/main/resources/application.yml` to configure the database connection
-
-3.2. Install Redis and start it (it will not affect you if you don't use it)
-
-3.3. Open the command line and enter the following command
-
-```
-cd iceCMS
-mvn install
-mvn clean package
-java -Dfile.encoding=UTF-8 -jar iceCMS/iceCMS-main/target/iceCMS.jar
-#在iceCMS.jar目录输入 java -jar iceCMS.jar
-```
-
-### <strong>Front-end deployment</strong>
-
-4. Enter the iceCMS-vues directory
-
-Open the command line and enter the following command
-
+**Q: What if ports are occupied?**
 ```bash
-# 克隆项目
-git clone https://github.com/PanJiaChen/vue-admin-template.git
+# Check port usage
+lsof -i :8181  # Mac
+ss -tulpn | grep :8181  # Ubuntu
 
-# 进入项目目录
-cd IceWk-VUE
-
-# 安装依赖
-npm install
-
-# 建议不要直接使用 cnpm 安装以来，会有各种诡异的 bug。可以通过如下操作解决 npm 下载速度慢的问题
-npm install --legacy-peer-deps --registry=https://registry.npm.taobao.org
-# 启动服务
-npm run dev
+# Modify port configuration
+# Edit IceCMS-main/src/main/resources/application.yml
 ```
 
-### release
+**Q: Database connection failed?**
+- Ensure MySQL service is running
+- Check database charset is `utf8mb4`
+- Confirm user permissions are correct
 
+**Q: Frontend dependency installation failed (Ubuntu environment)?**
+
+Ubuntu environment may encounter `oxc-parser` native module issues:
 ```bash
-# 构建测试环境
-npm run build:stage
+# Use specialized repair script
+./scripts/fix-frontend-deps.sh
 
-# 构建生产环境
-npm run build:prod
+# Or manual repair
+cd IceCMS-front-nuxt3
+rm -rf node_modules .nuxt
+pnpm install --ignore-scripts --no-optional
 ```
 
-5. Start the front end
+## 🌟 Project Introduction
 
-Open the browser and visit [http://localhost:9528](http://localhost:9528) to enter the front-end page.
+A modern Content Management System based on Spring Boot + Vue with frontend-backend separation, supporting **Mac** and **Ubuntu** one-click deployment.
 
-Start the front-end backend (backend address http://localhost:9528/admin)
+### 🎯 Online Demo
 
-6. Start the uniapp mobile terminal
+- **Frontend Demo**: [www.icecmspro.com](https://www.icecmspro.com/)
+- **Admin Panel**: [admin.icecmspro.com](https://admin.icecmspro.com/) (admin/admin123)
+- **API Documentation**: [api.icecmspro.com/doc.html](https://api.icecmspro.com/doc.html)
 
-Download HBuilderX
+### 📚 Official Resources
 
-Enter the uniapp mobile plug-in directory ( [https://ext.dcloud.net.cn/plugin?id=9261](https://ext.dcloud.net.cn/plugin?id=9261) ), click Import, and then import it to the local computer.
+- **Official Website**: [www.icecms.cn](https://www.icecms.cn)
+- **Technical Documentation**: [doc.icecms.cn](https://doc.icecms.cn)
+- **Original Author GitHub**: [github.com/zlcggb/IceCMS-Pro](https://github.com/zlcggb/IceCMS-Pro)
 
-You can also open the IceCMS-uniapp project locally
+## ⚠️ Important Notes
 
-Open the `IceWK-uniApp` directory and compile and package it
+### About Large Files
+- JAR files in the project (such as `main.jar`) are large and excluded from the repository
+- On first run, scripts will automatically build and generate required JAR files
+- For pre-built JAR files, please check the [Releases page](https://github.com/zlcggb/IceCMS-Pro/releases)
 
-## Precautions
+### Database Charset
+- Ensure MySQL database charset is `utf8mb4`
+- Support emoji expressions and special characters
+- Confirm charset configuration before importing SQL files
 
-Some common questions:
+## 🎯 Features
 
-- MySQL usually has no problem ensuring that the database character set is `utf8mb4` (many table fields such as "Site Settings" and "Article Details" require the `utf8mb4` character set to support emoji emoticons. Otherwise, when importing the sql file, even if the import is successful, some field contents will be incomplete, resulting in an error when rendering data on the front-end page)
-- Make sure Maven can successfully import the current version of the dependency. Do not upgrade or downgrade the dependency version.
-- The default username and password in the database are `root` and `123123` Because it is a personal project, I don't plan to make a password modification page. You can manually generate a password and store it in the database in the `main` method under `top.naccl.util.HashUtils`
-- Note: modify the configuration information of `application-dev.properties` in the IceCMS-main directory
-    - If Redis has no password, leave it blank
-    - Be careful to modify `token.secretKey` , otherwise the security of token cannot be guaranteed.
+**Content Management**: Articles, images, resources and other types of content management;
 
-## QQ chat group
+**Category Management**: Custom categories, CRUD operations on categories;
 
-QQ chat group: [(951286996](https://qm.qq.com/cgi-bin/qm/qr?k=XLX0hSw6GGuOgNbC53r-Pc7Lrubwcm4q&authKey=AaNuGPfAWTSyaN6MR5yGYFQ0+4AKsZQq7kI0uRASo+v5ttyrc6xvh7gfNEMQ7UDR&noverify=0) )
+**User Management**: Backend user management, including add, delete, modify, permission assignment functions;
 
-Tg group: [https://t.me/+1rau4SBwFyE1OTA1](https://t.me/+1rau4SBwFyE1OTA1)
+**Data Statistics**: Statistical analysis of website traffic, user behavior, etc.;
 
-This group is a learning and communication group. If you have any program-related questions, please submit issues directly.
+**Template Management**: Custom website templates for quick website building;
 
-## Soft
+**SEO Optimization**: Website title, keywords, description and other SEO optimization functions.
 
-<div class="half">   <img alt="describe" style="width:420px" src="https://res.cloudinary.com/dxl1idlr5/image/upload/v1689829207/%E7%99%BB%E8%AE%B0%E8%AF%81%E4%B9%A6_2023R11L0135975__mosaic_wgmw6p.jpg" width="50%"> </div>
+## PC Screenshots
+<div class = "half">
+  <img alt="describe" src = "https://res.cloudinary.com/dxl1idlr5/image/upload/v1689828922/63d19ee5a6c55_xu7ex3.png"  width = "50%">
+    <img alt="describe" src = "https://res.cloudinary.com/dxl1idlr5/image/upload/v1689829049/63d19ee456c4b_fhibyf.png"  width = "50%">
+</div>
+<div class = "half">
+  <img alt="describe" src = "https://res.cloudinary.com/dxl1idlr5/image/upload/v1689829099/63d19ee6e070e_meudqj.png"  width = "50%">
+    <img alt="describe" src = "https://res.cloudinary.com/dxl1idlr5/image/upload/v1689829121/63d19ee4b609d_pt54fj.png"  width = "50%">
+</div>
 
-## Open Source Agreement
+## Admin Panel
+<div class = "half">
+  <img alt="describe" src = "https://res.cloudinary.com/dxl1idlr5/image/upload/v1710237058/Screenshot_2024-03-12_at_17.48.51_el9tcs.png"  width = "50%">
+    <img alt="describe" src = "https://res.cloudinary.com/dxl1idlr5/image/upload/v1710237057/Screenshot_2024-03-12_at_17.49.02_eioj84.png"  width = "50%">
+</div>
+<div class = "half">
+  <img alt="describe" src = "https://res.cloudinary.com/dxl1idlr5/image/upload/v1710237060/Screenshot_2024-03-12_at_17.49.12_x7aotb.png"  width = "50%">
+</div>
 
-GPL-3.0 license © pipipi-pikachu
-
-## Commercial Use
-
-- If you want to use this project for commercial purposes, I hope you can strictly follow the GPL-3.0 agreement;
-- If you really need closed-source commercial use and cannot execute the GPL-3.0 agreement, you can choose:
-- Becoming a contributor to a project generally includes:
-- Your code is referenced as a dependency by this project;
-- The PR you submitted is merged into this project (only valuable ones, excluding simple typos or spelling errors, etc.);
-- You have participated in the design and implementation of this project (including providing valuable ideas for the implementation of various functions/modules or the repair of bugs);
-- Contact the author for commercial use
-
-## Thanks
-
-Thanks to [JetBrains](https://www.jetbrains.com/) for providing the non-commercial open source software license
-
-## Star History
-
-[](https://star-history.com/#Thecosy/IceCMS&Date)![Star History Chart](https://api.star-history.com/svg?repos=Thecosy/IceCMS&type=Date)
-
-
+## UniApp H5, Mini Program Mobile
+<img alt="describe" src="https://i0.hdslb.com/bfs/album/354a1caa29bfd8bc9571be67b18db13227bea80f.png" width="280" height="405">
