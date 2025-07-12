@@ -4,20 +4,50 @@
 
 ## 系统要求
 
-- **操作系统**: Ubuntu 18.04 或更高版本
-- **内存**: 至少 4GB RAM
-- **存储**: 至少 10GB 可用空间
-- **网络**: 能够访问互联网（用于下载依赖）
+### 支持的架构和设备
+
+| 架构 | 设备类型 | 兼容性 | 说明 |
+|------|----------|--------|------|
+| **x86_64** | 服务器、PC | ✅ 优秀 | 推荐配置，性能最佳 |
+| **ARM64** | 树莓派4/5、Jetson、ARM服务器 | ✅ 良好 | 自动优化配置 |
+| **ARM32** | 树莓派3及更早版本 | ⚠️ 基本 | 轻量化配置 |
+
+### 云服务器支持
+
+- ✅ **阿里云**: 自动检测并优化
+- ✅ **AWS EC2**: 完全兼容
+- ✅ **腾讯云**: 完全兼容
+- ✅ **Azure**: 完全兼容
+- ✅ **Google Cloud**: 完全兼容
+
+### 硬件要求
+
+| 组件 | 最低要求 | 推荐配置 | ARM设备 |
+|------|----------|----------|---------|
+| **内存** | 2GB RAM | 4GB+ RAM | 1GB+ RAM |
+| **存储** | 10GB | 20GB+ | 16GB+ |
+| **CPU** | 双核 | 四核+ | ARM Cortex-A72+ |
+| **网络** | 互联网连接 | 稳定宽带 | WiFi/以太网 |
 
 ## 快速部署
 
-### 1. 下载项目
+### 1. 检测系统兼容性（推荐）
 
 ```bash
 # 克隆项目
 git clone https://github.com/zlcggb/IceCMS-Pro.git
 cd IceCMS-Pro
+
+# 检测系统架构和兼容性
+./scripts/check-system.sh
 ```
+
+这将显示：
+- 系统架构信息（x64/ARM64/ARM32）
+- 设备类型（服务器/树莓派/Jetson等）
+- 硬件资源状况
+- 软件兼容性检查
+- 针对性优化建议
 
 ### 2. 一键安装依赖
 
@@ -204,7 +234,7 @@ sudo systemctl start icecms-backend
    ```bash
    # 查看端口占用
    sudo ss -tulpn | grep :8181
-   
+
    # 杀死进程
    sudo kill -9 <PID>
    ```
@@ -213,7 +243,7 @@ sudo systemctl start icecms-backend
    ```bash
    # 检查 Java 版本
    java -version
-   
+
    # 切换 Java 版本
    sudo update-alternatives --config java
    ```
@@ -222,19 +252,35 @@ sudo systemctl start icecms-backend
    ```bash
    # 检查 MySQL 状态
    sudo systemctl status mysql
-   
+
    # 重启 MySQL
    sudo systemctl restart mysql
    ```
 
-4. **前端依赖安装失败**
+4. **前端依赖安装失败（oxc-parser 错误）**
+
+   这是 Ubuntu 环境下常见的原生模块兼容性问题：
+
    ```bash
-   # 清理缓存
+   # 使用专门的修复脚本
+   ./scripts/fix-frontend-deps.sh
+
+   # 或手动修复
+   cd IceCMS-front-nuxt3
+   rm -rf node_modules .nuxt
    pnpm store prune
-   
-   # 重新安装
-   pnpm install
+   pnpm install --ignore-scripts --no-optional
    ```
+
+   **错误特征**：
+   - `Cannot find module './parser.linux-x64-gnu.node'`
+   - `Failed to load native binding`
+   - `oxc-parser` 相关错误
+
+   **解决方案**：
+   - 跳过构建脚本安装依赖
+   - 使用简化的依赖配置
+   - 设置环境变量避免问题模块
 
 ### 日志位置
 

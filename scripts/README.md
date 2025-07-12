@@ -66,6 +66,19 @@
 - **功能**: 显示所有密码和配置信息
 - **包含**: 数据库密码、访问地址、管理命令等
 
+### 🖥️ check-system.sh - 系统检测脚本
+- **功能**: 检测系统架构和兼容性
+- **支持**: x64、ARM64、ARM32 架构
+- **检测**: 树莓派、Jetson、云服务器等设备类型
+
+### 🧪 test-architecture.sh - 架构测试脚本
+- **功能**: 测试不同架构下的安装和运行
+- **测试项**: Java、Node.js、数据库、编译等
+
+### 🔧 fix-frontend-deps.sh - 前端依赖修复脚本
+- **功能**: 修复 Ubuntu 环境下的前端依赖问题
+- **解决**: oxc-parser 等原生模块兼容性问题
+
 ### 🚀 start-all.sh - Mac 一键启动脚本
 - **功能**: Mac 环境启动所有服务
 - **服务**:
@@ -124,7 +137,7 @@ scripts/
 ├── config.sh                # 配置文件（密码、路径等）
 ├── setup.sh                 # 快速设置脚本 (推荐入口)
 ├── install-dependencies.sh  # Mac 依赖安装脚本
-├── ubuntu-install.sh        # Ubuntu 依赖安装脚本
+├── ubuntu-install.sh        # Ubuntu 依赖安装脚本（多架构支持）
 ├── start-all.sh             # Mac 一键启动脚本
 ├── ubuntu-start.sh          # Ubuntu 一键启动脚本
 ├── stop-all.sh              # 停止服务脚本
@@ -132,6 +145,9 @@ scripts/
 ├── status.sh                # 状态检查脚本
 ├── logs.sh                  # 日志查看脚本
 ├── show-passwords.sh        # 密码查看脚本
+├── check-system.sh          # 系统架构检测脚本
+├── test-architecture.sh     # 架构兼容性测试脚本
+├── fix-frontend-deps.sh     # 前端依赖修复脚本
 ├── pids/                    # PID 文件目录
 └── README.md                # 本文件
 

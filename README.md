@@ -49,9 +49,18 @@ cd IceCMS-Pro
 ```bash
 git clone https://github.com/zlcggb/IceCMS-Pro.git
 cd IceCMS-Pro
-./scripts/ubuntu-install.sh  # 一键安装依赖（自动配置强密码）
+./scripts/check-system.sh    # 检测系统兼容性（推荐）
+./scripts/ubuntu-install.sh  # 一键安装依赖（自动适配架构）
 ./scripts/ubuntu-start.sh    # 一键启动服务
 ```
+
+### 🏗️ 多架构支持
+
+| 架构 | 设备示例 | 支持状态 |
+|------|----------|----------|
+| **x86_64** | 服务器、PC | ✅ 完全支持 |
+| **ARM64** | 树莓派4/5、Jetson Orin、阿里云ARM | ✅ 自动优化 |
+| **ARM32** | 树莓派3 | ⚠️ 轻量化支持 |
 
 ### 🔐 密码管理
 
@@ -234,12 +243,17 @@ ss -tulpn | grep :8181  # Ubuntu
 - 检查数据库字符集为 `utf8mb4`
 - 确认用户权限正确
 
-**Q: 前端依赖安装失败？**
+**Q: 前端依赖安装失败（Ubuntu 环境）？**
+
+Ubuntu 环境可能遇到 `oxc-parser` 原生模块问题：
 ```bash
-# 清理缓存重新安装
-pnpm store prune
-rm -rf node_modules
-pnpm install
+# 使用专门的修复脚本
+./scripts/fix-frontend-deps.sh
+
+# 或手动修复
+cd IceCMS-front-nuxt3
+rm -rf node_modules .nuxt
+pnpm install --ignore-scripts --no-optional
 ```
 
 ## 🌟 项目简介

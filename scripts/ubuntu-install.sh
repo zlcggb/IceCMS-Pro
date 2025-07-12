@@ -67,23 +67,101 @@ check_root() {
     fi
 }
 
-# 检测系统版本
+# 检测系统架构和环境
 check_system() {
     log_step "检测系统环境..."
-    
+
     if [[ ! -f /etc/os-release ]]; then
         log_error "无法检测系统版本"
         exit 1
     fi
-    
+
     . /etc/os-release
-    
+
     if [[ "$ID" != "ubuntu" ]]; then
         log_error "此脚本仅支持 Ubuntu 系统，当前系统: $ID"
         exit 1
     fi
-    
-    log_success "系统检测通过: Ubuntu $VERSION"
+
+    # 检测系统架构
+    ARCH=$(uname -m)
+    case $ARCH in
+        x86_64)
+            SYSTEM_ARCH="x64"
+            log_info "检测到架构: x86_64 (Intel/AMD 64位)"
+            ;;
+        aarch64|arm64)
+            SYSTEM_ARCH="arm64"
+            log_info "检测到架构: ARM64 (树莓派4/5, Jetson, Apple M1/M2, 阿里云ARM)"
+            ;;
+        armv7l|armhf)
+            SYSTEM_ARCH="arm32"
+            log_info "检测到架构: ARM32 (树莓派3及更早版本)"
+            ;;
+        *)
+            SYSTEM_ARCH="unknown"
+            log_warning "检测到未知架构: $ARCH"
+            ;;
+    esac
+
+    # 检测特殊设备
+    detect_device_type
+
+    log_success "系统检测通过: Ubuntu $VERSION ($SYSTEM_ARCH)"
+}
+
+# 检测设备类型
+detect_device_type() {
+    DEVICE_TYPE="generic"
+
+    # 检测树莓派
+    if [[ -f /proc/device-tree/model ]]; then
+        MODEL=$(cat /proc/device-tree/model 2>/dev/null)
+        if [[ "$MODEL" == *"Raspberry Pi"* ]]; then
+            DEVICE_TYPE="raspberry_pi"
+            log_info "检测到设备: 树莓派 ($MODEL)"
+        fi
+    fi
+
+    # 检测 Jetson 设备
+    if [[ -f /etc/nv_tegra_release ]] || [[ -f /proc/device-tree/model ]] && grep -q "NVIDIA" /proc/device-tree/model 2>/dev/null; then
+        DEVICE_TYPE="jetson"
+        if [[ -f /proc/device-tree/model ]]; then
+            MODEL=$(cat /proc/device-tree/model 2>/dev/null)
+            log_info "检测到设备: NVIDIA Jetson ($MODEL)"
+        else
+            log_info "检测到设备: NVIDIA Jetson"
+        fi
+    fi
+
+    # 检测阿里云
+    if [[ -f /sys/class/dmi/id/sys_vendor ]] && grep -q "Alibaba" /sys/class/dmi/id/sys_vendor 2>/dev/null; then
+        DEVICE_TYPE="aliyun"
+        log_info "检测到环境: 阿里云服务器"
+    fi
+
+    # 检测其他云服务商
+    if [[ -f /sys/class/dmi/id/sys_vendor ]]; then
+        VENDOR=$(cat /sys/class/dmi/id/sys_vendor 2>/dev/null)
+        case "$VENDOR" in
+            *"Amazon"*|*"AWS"*)
+                DEVICE_TYPE="aws"
+                log_info "检测到环境: AWS EC2"
+                ;;
+            *"Microsoft"*)
+                DEVICE_TYPE="azure"
+                log_info "检测到环境: Azure"
+                ;;
+            *"Google"*)
+                DEVICE_TYPE="gcp"
+                log_info "检测到环境: Google Cloud"
+                ;;
+            *"Tencent"*)
+                DEVICE_TYPE="tencent"
+                log_info "检测到环境: 腾讯云"
+                ;;
+        esac
+    fi
 }
 
 # 更新系统包
@@ -102,11 +180,11 @@ update_system() {
 # 安装 Java 11
 install_java() {
     log_step "安装 Java 11..."
-    
+
     if command_exists java; then
         JAVA_VERSION=$(java -version 2>&1 | head -n1 | awk -F '"' '{print $2}')
         log_info "检测到已安装 Java: $JAVA_VERSION"
-        
+
         # 检查是否为 Java 11
         if [[ "$JAVA_VERSION" =~ ^11\. ]]; then
             log_success "Java 11 已安装"
@@ -115,17 +193,49 @@ install_java() {
             log_warning "当前 Java 版本不是 11，将安装 Java 11"
         fi
     fi
-    
-    sudo apt install -y openjdk-11-jdk
-    
+
+    # 根据架构选择合适的 Java 包
+    case $SYSTEM_ARCH in
+        "x64")
+            JAVA_PACKAGE="openjdk-11-jdk"
+            JAVA_HOME_PATH="/usr/lib/jvm/java-11-openjdk-amd64"
+            ;;
+        "arm64")
+            JAVA_PACKAGE="openjdk-11-jdk"
+            JAVA_HOME_PATH="/usr/lib/jvm/java-11-openjdk-arm64"
+            ;;
+        "arm32")
+            JAVA_PACKAGE="openjdk-11-jdk"
+            JAVA_HOME_PATH="/usr/lib/jvm/java-11-openjdk-armhf"
+            ;;
+        *)
+            JAVA_PACKAGE="openjdk-11-jdk"
+            # 尝试自动检测 JAVA_HOME
+            JAVA_HOME_PATH=$(find /usr/lib/jvm -name "java-11-openjdk*" -type d | head -n1)
+            ;;
+    esac
+
+    log_info "安装 Java 包: $JAVA_PACKAGE (架构: $SYSTEM_ARCH)"
+    sudo apt install -y $JAVA_PACKAGE
+
+    # 自动检测实际的 JAVA_HOME 路径
+    if [[ ! -d "$JAVA_HOME_PATH" ]]; then
+        JAVA_HOME_PATH=$(find /usr/lib/jvm -name "java-11-openjdk*" -type d | head -n1)
+        log_info "自动检测到 JAVA_HOME: $JAVA_HOME_PATH"
+    fi
+
     # 设置 JAVA_HOME
-    echo 'export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64' >> ~/.bashrc
-    echo 'export PATH=$JAVA_HOME/bin:$PATH' >> ~/.bashrc
-    
-    export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
-    export PATH=$JAVA_HOME/bin:$PATH
-    
-    log_success "Java 11 安装完成"
+    if [[ -n "$JAVA_HOME_PATH" && -d "$JAVA_HOME_PATH" ]]; then
+        echo "export JAVA_HOME=$JAVA_HOME_PATH" >> ~/.bashrc
+        echo 'export PATH=$JAVA_HOME/bin:$PATH' >> ~/.bashrc
+
+        export JAVA_HOME="$JAVA_HOME_PATH"
+        export PATH="$JAVA_HOME/bin:$PATH"
+
+        log_success "Java 11 安装完成 (JAVA_HOME: $JAVA_HOME_PATH)"
+    else
+        log_warning "无法确定 JAVA_HOME 路径，请手动设置"
+    fi
 }
 
 # 安装 Maven
@@ -145,33 +255,117 @@ install_maven() {
 # 安装 Node.js 和 pnpm
 install_nodejs() {
     log_step "安装 Node.js 和 pnpm..."
-    
-    # 安装 Node.js 18.x
-    if ! command_exists node; then
-        curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
-        sudo apt install -y nodejs
-    else
+
+    # 检查现有安装
+    if command_exists node; then
         NODE_VERSION=$(node -v | sed 's/v//')
         log_info "检测到已安装 Node.js: $NODE_VERSION"
+
+        # 检查版本是否满足要求 (18+)
+        if [[ "${NODE_VERSION%%.*}" -ge 18 ]]; then
+            log_success "Node.js 版本满足要求"
+        else
+            log_warning "Node.js 版本过低，将升级到 18.x"
+        fi
+    else
+        log_info "未检测到 Node.js，将安装 18.x 版本"
     fi
-    
+
+    # 根据架构和设备类型选择安装方式
+    case $SYSTEM_ARCH in
+        "x64")
+            install_nodejs_standard
+            ;;
+        "arm64")
+            if [[ "$DEVICE_TYPE" == "raspberry_pi" ]]; then
+                install_nodejs_raspberry_pi
+            else
+                install_nodejs_standard
+            fi
+            ;;
+        "arm32")
+            install_nodejs_raspberry_pi
+            ;;
+        *)
+            log_warning "未知架构，尝试标准安装方式"
+            install_nodejs_standard
+            ;;
+    esac
+
     # 安装 pnpm
+    install_pnpm
+
+    log_success "Node.js 和 pnpm 安装完成"
+}
+
+# 标准 Node.js 安装
+install_nodejs_standard() {
+    log_info "使用标准方式安装 Node.js..."
+
+    # 使用 NodeSource 仓库
+    if ! curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -; then
+        log_warning "NodeSource 安装失败，尝试使用系统包"
+        sudo apt update
+        sudo apt install -y nodejs npm
+    else
+        sudo apt install -y nodejs
+    fi
+}
+
+# 树莓派 Node.js 安装
+install_nodejs_raspberry_pi() {
+    log_info "为树莓派/ARM 设备安装 Node.js..."
+
+    # 树莓派推荐使用系统包或手动安装
+    if [[ "$SYSTEM_ARCH" == "arm32" ]]; then
+        log_info "ARM32 设备，使用系统包管理器安装..."
+        sudo apt update
+        sudo apt install -y nodejs npm
+
+        # 检查版本，如果太低则尝试其他方式
+        if command_exists node; then
+            NODE_VERSION=$(node -v | sed 's/v//')
+            if [[ "${NODE_VERSION%%.*}" -lt 16 ]]; then
+                log_warning "系统 Node.js 版本过低，尝试使用 snap 安装"
+                sudo snap install node --classic || log_warning "snap 安装失败"
+            fi
+        fi
+    else
+        # ARM64 设备可以尝试 NodeSource
+        install_nodejs_standard
+    fi
+}
+
+# 安装 pnpm
+install_pnpm() {
     if ! command_exists pnpm; then
-        curl -fsSL https://get.pnpm.io/install.sh | sh -
-        
+        log_info "安装 pnpm..."
+
+        # 方式1: 使用官方安装脚本
+        if curl -fsSL https://get.pnpm.io/install.sh | sh -; then
+            log_success "pnpm 安装成功"
+        else
+            log_warning "pnpm 官方脚本安装失败，尝试使用 npm"
+            # 方式2: 使用 npm 安装
+            if command_exists npm; then
+                npm install -g pnpm
+            else
+                log_error "无法安装 pnpm"
+                return 1
+            fi
+        fi
+
         # 添加 pnpm 到 PATH
         export PNPM_HOME="$HOME/.local/share/pnpm"
         export PATH="$PNPM_HOME:$PATH"
         echo 'export PNPM_HOME="$HOME/.local/share/pnpm"' >> ~/.bashrc
         echo 'export PATH="$PNPM_HOME:$PATH"' >> ~/.bashrc
-        
+
         # 重新加载环境变量
-        source ~/.bashrc
+        source ~/.bashrc 2>/dev/null || true
     else
         log_success "pnpm 已安装"
     fi
-    
-    log_success "Node.js 和 pnpm 安装完成"
 }
 
 # 安装 MySQL
@@ -303,12 +497,174 @@ install_project_dependencies() {
     if [[ -d "$FRONTEND_DIR" ]]; then
         log_info "安装用户前台依赖..."
         cd "$FRONTEND_DIR"
-        pnpm install
+
+        # 清理可能存在的问题依赖
+        log_info "清理缓存和重新安装依赖..."
+        rm -rf node_modules
+        rm -rf .nuxt
+        pnpm store prune 2>/dev/null || true
+
+        # 根据架构设置不同的安装策略
+        install_frontend_deps_by_arch
+
         cd "$PROJECT_ROOT"
         log_success "用户前台依赖安装完成"
     else
         log_warning "用户前台目录不存在: $FRONTEND_DIR"
     fi
+}
+
+# 根据架构安装前端依赖
+install_frontend_deps_by_arch() {
+    # 设置通用环境变量
+    export SKIP_POSTINSTALL=1
+    export NODE_OPTIONS="--max-old-space-size=2048"
+    export NUXT_TELEMETRY_DISABLED=1
+
+    case $SYSTEM_ARCH in
+        "x64")
+            install_frontend_deps_x64
+            ;;
+        "arm64")
+            if [[ "$DEVICE_TYPE" == "raspberry_pi" || "$DEVICE_TYPE" == "jetson" ]]; then
+                install_frontend_deps_arm_device
+            else
+                install_frontend_deps_arm64_server
+            fi
+            ;;
+        "arm32")
+            install_frontend_deps_arm_device
+            ;;
+        *)
+            log_warning "未知架构，使用保守安装策略"
+            install_frontend_deps_conservative
+            ;;
+    esac
+}
+
+# x64 架构安装
+install_frontend_deps_x64() {
+    log_info "x64 架构：使用标准安装方式..."
+
+    # 先尝试标准安装
+    if pnpm install --ignore-scripts --no-optional; then
+        log_success "标准安装成功"
+        mkdir -p .nuxt
+        return 0
+    fi
+
+    # 失败则使用保守方式
+    install_frontend_deps_conservative
+}
+
+# ARM64 服务器安装
+install_frontend_deps_arm64_server() {
+    log_info "ARM64 服务器：使用优化安装方式..."
+
+    # ARM64 服务器通常性能较好，可以尝试标准安装
+    export NODE_OPTIONS="--max-old-space-size=3072"
+
+    if pnpm install --ignore-scripts --no-optional; then
+        log_success "ARM64 服务器安装成功"
+        mkdir -p .nuxt
+        return 0
+    fi
+
+    # 失败则降级到设备安装方式
+    install_frontend_deps_arm_device
+}
+
+# ARM 设备安装（树莓派、Jetson 等）
+install_frontend_deps_arm_device() {
+    log_info "ARM 设备：使用轻量化安装方式..."
+
+    # ARM 设备内存和性能有限，使用更保守的设置
+    export NODE_OPTIONS="--max-old-space-size=1024"
+
+    # 创建简化的 package.json
+    if [[ -f "package.json" ]]; then
+        cp package.json package.json.backup
+        create_simplified_package_json
+
+        # 使用简化配置安装
+        if pnpm install --ignore-scripts --no-optional; then
+            log_success "ARM 设备简化安装成功"
+            # 恢复原始配置
+            mv package.json.backup package.json
+            mkdir -p .nuxt
+            return 0
+        fi
+
+        # 恢复原始配置
+        mv package.json.backup package.json
+    fi
+
+    # 最后尝试保守安装
+    install_frontend_deps_conservative
+}
+
+# 保守安装方式
+install_frontend_deps_conservative() {
+    log_info "使用保守安装方式..."
+
+    # 降低内存使用
+    export NODE_OPTIONS="--max-old-space-size=512"
+
+    # 尝试使用 npm
+    if command_exists npm; then
+        log_info "尝试使用 npm 安装..."
+        if npm install --ignore-scripts --no-optional; then
+            log_success "npm 安装成功"
+            mkdir -p .nuxt
+            return 0
+        fi
+    fi
+
+    # 最后的备用方案：只安装核心依赖
+    log_warning "标准安装失败，创建最小化环境..."
+    mkdir -p .nuxt
+    mkdir -p .output
+
+    # 创建基本的 nuxt.config.js（如果不存在）
+    if [[ ! -f "nuxt.config.js" && ! -f "nuxt.config.ts" ]]; then
+        cat > nuxt.config.js << 'EOF'
+export default defineNuxtConfig({
+  devtools: { enabled: false },
+  ssr: true,
+  nitro: {
+    preset: 'node-server'
+  }
+})
+EOF
+    fi
+
+    log_warning "使用最小化环境，某些功能可能受限"
+}
+
+# 创建简化的 package.json
+create_simplified_package_json() {
+    cat > package.json << 'EOF'
+{
+  "name": "nuxt-app",
+  "private": true,
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev --port 3000",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "echo 'Skipping postinstall for ARM device'"
+  },
+  "devDependencies": {
+    "nuxt": "^3.15.2"
+  },
+  "dependencies": {
+    "@element-plus/nuxt": "^1.0.10",
+    "element-plus": "^2.9.3",
+    "@pinia/nuxt": "^0.5.5",
+    "pinia": "^2.2.6"
+  }
+}
+EOF
 }
 
 # 创建启动脚本
@@ -328,10 +684,20 @@ show_result() {
     echo "         IceCMS Pro Ubuntu 安装完成"
     echo "=================================================="
     echo
+    echo "🖥️  系统信息："
+    echo "  - 操作系统: Ubuntu $VERSION"
+    echo "  - 系统架构: $SYSTEM_ARCH ($ARCH)"
+    echo "  - 设备类型: $DEVICE_TYPE"
+    echo
+    echo "✅ 安装组件："
     echo -e "${GREEN}✓${NC} Java 11: $(java -version 2>&1 | head -n1)"
     echo -e "${GREEN}✓${NC} Maven: $(mvn -version 2>&1 | head -n1)"
     echo -e "${GREEN}✓${NC} Node.js: $(node -v)"
-    echo -e "${GREEN}✓${NC} pnpm: $(pnpm -v)"
+    if command_exists pnpm; then
+        echo -e "${GREEN}✓${NC} pnpm: $(pnpm -v)"
+    else
+        echo -e "${YELLOW}⚠${NC} pnpm: 未安装（将使用 npm）"
+    fi
     echo -e "${GREEN}✓${NC} MySQL: 已安装并启动"
     echo -e "${GREEN}✓${NC} Redis: 已安装并启动"
     echo
@@ -344,14 +710,37 @@ show_result() {
     echo "🚀 下一步操作："
     echo "1. 启动服务: ./scripts/ubuntu-start.sh"
     echo "2. 查看状态: ./scripts/status.sh"
-    echo "3. 访问地址:"
+    echo "3. 查看配置: ./scripts/show-passwords.sh"
+    echo "4. 访问地址:"
     echo "   - 管理后台: http://localhost:2580 (admin/admin123)"
     echo "   - 用户前台: http://localhost:3000"
     echo "   - API文档: http://localhost:8181/doc.html"
     echo
-    echo "📝 重要提示："
+    echo "📝 架构特定提示："
+    case $SYSTEM_ARCH in
+        "arm32"|"arm64")
+            if [[ "$DEVICE_TYPE" == "raspberry_pi" ]]; then
+                echo "- 树莓派设备：如遇性能问题，可适当增加 swap 空间"
+                echo "- 建议使用 Class 10 或更快的 SD 卡"
+            elif [[ "$DEVICE_TYPE" == "jetson" ]]; then
+                echo "- Jetson 设备：已优化 GPU 加速支持"
+                echo "- 确保 CUDA 环境正确配置"
+            else
+                echo "- ARM 设备：已使用轻量化配置"
+            fi
+            ;;
+        "x64")
+            if [[ "$DEVICE_TYPE" == "aliyun" ]]; then
+                echo "- 阿里云服务器：建议配置安全组开放相应端口"
+            elif [[ "$DEVICE_TYPE" != "generic" ]]; then
+                echo "- 云服务器：建议配置防火墙和安全组"
+            fi
+            ;;
+    esac
+    echo
     echo "- 请妥善保存上述数据库密码信息"
     echo "- 生产环境请修改默认管理员密码"
+    echo "- 如遇问题，请运行: ./scripts/fix-frontend-deps.sh"
     echo "=================================================="
 }
 

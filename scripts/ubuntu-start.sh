@@ -193,7 +193,23 @@ start_frontend() {
     # 确保环境变量正确加载
     export PNPM_HOME="$HOME/.local/share/pnpm"
     export PATH="$PNPM_HOME:$PATH"
-    nohup pnpm dev > "$LOG_DIR/frontend.log" 2>&1 &
+
+    # 设置环境变量以避免原生模块问题
+    export SKIP_POSTINSTALL=1
+    export NODE_OPTIONS="--max-old-space-size=4096"
+
+    # 尝试启动，如果失败则使用备用方案
+    if ! pnpm dev > "$LOG_DIR/frontend.log" 2>&1 &
+    then
+        log_warning "标准启动失败，尝试备用启动方案..."
+        # 使用 npm 作为备用方案
+        if command_exists npm; then
+            npm run dev > "$LOG_DIR/frontend.log" 2>&1 &
+        else
+            log_error "无法启动用户前台，请检查依赖安装"
+            return 1
+        fi
+    fi
     echo $! > "$PID_DIR/frontend.pid"
 
     # 等待用户前台启动
