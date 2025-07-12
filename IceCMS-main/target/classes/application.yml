@@ -22,6 +22,7 @@ mybatis-plus:
   # log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   mapper-locations: classpath:com/ttice/mapper/xml/*.xml
 server:
+  address: 0.0.0.0
   port: 8181
   #  ??ssh https
 #  ssl:

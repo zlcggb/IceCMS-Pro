@@ -17,6 +17,11 @@ export default defineNuxtConfig({
       API_BASE_PROD: 'https://api.example.com/v1'
     }
   },
+  // 服务器配置 - 监听所有网络接口
+  devServer: {
+    host: '0.0.0.0',
+    port: 3000
+  },
   // mermaid fix
   vite: {
     optimizeDeps: {
