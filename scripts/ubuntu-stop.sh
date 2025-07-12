@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# IceCMS Pro 停止所有服务脚本
+# IceCMS Pro Ubuntu 停止所有服务脚本
 # 作者: AI Assistant
 # 版本: 1.0
 # 描述: 停止 IceCMS Pro 的所有服务
@@ -72,7 +72,7 @@ stop_by_port() {
     local port=$1
     local service_name=$2
     
-    local pid=$(lsof -ti:$port)
+    local pid=$(ss -tulpn | grep ":$port " | awk '{print $7}' | cut -d',' -f2 | cut -d'=' -f2)
     if [[ -n "$pid" ]]; then
         log_info "停止运行在端口 $port 的 $service_name (PID: $pid)..."
         kill "$pid" 2>/dev/null || true
@@ -81,7 +81,7 @@ stop_by_port() {
         sleep 2
         
         # 检查是否还在运行
-        if lsof -ti:$port >/dev/null 2>&1; then
+        if ss -tulpn | grep ":$port " >/dev/null 2>&1; then
             log_warning "强制停止端口 $port 上的进程..."
             kill -9 "$pid" 2>/dev/null || true
         fi
@@ -95,7 +95,7 @@ stop_by_port() {
 # 主函数
 main() {
     echo "=================================================="
-    echo "         IceCMS Pro 停止所有服务"
+    echo "         IceCMS Pro Ubuntu 停止所有服务"
     echo "=================================================="
     echo
     
@@ -108,7 +108,6 @@ main() {
     log_info "停止管理后台..."
     stop_process "admin"
     stop_by_port 2580 "管理后台"
-    stop_by_port 5173 "管理后台"
     
     # 停止用户前台
     log_info "停止用户前台..."

@@ -16,83 +16,259 @@
 	<img style="padding: 4px;" alt="Label" src="https://img.shields.io/badge/Nuxt-3.0+-green">
 	<img style="padding: 4px;" alt="Label" src="https://img.shields.io/badge/license-MIT-blue">
 	<img style="padding: 4px;" alt="Label" src="https://img.shields.io/badge/Mac-一键部署-red">
+	<img style="padding: 4px;" alt="Label" src="https://img.shields.io/badge/Ubuntu-一键部署-blue">
 </p>
 
-## 🚀 Mac一键启动功能
+## 📋 目录导航
 
-本项目已添加Mac环境下的一键启动功能，支持自动安装依赖和启动所有服务。
+- [🚀 快速开始](#-快速开始)
+- [💻 环境要求](#-环境要求)
+- [🔧 部署指南](#-部署指南)
+  - [Mac 环境部署](#mac-环境部署)
+  - [Ubuntu 环境部署](#ubuntu-环境部署)
+  - [Docker 部署](#docker-部署)
+- [📁 项目结构](#-项目结构)
+- [🌐 访问地址](#-访问地址)
+- [📖 详细文档](#-详细文档)
+- [❓ 常见问题](#-常见问题)
 
-### 快速开始
+## 🚀 快速开始
 
+基于 Spring Boot + Vue 前后端分离的内容管理系统，支持 **Mac** 和 **Ubuntu** 环境一键部署。
+
+### ⚡ 超快速部署（推荐）
+
+**Mac 环境：**
 ```bash
-# 一键启动所有服务
+git clone https://github.com/zlcggb/IceCMS-Pro.git
+cd IceCMS-Pro
+./scripts/start-all.sh  # 一键启动所有服务
+```
+
+**Ubuntu 环境：**
+```bash
+git clone https://github.com/zlcggb/IceCMS-Pro.git
+cd IceCMS-Pro
+./scripts/ubuntu-install.sh  # 一键安装依赖（自动配置强密码）
+./scripts/ubuntu-start.sh    # 一键启动服务
+```
+
+### 🔐 密码管理
+
+**所有密码都已预配置强密码，无需手动设置：**
+```bash
+# 查看所有密码和配置信息
+./scripts/show-passwords.sh
+```
+
+**默认配置：**
+- MySQL Root 密码: `IceCMS@2024#Root`
+- 数据库用户密码: `IceCMS@2024#User`
+- 管理员账号: `admin` / `admin123`
+
+### 🎯 启动后访问地址
+
+- **管理后台**: http://localhost:2580 (账号: `admin` 密码: `admin123`)
+- **用户前台**: http://localhost:3000
+- **API文档**: http://localhost:8181/doc.html
+
+## 💻 环境要求
+
+### 🔴 重要提示：Java 版本要求
+
+**⚠️ 本项目推荐使用 Java 11 或更高版本，不再推荐 Java 8**
+
+- **推荐**: Java 11+ (LTS 长期支持版本)
+- **最低**: Java 8 (需要额外配置，不推荐)
+
+**Java 11+ 的优势：**
+- ✅ 更好的性能和内存管理
+- ✅ 长期支持版本（LTS）
+- ✅ 更好的容器化支持
+- ✅ 现代化的垃圾收集器
+- ✅ 更好的安全性和稳定性
+
+### 系统要求
+
+| 组件 | Mac 环境 | Ubuntu 环境 | 说明 |
+|------|----------|-------------|------|
+| **Java** | JDK 11+ | JDK 11+ | 推荐 OpenJDK |
+| **Node.js** | 18.18.0+ | 18.18.0+ | 支持 20.x |
+| **MySQL** | 5.7+ / 8.0+ | 5.7+ / 8.0+ | 字符集 utf8mb4 |
+| **Redis** | 3.0+ | 3.0+ | 可选，用于缓存 |
+| **Maven** | 3.6+ | 3.6+ | 构建工具 |
+| **pnpm** | 8.6.10+ | 8.6.10+ | 包管理器 |
+
+## 🔧 部署指南
+
+### Mac 环境部署
+
+**方式一：一键启动（推荐）**
+```bash
+# 克隆项目
+git clone https://github.com/zlcggb/IceCMS-Pro.git
+cd IceCMS-Pro
+
+# 一键启动（自动安装依赖并启动服务）
 ./scripts/start-all.sh
 ```
 
-该脚本会自动：
-- 检查并安装Java环境
-- 检查并安装Node.js和pnpm
-- 安装项目依赖
-- 启动后端服务
-- 启动前端服务
-- 提供访问链接
+**方式二：分步安装**
+```bash
+# 1. 安装依赖
+./scripts/install-dependencies.sh
 
-### 其他脚本
+# 2. 启动服务
+./scripts/start-all.sh
+
+# 3. 管理服务
+./scripts/status.sh      # 查看状态
+./scripts/stop-all.sh    # 停止服务
+./scripts/logs.sh        # 查看日志
+```
+
+### Ubuntu 环境部署
+
+**一键部署流程：**
+```bash
+# 1. 克隆项目
+git clone https://github.com/zlcggb/IceCMS-Pro.git
+cd IceCMS-Pro
+
+# 2. 一键安装所有依赖（Java、MySQL、Node.js等）
+./scripts/ubuntu-install.sh
+
+# 3. 一键启动所有服务
+./scripts/ubuntu-start.sh
+
+# 4. 管理服务
+./scripts/ubuntu-stop.sh  # 停止服务
+./scripts/status.sh       # 查看状态
+```
+
+**详细部署文档：** 📖 [Ubuntu 部署指南](docs/Ubuntu-Deployment.md)
+
+### Docker 部署
 
 ```bash
-# 查看服务状态
-./scripts/status.sh
-
-# 停止所有服务
-./scripts/stop-all.sh
-
-# 查看日志
-./scripts/logs.sh
-
-# 智能启动（检测已运行的服务）
-./scripts/smart-start.sh
+# 快速 Docker 部署
+cd IceCMS-Docker
+docker-compose up -d
 ```
 
 ## 📁 项目结构
 
 ```
 IceCMS-Pro/
-├── IceCMS-main/              # 后端主服务 (Spring Boot)
-├── IceCMS-front-admin/       # 管理后台前端 (Vue 3 + Vite)
-├── IceCMS-front-nuxt3/       # 用户前端 (Nuxt 3)
-├── IceCMS-Docker/            # Docker部署配置
+├── IceCMS-main/              # 后端主服务 (Spring Boot + Java 11)
+├── IceCMS-front-admin/       # 管理后台 (Vue 3 + Vite + TypeScript)
+├── IceCMS-front-nuxt3/       # 用户前台 (Nuxt 3 + Vue 3)
+├── IceCMS-Docker/            # Docker 部署配置
 ├── IceCMS-uniApp/            # 移动端应用 (uni-app)
-├── IceCMS-ment/              # 评论服务
-├── IcePay-ment/              # 支付服务
-├── scripts/                  # 部署和管理脚本
+├── IceCMS-ment/              # 评论服务模块
+├── IcePay-ment/              # 支付服务模块
+├── scripts/                  # 🔧 部署和管理脚本
+│   ├── start-all.sh          # Mac 一键启动
+│   ├── ubuntu-install.sh     # Ubuntu 一键安装
+│   ├── ubuntu-start.sh       # Ubuntu 一键启动
+│   └── ...                   # 其他管理脚本
+├── docs/                     # 📖 文档目录
 ├── sql/                      # 数据库脚本
 └── logs/                     # 日志文件
 ```
 
-## 简介
+## 🌐 访问地址
 
-基于 Spring Boot + Vue 前后端分离的内容管理系统，支持Mac环境一键部署。
+| 服务 | 地址 | 说明 |
+|------|------|------|
+| **管理后台** | http://localhost:2580 | 账号: `admin` 密码: `admin123` |
+| **用户前台** | http://localhost:3000 | 网站前台页面 |
+| **后端 API** | http://localhost:8181 | RESTful API 服务 |
+| **API 文档** | http://localhost:8181/doc.html | Swagger 接口文档 |
 
-演示: （[www.icecmspro.com](https://www.icecmspro.com/)）
-后台:（[admin.icecmspro.com](https://admin.icecmspro.com/)）
+## 📖 详细文档
 
-官网: （[www.icecms.cn](https://doc.icecms.cn)）
+| 文档 | 说明 | 适用环境 |
+|------|------|----------|
+| 📱 [Mac 部署指南](IceCMS项目技术分析与Mac本地部署指南.md) | 详细的 Mac 环境部署教程 | macOS |
+| 🐧 [Ubuntu 部署指南](docs/Ubuntu-Deployment.md) | 完整的 Ubuntu 部署和生产配置 | Ubuntu 18.04+ |
+| 🐳 [Docker 部署](IceCMS-Docker/) | 容器化部署方案 | 跨平台 |
 
-IceCMS 文档： （[http://www.icecms.cn](https://www.icecms.cn)）
+## ❓ 常见问题
+
+### 🔧 Java 版本问题
+
+**Q: 为什么推荐 Java 11 而不是 Java 8？**
+
+A: Java 11 是 LTS 版本，具有以下优势：
+- 更好的性能和内存管理
+- 更强的安全性和稳定性
+- 更好的容器化支持
+- 现代化的垃圾收集器
+
+**Q: 如果必须使用 Java 8 怎么办？**
+
+A: 需要在 `pom.xml` 中添加以下依赖：
+```xml
+<dependency>
+    <groupId>javax.xml.bind</groupId>
+    <artifactId>jaxb-api</artifactId>
+    <version>2.3.0</version>
+</dependency>
+```
+
+### 🚀 部署问题
+
+**Q: 端口被占用怎么办？**
+```bash
+# 查看端口占用
+lsof -i :8181  # Mac
+ss -tulpn | grep :8181  # Ubuntu
+
+# 修改端口配置
+# 编辑 IceCMS-main/src/main/resources/application.yml
+```
+
+**Q: 数据库连接失败？**
+- 确保 MySQL 服务正在运行
+- 检查数据库字符集为 `utf8mb4`
+- 确认用户权限正确
+
+**Q: 前端依赖安装失败？**
+```bash
+# 清理缓存重新安装
+pnpm store prune
+rm -rf node_modules
+pnpm install
+```
+
+## 🌟 项目简介
+
+基于 Spring Boot + Vue 前后端分离的现代化内容管理系统，支持 **Mac** 和 **Ubuntu** 环境一键部署。
+
+### 🎯 在线演示
+
+- **前台演示**: [www.icecmspro.com](https://www.icecmspro.com/)
+- **管理后台**: [admin.icecmspro.com](https://admin.icecmspro.com/) (admin/admin123)
+- **API 文档**: [api.icecmspro.com/doc.html](https://api.icecmspro.com/doc.html)
+
+### 📚 官方资源
+
+- **官方网站**: [www.icecms.cn](https://www.icecms.cn)
+- **技术文档**: [doc.icecms.cn](https://doc.icecms.cn)
+- **GitHub**: [github.com/zlcggb/IceCMS-Pro](https://github.com/zlcggb/IceCMS-Pro)
 
 ## ⚠️ 重要提示
 
-**关于大文件：**
-- 项目中的JAR文件（如`main.jar`）较大，已从仓库中排除
-- 首次运行时，脚本会自动构建生成所需的JAR文件
-- 如需预构建的JAR文件，请查看[Releases页面](https://github.com/zlcggb/IceCMS-Pro/releases)
+### 关于大文件
+- 项目中的 JAR 文件（如 `main.jar`）较大，已从仓库中排除
+- 首次运行时，脚本会自动构建生成所需的 JAR 文件
+- 如需预构建的 JAR 文件，请查看 [Releases 页面](https://github.com/zlcggb/IceCMS-Pro/releases)
 
-**快速开始：**
-```bash
-git clone https://github.com/zlcggb/IceCMS-Pro.git
-cd IceCMS-Pro
-./scripts/start-all.sh
-```
+### 数据库字符集
+- 确保 MySQL 数据库字符集为 `utf8mb4`
+- 支持 emoji 表情和特殊字符
+- 导入 SQL 文件前请确认字符集配置
 
 内容管理：文章、图片、资源等多种类型的内容管理；
 

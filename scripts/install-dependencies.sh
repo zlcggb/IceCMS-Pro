@@ -14,6 +14,12 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
+# 默认配置（强密码）
+MYSQL_ROOT_PASSWORD="IceCMS@2024#Root"
+MYSQL_DB_NAME="icecmspro"
+MYSQL_DB_USER="icecmspro"
+MYSQL_DB_PASSWORD="IceCMS@2024#User"
+
 # 日志函数
 log_info() {
     echo -e "${BLUE}[INFO]${NC} $1"
@@ -118,11 +124,33 @@ install_mysql() {
         brew install mysql
         log_success "MySQL 安装完成"
     fi
-    
+
     # 启动 MySQL 服务
     log_info "启动 MySQL 服务..."
     brew services start mysql
-    log_success "MySQL 服务已启动"
+
+    # 等待 MySQL 启动
+    sleep 3
+
+    # 配置 MySQL root 密码和数据库
+    log_info "配置 MySQL 数据库..."
+
+    # 设置 root 密码
+    mysql -u root -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '$MYSQL_ROOT_PASSWORD';" 2>/dev/null || true
+
+    # 创建数据库和用户
+    mysql -u root -p"$MYSQL_ROOT_PASSWORD" <<EOF 2>/dev/null || mysql -u root <<EOF
+CREATE DATABASE IF NOT EXISTS $MYSQL_DB_NAME CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE USER IF NOT EXISTS '$MYSQL_DB_USER'@'localhost' IDENTIFIED BY '$MYSQL_DB_PASSWORD';
+GRANT ALL PRIVILEGES ON $MYSQL_DB_NAME.* TO '$MYSQL_DB_USER'@'localhost';
+FLUSH PRIVILEGES;
+EOF
+
+    log_success "MySQL 服务已启动并配置完成"
+    log_info "数据库信息："
+    log_info "  - 数据库名: $MYSQL_DB_NAME"
+    log_info "  - 用户名: $MYSQL_DB_USER"
+    log_info "  - 密码: $MYSQL_DB_PASSWORD"
 }
 
 # 安装 Redis
@@ -338,11 +366,21 @@ main() {
     log_success "所有依赖安装完成！"
     echo "=================================================="
     echo
-    echo "接下来您可以："
+    echo "🔐 数据库配置信息："
+    echo "  - MySQL Root 密码: $MYSQL_ROOT_PASSWORD"
+    echo "  - 数据库名: $MYSQL_DB_NAME"
+    echo "  - 数据库用户: $MYSQL_DB_USER"
+    echo "  - 数据库密码: $MYSQL_DB_PASSWORD"
+    echo
+    echo "🚀 接下来您可以："
     echo "1. 运行 './scripts/start-all.sh' 启动所有服务"
-    echo "2. 访问管理后台: http://localhost:5173 (admin/admin123)"
+    echo "2. 访问管理后台: http://localhost:2580 (admin/admin123)"
     echo "3. 访问用户前台: http://localhost:3000"
     echo "4. 访问API文档: http://localhost:8181/doc.html"
+    echo
+    echo "📝 重要提示："
+    echo "- 请妥善保存上述数据库密码信息"
+    echo "- 生产环境请修改默认管理员密码"
     echo
 }
 

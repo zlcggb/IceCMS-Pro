@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# IceCMS Pro 一键启动脚本
+# IceCMS Pro Ubuntu 一键启动脚本
 # 作者: AI Assistant
 # 版本: 1.0
-# 描述: 一键启动 IceCMS Pro 的所有服务
+# 描述: 在 Ubuntu 系统上一键启动 IceCMS Pro 的所有服务
 
 set -e  # 遇到错误立即退出
 
@@ -24,7 +24,7 @@ mkdir -p "$LOG_DIR"
 # 检查端口是否被占用
 check_port() {
     local port=$1
-    if lsof -Pi :$port -sTCP:LISTEN -t >/dev/null; then
+    if ss -tuln | grep ":$port " >/dev/null; then
         return 0  # 端口被占用
     else
         return 1  # 端口未被占用
@@ -57,17 +57,17 @@ check_services() {
     log_step "检查必要的服务..."
     
     # 检查 MySQL
-    if ! brew services list | grep mysql | grep started > /dev/null; then
+    if ! systemctl is-active --quiet mysql; then
         log_info "启动 MySQL 服务..."
-        brew services start mysql
+        sudo systemctl start mysql
         sleep 3
     fi
     log_success "MySQL 服务正在运行"
     
     # 检查 Redis
-    if ! brew services list | grep redis | grep started > /dev/null; then
+    if ! systemctl is-active --quiet redis-server; then
         log_info "启动 Redis 服务..."
-        brew services start redis
+        sudo systemctl start redis-server
         sleep 2
     fi
     log_success "Redis 服务正在运行"
@@ -90,13 +90,15 @@ start_backend() {
         return 0
     fi
     
-    # 编译项目
-    log_info "编译后端项目..."
-    mvn clean package -DskipTests > "$LOG_DIR/backend-build.log" 2>&1
-    
+    # 检查 jar 文件是否存在
     if [[ ! -f "target/main.jar" ]]; then
-        log_error "后端编译失败，请检查日志: $LOG_DIR/backend-build.log"
-        return 1
+        log_info "编译后端项目..."
+        mvn clean package -DskipTests > "$LOG_DIR/backend-build.log" 2>&1
+        
+        if [[ ! -f "target/main.jar" ]]; then
+            log_error "后端编译失败，请检查日志: $LOG_DIR/backend-build.log"
+            return 1
+        fi
     fi
     
     # 启动后端服务
@@ -126,12 +128,9 @@ start_admin() {
 
     cd "$ADMIN_DIR"
 
-    # 检查是否已经启动 (优先检查配置的端口 2580)
+    # 检查是否已经启动 (检查配置的端口 2580)
     if check_port 2580; then
         log_warning "管理后台已在运行 (端口 2580)"
-        return 0
-    elif check_port 5173; then
-        log_warning "管理后台已在运行 (端口 5173)"
         return 0
     fi
 
@@ -152,11 +151,9 @@ start_admin() {
     nohup pnpm dev > "$LOG_DIR/admin.log" 2>&1 &
     echo $! > "$PID_DIR/admin.pid"
 
-    # 等待管理后台启动 (优先等待配置的端口 2580)
+    # 等待管理后台启动
     if wait_for_port 2580 60; then
         log_success "管理后台启动成功 (http://localhost:2580)"
-    elif wait_for_port 5173 30; then
-        log_success "管理后台启动成功 (http://localhost:5173)"
     else
         log_error "管理后台启动失败"
         return 1
@@ -226,12 +223,9 @@ show_status() {
         echo -e "${RED}✗${NC} 后端服务: 未运行"
     fi
     
-    # 检查管理后台 (检查实际配置的端口 2580)
+    # 检查管理后台
     if check_port 2580; then
         echo -e "${GREEN}✓${NC} 管理后台: http://localhost:2580"
-        echo -e "  ${CYAN}→${NC} 默认账号: admin / admin123"
-    elif check_port 5173; then
-        echo -e "${GREEN}✓${NC} 管理后台: http://localhost:5173"
         echo -e "  ${CYAN}→${NC} 默认账号: admin / admin123"
     else
         echo -e "${RED}✗${NC} 管理后台: 未运行"
@@ -248,7 +242,7 @@ show_status() {
     echo "日志文件位置: $LOG_DIR"
     echo "PID文件位置: $PID_DIR"
     echo
-    echo "停止所有服务: ./scripts/stop-all.sh"
+    echo "停止所有服务: ./scripts/ubuntu-stop.sh"
     echo "查看日志: ./scripts/logs.sh"
     echo "=================================================="
 }
@@ -256,23 +250,23 @@ show_status() {
 # 主函数
 main() {
     echo "=================================================="
-    echo "         IceCMS Pro 一键启动脚本"
+    echo "         IceCMS Pro Ubuntu 一键启动脚本"
     echo "=================================================="
     echo
     
     # 检查必要的命令
     if ! command_exists java; then
-        log_error "Java 未安装，请先运行 ./scripts/install-dependencies.sh"
+        log_error "Java 未安装，请先运行 ./scripts/ubuntu-install.sh"
         exit 1
     fi
     
     if ! command_exists mvn; then
-        log_error "Maven 未安装，请先运行 ./scripts/install-dependencies.sh"
+        log_error "Maven 未安装，请先运行 ./scripts/ubuntu-install.sh"
         exit 1
     fi
     
     if ! command_exists pnpm; then
-        log_error "pnpm 未安装，请先运行 ./scripts/install-dependencies.sh"
+        log_error "pnpm 未安装，请先运行 ./scripts/ubuntu-install.sh"
         exit 1
     fi
     
@@ -291,7 +285,7 @@ main() {
 }
 
 # 处理中断信号
-trap 'echo -e "\n${YELLOW}正在停止服务...${NC}"; "$PROJECT_ROOT/scripts/stop-all.sh"; exit 0' INT TERM
+trap 'echo -e "\n${YELLOW}正在停止服务...${NC}"; "$PROJECT_ROOT/scripts/ubuntu-stop.sh"; exit 0' INT TERM
 
 # 执行主函数
 main "$@"

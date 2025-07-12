@@ -13,13 +13,32 @@ IceCMS Pro 是一个基于 Spring Boot + Vue 前后端分离的内容管理系�
 - **持久层框架**: MyBatis Plus 3.4.2
 - **数据库**: MySQL 8.0+
 - **缓存**: Redis
-- **Java版本**: JDK 1.8+
+- **Java版本**: **JDK 11+** (推荐) 或 JDK 1.8+ (最低要求)
 - **构建工具**: Maven
 - **API文档**: Swagger2 + Knife4j
 - **其他依赖**:
   - FastJSON 2.0.51 (JSON处理)
   - Spring Boot Mail (邮件服务)
   - Lombok (代码简化)
+
+### ⚠️ Java 版本重要说明
+
+**强烈推荐使用 Java 11 或更高版本：**
+- ✅ **性能优势**: 更好的 JVM 性能和内存管理
+- ✅ **长期支持**: Java 11 是 LTS 版本，获得长期支持
+- ✅ **安全性**: 更强的安全特性和漏洞修复
+- ✅ **容器化**: 更好的 Docker 和 Kubernetes 支持
+- ✅ **现代化**: 支持现代化的垃圾收集器（如 G1GC、ZGC）
+
+**如果必须使用 Java 8，需要额外配置：**
+```xml
+<!-- 在 pom.xml 中添加以下依赖 -->
+<dependency>
+    <groupId>javax.xml.bind</groupId>
+    <artifactId>jaxb-api</artifactId>
+    <version>2.3.0</version>
+</dependency>
+```
 
 ### 前端技术栈
 
@@ -99,11 +118,16 @@ IceCMS Pro 是一个基于 Spring Boot + Vue 前后端分离的内容管理系�
 ### 环境要求
 
 #### 必需软件
-1. **Java Development Kit (JDK) 1.8+**
-2. **MySQL 8.0+**
+1. **Java Development Kit (JDK) 11+** (推荐) 或 JDK 1.8+ (最低)
+2. **MySQL 8.0+** (或 MySQL 5.7+)
 3. **Maven 3.6+**
 4. **Node.js 18.18.0+ 或 20.9.0+ 或 21.1.0+**
 5. **pnpm 8.6.10+**
+
+#### ⚠️ Java 版本选择建议
+- **生产环境**: 强烈推荐 Java 11 或 Java 17 (LTS 版本)
+- **开发环境**: 推荐 Java 11+
+- **兼容性**: 最低支持 Java 8 (需要额外配置)
 
 #### 可选软件
 1. **Redis** (用于缓存，可选)
@@ -116,12 +140,25 @@ IceCMS Pro 是一个基于 Spring Boot + Vue 前后端分离的内容管理系�
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 ```
 
-#### 2. 安装 Java
+#### 2. 安装 Java (推荐 Java 11)
 ```bash
-# 安装 OpenJDK 8
-brew install openjdk@8
+# 推荐：安装 OpenJDK 11 (LTS 版本)
+brew install openjdk@11
 
 # 设置环境变量 (添加到 ~/.zshrc 或 ~/.bash_profile)
+export JAVA_HOME=/opt/homebrew/opt/openjdk@11/libexec/openjdk.jdk/Contents/Home
+export PATH=$JAVA_HOME/bin:$PATH
+
+# 验证安装
+java -version
+```
+
+**可选：如果需要 Java 8**
+```bash
+# 安装 OpenJDK 8 (不推荐，仅兼容性考虑)
+brew install openjdk@8
+
+# 设置环境变量
 export JAVA_HOME=/opt/homebrew/opt/openjdk@8/libexec/openjdk.jdk/Contents/Home
 export PATH=$JAVA_HOME/bin:$PATH
 ```
